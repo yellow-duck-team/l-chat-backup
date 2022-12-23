@@ -11,7 +11,7 @@ function App() {
   return (
     <div className="App">
       <Routes>
-        <Route exact path='/' element={<ArtistListPage />} />
+        <Route path='/l-chat-backup' element={<ArtistListPage />} />
         <Route path='/chat' element={<ArtistPage />} />
         <Route path='/chat/:chatId' element={<MessagePage />} />
         <Route path='/chat/:chatId/msg' element={<ChatPage />} />
