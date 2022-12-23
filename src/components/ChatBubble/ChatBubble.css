@@ -9,6 +9,20 @@
     word-wrap: break-word;
 }
 
+.bubble.voice {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    background-color: #D5D5D9;
+    color: #C1C1C7;
+}
+
+/* .bubble.notice {
+    background-color: #D5D5D9;
+    color: #fff;
+} */
+
 .bubble .bubble-reply {
     margin-bottom: 10px;
     padding-bottom: 10px;
@@ -16,6 +30,15 @@
     color: #555555;
 }
 
+.bubble-emoji {
+    font-size: 40px;
+    margin: 0;
+}
+
 .bubble p {
     margin: 0;
+}
+
+.bubble.voice p {
+    margin-left: 5px;
 }

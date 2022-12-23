@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import './Chat.css';
 // Components
 import ChatBubble from '../../ChatBubble/ChatBubble';
 import Date from '../../Date/Date';
 import Profile from '../../Profile/Profile';
+// Style
+import { NotificationOutlined } from '@ant-design/icons';
+import './Chat.css';
 
 function Chat(props) {
     let chatDate = "";
@@ -12,7 +14,7 @@ function Chat(props) {
 
     useEffect(() => {
         if (props && props.chatId && props.chatData) {
-            console.log(props.chatData);
+            // console.log(props.chatData);
             const chatData = props.chatData;
             if (chatData && chatData[0]) {
                 setChats(chatData.slice(1));
@@ -32,21 +34,25 @@ function Chat(props) {
 
         const textBubble = () => {
             if (chat[2] === "Reply" || chat[1] !== "") {
-                return <ChatBubble chat={chat[0]} reply={chat[1]} />;
+                return <ChatBubble index={index} chat={chat[0]} reply={chat[1]} />;
             }
-            if (chat[2] === "Text") {
-                return <ChatBubble chat={chat[0]} />;
+            if (chat[2] === "Emoji") {
+                return <ChatBubble index={index} emoji={chat[0]} />;
+            }
+            if (chat[2] === "Voice") {
+                return <ChatBubble index={index} voice={true} chat={"음성 댓글"} />;
             }
             if (chat[2] === "Notice") {
-                return <ChatBubble chat={"<공지>"} />;
+                return <ChatBubble index={index} notice={chat[0]} />;
             }
+            return <ChatBubble index={index} chat={chat[0]} />;
         }
 
         return (
             <div key={index} className="block">
                 {showChatDate()}
                 <div className="block-top">
-                    <Profile />
+                    {chat[2] === "Notice" ? <div className="notice"><NotificationOutlined /></div> : <Profile />}
                     <div className="message">
                         {textBubble()}
                     </div>

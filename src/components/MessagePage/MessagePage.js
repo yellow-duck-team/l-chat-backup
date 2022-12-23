@@ -86,10 +86,10 @@ function MessagePage() {
                 let msgImg = [];
                 let j = imgCount;
                 while (j < num) {
-                    msgImg.push(<img src={require(`../../assets/12/media/${ChatId}_${j}.jpg`)} />)
+                    msgImg.push(<img key={`img-${i}`} src={require(`../../assets/12/media/${ChatId}_${j}.jpg`)} />)
                     j++;
                 }
-                msgText[i] = <div key={i} className={`artist-msg msg-img-${lineImgCount}`}>{msgImg}</div>;
+                msgText[i] = <div key={`text-${i}`} className={`artist-msg msg-img-${lineImgCount}`}>{msgImg}</div>;
                 imgCount = j;
             } else {
                 // Color and Size

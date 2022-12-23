@@ -56,6 +56,18 @@
     align-items: center;
 }
 
+.chat>.block>.block-top>.notice {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    width: 45px;
+    height: 45px;
+    border-radius: 100px;
+    background-color: #D5D5D9;
+    color: #fff;
+}
+
 .chat>.block .message {
     display: flex;
     flex-direction: column;

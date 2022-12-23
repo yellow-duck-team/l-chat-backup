@@ -1,34 +1,58 @@
 import React, { useEffect, useState } from 'react';
+// Style
+import { StopOutlined } from '@ant-design/icons';
 import './ChatBubble.css';
 
 function ChatBubble(props) {
     const [Text, setText] = useState("");
-    const [Photo, setPhoto] = useState("");
 
     useEffect(() => {
         if (props) {
             if (props.chat) {
-                const chat = props.chat.split('\n').map(str => <p>{str}</p>);
+                const chat = props.chat.split('\n').map(str => <p key={props.index}>{str}</p>);
                 setText(chat);
             }
-            // if (props.chat) setText(props.chat);
-            else if (props.photo) setPhoto(props.photo);
         }
     }, [props]);
 
+    // Reply
     if (props.reply) {
         return (
             <div className="bubble">
-                <div className="bubble-reply"><p>{props.reply}</p></div>
+                <div className="bubble-reply"><p key={props.index}>{props.reply}</p></div>
                 {Text}
-                {/* {Text !== "" ? Text : (Photo && Photo !== "" ? <img src={Photo} /> : "")} */}
             </div>
         );
-    } 
+    }
+    
+    // Emoji
+    if (props.emoji) {
+        return (
+            <p key={props.index} className="bubble-emoji">{props.emoji}</p>
+        );
+    }
+
+    // Voice
+    if (props.voice) {
+        return (
+            <div className="bubble voice">
+                <StopOutlined />{Text}
+            </div>
+        );
+    }
+
+    // Notice
+    if (props.notice) {
+        return (
+            <div className="bubble notice">
+                <p key={props.index}>{props.notice}</p>
+            </div>
+        );
+    }
+
     return (
         <div className="bubble">
             {Text}
-            {/* {Text !== "" ? Text : (Photo && Photo !== "" ? <img src={Photo} /> : "")} */}
         </div>
     );
 }
