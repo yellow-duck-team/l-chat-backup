@@ -16,7 +16,7 @@ function ChatPage() {
 
     useEffect(() => {
         let chatId = window.location.pathname;
-        chatId = chatId.slice(6, chatId.length).split('/');
+        chatId = chatId.split('/chat/')[1].split('/');
         setChatId(chatId[0]);
     }, []);
 
@@ -60,7 +60,7 @@ function ChatPage() {
         <div className="mobile">
             <div className="header">
                 <div className="top">
-                    <div className="top-icon"><ArrowLeftOutlined onClick={() => navigate(`/chat/${ChatId}`)} /></div>
+                    <div className="top-icon"><ArrowLeftOutlined onClick={() => navigate(`/l-chat-backup/chat/${ChatId}`)} /></div>
                     <div className="text">
                         <p className="header-title">이달의 소녀+</p>
                         <p className="header-subtitle">이달의 소녀(LOONA)</p>

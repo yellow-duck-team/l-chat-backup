@@ -8,7 +8,7 @@ function ArtistListPage() {
 
     return (
         <div className="mobile">
-            <img src={profileImg} className="artist-list-img" onClick={() => navigate('/chat')} />
+            <img src={profileImg} className="artist-list-img" onClick={() => navigate('/l-chat-backup/chat')} />
         </div>
     );
 }

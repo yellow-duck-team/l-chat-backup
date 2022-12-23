@@ -16,7 +16,7 @@ function MessagePage() {
 
     useEffect(() => {
         let chatId = window.location.pathname;
-        chatId = chatId.slice(6, chatId.length).split('/');
+        chatId = chatId.split('/chat/')[1].split('/');
         setChatId(chatId[0]);
     }, []);
 
@@ -149,11 +149,11 @@ function MessagePage() {
 
     // Go back to artist page
     const onArtistPage = () => {
-        navigate('/chat');
+        navigate('/l-chat-backup/chat');
     };
 
     const onChatPage = () => {
-        navigate(`/chat/${ChatId}/msg`);
+        navigate(`/l-chat-backup/chat/${ChatId}/msg`);
     };
 
     return (

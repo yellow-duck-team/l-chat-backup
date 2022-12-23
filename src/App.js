@@ -12,9 +12,9 @@ function App() {
     <div className="App">
       <Routes>
         <Route path='/l-chat-backup' element={<ArtistListPage />} />
-        <Route path='/chat' element={<ArtistPage />} />
-        <Route path='/chat/:chatId' element={<MessagePage />} />
-        <Route path='/chat/:chatId/msg' element={<ChatPage />} />
+        <Route path='/l-chat-backup/chat' element={<ArtistPage />} />
+        <Route path='/l-chat-backup/chat/:chatId' element={<MessagePage />} />
+        <Route path='/l-chat-backup/chat/:chatId/msg' element={<ChatPage />} />
       </Routes>
     </div>
   );
