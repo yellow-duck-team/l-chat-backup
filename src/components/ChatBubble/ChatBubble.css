@@ -1,0 +1,21 @@
+.bubble {
+    border-radius: 20px 20px 20px 2px;
+    padding: 13px 14px;
+    background-color: #fff;
+    font-size: 14px;
+    color: #000;
+    max-width: 230px;
+    /* white-space: normal; */
+    word-wrap: break-word;
+}
+
+.bubble .bubble-reply {
+    margin-bottom: 10px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #F2F1F2;
+    color: #555555;
+}
+
+.bubble p {
+    margin: 0;
+}

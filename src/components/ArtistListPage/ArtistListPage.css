@@ -1,0 +1,23 @@
+.chat-list {
+    height: 100%;
+}
+
+.chat-list>.chat-list-block {
+    display: flex;
+    justify-content: space-between;
+    margin: 20px 20px 0px 20px;
+    padding: 20px;
+    background-color: #f1f0f4;
+}
+
+.chat-list>.chat-list-block:hover {
+    background-color: #cfcdd4;
+    cursor: pointer;
+}
+
+.artist-list-img {
+    border-radius: 100px;
+    width: 200px;
+    height: 200px;
+    cursor: pointer;
+}

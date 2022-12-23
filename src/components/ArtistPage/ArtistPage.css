@@ -1,0 +1,79 @@
+.artistpage {
+    width: 400px;
+    height: 800px;
+    background-color: #fff;
+}
+
+.artistpage .top {
+    display: flex;
+    position: absolute;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 400px;
+    height: 80px;
+}
+  
+.artistpage .top>.top-icon {
+    margin-left: 20px;
+    margin-right: 20px;
+    font-size: 18px;
+    color: #fff;
+}
+
+.artistpage .top>.top-icon:first-child {
+    cursor: pointer;
+}
+
+.artistpage .artist-profile {
+    position: absolute;
+    margin-top: 170px;
+    margin-left: 20px;
+    width: 100px;
+    border-radius: 50px;
+}
+
+.artistpage .artist-background {
+    width: 100%;
+    height: auto;
+    border-radius: 0;
+}
+
+.artistpage .profile-name {
+    margin-top: 20px;
+    padding: 20px 20px;
+    border-bottom: 1px solid #eee;
+}
+
+.artistpage .profile-name p {
+    margin-bottom: 0;
+    font-weight: bold;
+}
+
+.artistpage .body {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px;
+    padding: 0;
+    width: 100%;
+    height: 58%;
+    overflow-y: scroll;
+}
+
+.artist-msg img {
+    width: 129.38px; /* 16:9 */
+    height: 230px; /* 16:9 */
+    object-fit: cover;
+    border: none;
+    cursor: pointer;
+}
+
+.artist-msg video {
+    width: 129.38px; /* 16:9 */
+    height: 230px; /* 16:9 */
+    border: none;
+    background-color: black;
+    cursor: pointer;
+}
