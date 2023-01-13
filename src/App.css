@@ -7,19 +7,6 @@
   align-items: center;
   height: 100vh;
   background-color: rgb(30, 30, 30);
-  /* text-align: center; */
-}
-
-.App-header {
-  /* background-color: rgb(209, 191, 191); */
-  background-color: #F5F4F5;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
 }
 
 .mobile {
@@ -27,22 +14,28 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  width: 400px;
-  height: 800px;
-  /* border: 10px solid rgb(255, 255, 255); */
-  /* box-shadow: 0 0 0 10px rgb(255, 255, 255) inset; */
-  /* padding: 30px; */
+  width: 50.63%;
+  height: 90%;
+  min-width: 390px;
+  min-height: 693.33px;
+  max-width: 400px;
+  max-height: 711.11px;
   background-color: #F5F4F5;
 }
 
+.mobile.mobile-chat {
+  justify-content: flex-start;
+}
+
 .mobile>.header {
-  flex-grow: 1;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
   width: 100%;
-  background-color: #F5F3FA;
+  height: 60px;
+  background-color: #FFF;
+  user-select: none;
 }
 
 .header>.top {
@@ -51,7 +44,7 @@
   justify-content: space-between;
   align-items: center;
   width: 90%;
-  height: 80px;
+  height: 100%;
 }
 
 .header>.top>.top-icon {
@@ -66,19 +59,13 @@
 }
 
 .header>.top>.text>.header-title {
-  margin-bottom: -10px;
-  font-size: 22px;
+  font-size: 14px;
   font-weight: bold;
-}
-
-.header>.top>.text>.header-subtitle {
-  font-size: 12px;
-  color: #848286;
 }
 
 .mobile>.body {
   width: 100%;
-  flex-grow: 30;
+  height: calc(100% - 60px);
   background-color: #F5F4F5;
 }
 

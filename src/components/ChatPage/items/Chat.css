@@ -3,9 +3,7 @@
     flex-direction: column;
     justify-content: flex-start;
     align-items: flex-start;
-    /* align-items: center; */
-    /* background-color: aliceblue; */
-    height: 720px;
+    height: 100%;
 }
 
 .chat {
@@ -22,7 +20,8 @@
     flex-direction: column;
     justify-content: center;
     align-items: flex-start;
-    width: 380px;
+    width: 100%;
+    /* width: 380px; */
 }
 
 /* .chat>.block:first-child {
@@ -30,7 +29,7 @@
 } */
 
 .chat>.block:last-child {
-    margin-bottom: 30px;
+    margin-bottom: 20px;
 }
 
 .chat>.block:not(:first-child) {
@@ -74,6 +73,7 @@
     justify-content: center;
     align-items: flex-start;
     margin-left: 10px;
+    max-width: 75%;
 }
 
 .chat>.block .time {

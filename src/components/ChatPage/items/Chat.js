@@ -52,7 +52,7 @@ function Chat(props) {
             <div key={index} className="block">
                 {showChatDate()}
                 <div className="block-top">
-                    {chat[2] === "Notice" ? <div className="notice"><NotificationOutlined /></div> : <Profile />}
+                    {chat[2] === "Notice" ? <div className="notice"><NotificationOutlined /></div> : <Profile artistNum={props.artistNum} />}
                     <div className="message">
                         {textBubble()}
                     </div>

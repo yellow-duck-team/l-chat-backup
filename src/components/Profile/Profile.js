@@ -1,14 +1,19 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import './Profile.css';
-import { StarFilled } from '@ant-design/icons';
-import profileImg from '../../assets/12/profile/0.jpg';
 
-function Profile() {
+function Profile(props) {
+    const [ProfileImg, setProfileImg] = useState("");
+
+    useEffect(() => {
+        if (props.artistNum) {
+            const profileImg = require(`../../assets/${props.artistNum}/profile/0.jpg`);
+            setProfileImg(profileImg);
+        }
+    }, [props]);
+
     return (
         <div className="profile">
-            {/* <div className="star"><StarFilled /></div> */}
-            {/* <img src="/profile.png" /> */}
-            <img src={profileImg} />
+            <img src={ProfileImg} />
         </div>
     );
 }

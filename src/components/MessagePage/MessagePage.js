@@ -1,28 +1,39 @@
 import react, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { readString } from 'react-papaparse';
-// Import
-import textCSV from '../../assets/12/text.csv';
-import profileImg from '../../assets/12/profile/0.jpg';
 // Style
 import { ArrowLeftOutlined, CommentOutlined, MoreOutlined } from '@ant-design/icons';
 import './MessagePage.css';
 
+const artistName = [
+    "희진 • HeeJin", "현진 • HyunJin", "하슬 • HaSeul", "여진 • YeoJin", 
+    "비비 • ViVi", "김립 • Kim Lip", "진솔 • JinSoul", "최리 • Choerry", 
+    "이브 • Yves", "츄 • Chuu", "고원 • Go Won", "올리비아 혜 • Olivia Hye"
+];
+
 function MessagePage() {
     const navigate = useNavigate();
 
+    const [ArtistNum, setArtistNum] = useState("");
+    const [ProfileImg, setProfileImg] = useState("");
     const [ChatId, setChatId] = useState("");
     const [CSVText, setCSVText] = useState([]);
 
     useEffect(() => {
         let chatId = window.location.pathname;
         chatId = chatId.split('/chat/')[1].split('/');
-        setChatId(chatId[0]);
+        setArtistNum(chatId[0]);
+        setChatId(chatId[1]);
+        const profileImg = require(`../../assets/${chatId[0]}/profile/0.jpg`);
+        setProfileImg(profileImg);
     }, []);
 
     useEffect(() => {
-        readString(textCSV, papaConfig);
-    }, [textCSV, ChatId]);
+        if (ChatId !== "" && ArtistNum !== "") {
+            const textCSV = require(`../../assets/${ArtistNum}/text.csv`);
+            readString(textCSV, papaConfig);
+        }
+    }, [ArtistNum, ChatId]);
     
     const papaConfig = {
         complete: (results, file) => {
@@ -62,7 +73,7 @@ function MessagePage() {
             return (
                 <div className="artist-msg video">
                     <video width="750" height="500" controls autoPlay >
-                        <source src={require(`../../assets/12/media/${ChatId}_0.mp4`)} type="video/mp4"/>
+                        <source src={require(`../../assets/${ArtistNum}/media/${ChatId.length === 1 ? "0" + ChatId : ChatId}_0.mp4`)} type="video/mp4"/>
                     </video>
                 </div>
             );
@@ -71,11 +82,12 @@ function MessagePage() {
         if (CSVText[0] === "(Full Image)") {
             return (
                 <div className="artist-msg full-img">
-                    <img src={require(`../../assets/12/media/${ChatId}_0.jpg`)} />
+                    <img src={require(`../../assets/${ArtistNum}/media/${ChatId.length === 1 ? "0" + ChatId : ChatId}_0.jpg`)} />
                 </div>
             ); 
         }
         // If text or image text
+        console.log(CSVText[0]);
         const msgText = CSVText[0].split('\n');
         let imgCount = 0;
         for (let i = 0; i < msgText.length; i++) {
@@ -86,15 +98,19 @@ function MessagePage() {
                 let msgImg = [];
                 let j = imgCount;
                 while (j < num) {
-                    msgImg.push(<img key={`img-${i}`} src={require(`../../assets/12/media/${ChatId}_${j}.jpg`)} />)
+                    msgImg.push(<img key={`img-${i}`} src={require(`../../assets/${ArtistNum}/media/${ChatId.length === 1 ? "0" + ChatId : ChatId}_${j}.jpg`)} />)
                     j++;
                 }
                 msgText[i] = <div key={`text-${i}`} className={`artist-msg msg-img-${lineImgCount}`}>{msgImg}</div>;
                 imgCount = j;
             } else {
-                // Color and Size
-                msgText[i] = styleText(msgText[i]);
-                msgText[i] = <p key={i}>{msgText[i]}</p>;
+                if (msgText[i] === "") {
+                    msgText[i] = <p> </p>;
+                } else {
+                    // Color and Size
+                    msgText[i] = styleText(msgText[i]);
+                    msgText[i] = <p key={i}>{msgText[i]}</p>;
+                }
             }
         }
         return (
@@ -121,7 +137,7 @@ function MessagePage() {
     // Color text
     const styleText = (text) => {
         // Get index of first style
-        const firstStyle = minStyleIndex(text, ["small", "big", "blue", "green", "red"]);
+        const firstStyle = minStyleIndex(text, ["small", "big", "blue", "green", "red", "pink"]);
         // If text is stylized
         if (firstStyle !== "") {
             let colList = text.split(`(${firstStyle})`);
@@ -149,11 +165,11 @@ function MessagePage() {
 
     // Go back to artist page
     const onArtistPage = () => {
-        navigate('/l-chat-backup/chat');
+        navigate(`/l-chat-backup/chat/${ArtistNum}/`);
     };
 
     const onChatPage = () => {
-        navigate(`/l-chat-backup/chat/${ChatId}/msg`);
+        navigate(`/l-chat-backup/chat/${ArtistNum}/${ChatId}/msg`);
     };
 
     return (
@@ -167,9 +183,9 @@ function MessagePage() {
             </div>
             <div className="msg-footer">
                 <div className="footer-left">
-                    <img src={profileImg} className="artist-profile" />
+                    <img src={ProfileImg} className="artist-profile" />
                     <div className="footer-text">
-                        <p className="profile-name">올리비아 혜 • Olivia Hye</p>
+                        <p className="profile-name">{artistName[ArtistNum - 1]}</p>
                         {CSVText && CSVText.length > 0 && <p>{CSVText[3]}</p>}
                     </div>
                 </div>

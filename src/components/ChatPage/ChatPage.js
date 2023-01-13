@@ -1,8 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { readString } from 'react-papaparse';
-// Import
-import textCSV from '../../assets/12/text.csv';
 // Components
 import Chat from './items/Chat';
 // Style
@@ -11,21 +9,23 @@ import { ArrowLeftOutlined, MoreOutlined } from '@ant-design/icons';
 function ChatPage() {
     const navigate = useNavigate();
 
+    const [ArtistNum, setArtistNum] = useState("");
     const [ChatId, setChatId] = useState("");
     const [CSVText, setCSVText] = useState([]);
 
     useEffect(() => {
         let chatId = window.location.pathname;
         chatId = chatId.split('/chat/')[1].split('/');
-        setChatId(chatId[0]);
+        setArtistNum(chatId[0]);
+        setChatId(chatId[1]);
     }, []);
 
     useEffect(() => {
-        if (ChatId !== "") {
-            // Load text data
+        if (ChatId !== "" && ArtistNum !== "") {
+            const textCSV = require(`../../assets/${ArtistNum}/text.csv`);
             readString(textCSV, papaConfig);
         }
-    }, [textCSV, ChatId]);
+    }, [ArtistNum, ChatId]);
 
     const papaConfig = {
         complete: (results, file) => {
@@ -57,19 +57,18 @@ function ChatPage() {
     };
 
     return (
-        <div className="mobile">
+        <div className="mobile mobile-chat">
             <div className="header">
                 <div className="top">
-                    <div className="top-icon"><ArrowLeftOutlined onClick={() => navigate(`/l-chat-backup/chat/${ChatId}`)} /></div>
+                    <div className="top-icon"><ArrowLeftOutlined onClick={() => navigate(`/l-chat-backup/chat/${ArtistNum}/${ChatId}`)} /></div>
                     <div className="text">
-                        <p className="header-title">이달의 소녀+</p>
-                        <p className="header-subtitle">이달의 소녀(LOONA)</p>
+                        <p className="header-title">댓글</p>
                     </div>
                     <div className="top-icon"><MoreOutlined /></div>
                 </div>
             </div>
             <div className="body">
-                <Chat chatId={ChatId} chatData={CSVText} />
+                <Chat artistNum={ArtistNum} chatId={ChatId} chatData={CSVText} />
             </div>
         </div>
     );

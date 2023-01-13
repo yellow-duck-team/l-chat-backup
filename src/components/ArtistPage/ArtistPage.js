@@ -1,22 +1,40 @@
 import react, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { readString } from 'react-papaparse';
-// Import
-import textCSV from '../../assets/12/text.csv';
-import profileImg from '../../assets/12/profile/0.jpg';
-import backgroundImg from '../../assets/12/bg/0.jpg';
 // Style
 import { ArrowLeftOutlined, MoreOutlined } from '@ant-design/icons';
 import './ArtistPage.css';
 
+const artistName = [
+    "희진 • HeeJin", "현진 • HyunJin", "하슬 • HaSeul", "여진 • YeoJin", 
+    "비비 • ViVi", "김립 • Kim Lip", "진솔 • JinSoul", "최리 • Choerry", 
+    "이브 • Yves", "츄 • Chuu", "고원 • Go Won", "올리비아 혜 • Olivia Hye"
+];
+
 function ArtistPage() {
     const navigate = useNavigate();
 
+    const [ArtistNum, setArtistNum] = useState("");
+    const [ProfileImg, setProfileImg] = useState("");
+    const [BGImg, setBGImg] = useState("");
     const [CSVText, setCSVText] = useState([]);
 
     useEffect(() => {
-        readString(textCSV, papaConfig);
-    }, [textCSV]);
+        let chatId = window.location.pathname;
+        chatId = chatId.split('/chat/')[1].split('/');
+        setArtistNum(chatId[0]);
+        const profileImg = require(`../../assets/${chatId[0]}/profile/0.jpg`);
+        setProfileImg(profileImg);
+        const bgImg = require(`../../assets/${chatId[0]}/bg/0.jpg`);
+        setBGImg(bgImg);
+    }, []);
+
+    useEffect(() => {
+        if (ArtistNum !== "") {
+            const textCSV = require(`../../assets/${ArtistNum}/text.csv`);
+            readString(textCSV, papaConfig);
+        }
+    }, [ArtistNum]);
     
     const papaConfig = {
         complete: (results, file) => {
@@ -43,7 +61,7 @@ function ArtistPage() {
     };
 
     const onClickThumbnail = (msgNum) => {
-        navigate(`/l-chat-backup/chat/${msgNum}`);
+        navigate(`/l-chat-backup/chat/${ArtistNum}/${msgNum}`);
     };
 
     const msgImg = CSVText !== [] ? CSVText.map((data, index) => {
@@ -51,14 +69,21 @@ function ArtistPage() {
             return (
                 <div key={index} className="artist-msg" onClick={() => onClickThumbnail(data.msgNum)}>
                     <video width="750" height="500" >
-                        <source src={require(`../../assets/12/media/${data.msgNum}_0.mp4`)} type="video/mp4"/>
+                        <source src={require(`../../assets/${ArtistNum}/media/${data.msgNum.length === 1 ? "0" + data.msgNum : data.msgNum}_0.mp4`)} type="video/mp4"/>
                     </video>
                 </div>
             );
         }
+        if (!data.data[0].includes("Image")) {
+            return (
+                <div key={index} className="artist-msg" onClick={() => onClickThumbnail(data.msgNum)}>
+                <img src={require(`../../assets/empty.jpg`)} />
+            </div>
+            );
+        }
         return (
             <div key={index} className="artist-msg" onClick={() => onClickThumbnail(data.msgNum)}>
-                <img src={require(`../../assets/12/media/${data.msgNum}_0.jpg`)} />
+                <img src={require(`../../assets/${ArtistNum}/media/${data.msgNum.length === 1 ? "0" + data.msgNum : data.msgNum}_0.jpg`)} />
             </div>
         );
     }) : "";
@@ -69,10 +94,10 @@ function ArtistPage() {
                 <div className="top-icon" onClick={() => navigate('/l-chat-backup')}><ArrowLeftOutlined /></div>
                 <div className="top-icon"><MoreOutlined /></div>
             </div>
-            <img src={profileImg} className="artist-profile" />
-            <img src={backgroundImg} className="artist-background" />
+            <img src={ProfileImg} className="artist-profile" />
+            <img src={BGImg} className="artist-background" />
             <div className="profile-name">
-                <p>올리비아 혜 • Olivia Hye</p>
+                <p>{artistName[ArtistNum - 1]}</p>
             </div>
             <div className="body">
                 {msgImg}

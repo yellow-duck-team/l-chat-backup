@@ -3,8 +3,12 @@
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
-    width: 400px;
-    height: 800px;
+    width: 50.63%;
+    height: 90%;
+    min-width: 390px;
+    min-height: 693.33px;
+    max-width: 400px;
+    max-height: 711.11px;
     background-color: #fff;
 }
 
@@ -53,6 +57,7 @@
     margin: 0;
     font-size: 12px;
     line-height: 1.5em;
+    white-space: pre-wrap;
 }
 
 .msg-text p .msg-text-small {
@@ -73,6 +78,10 @@
 
 .msg-text p .msg-text-green {
     color: #58BA36;
+}
+
+.msg-text p .msg-text-pink {
+    color: #EA3BC9;
 }
 
 .msg-text .artist-msg img {
