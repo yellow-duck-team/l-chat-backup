@@ -19,7 +19,7 @@ function ArtistListPage() {
     const navigate = useNavigate();
 
     return (
-        <div className="mobile">
+        <div className="mobile artist-list">
             {artists.map((artistImg, index) => {
                 if (artistImg !== "") {
                     return <img key={index} src={artistImg} className="artist-list-img" onClick={() => navigate(`/l-chat-backup/chat/${index + 1}`)} />;

@@ -68,6 +68,21 @@
     overflow-y: scroll;
 }
 
+.artist-msg {
+    position: relative;
+    user-select: none;
+    cursor: pointer;
+}
+
+.artist-msg p {
+    position: absolute;
+    margin: 5px;
+    right: 0;
+    color: white;
+    font-size: 12px;
+    font-weight: bold;
+}
+
 .artist-msg img {
     width: 129.38px; /* 16:9 */
     height: 230px; /* 16:9 */

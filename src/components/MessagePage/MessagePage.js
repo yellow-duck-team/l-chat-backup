@@ -11,6 +11,15 @@ const artistName = [
     "이브 • Yves", "츄 • Chuu", "고원 • Go Won", "올리비아 혜 • Olivia Hye"
 ];
 
+const countReply = (data, index) => {
+    // i, i + 4
+    let count = 0;
+    while (count < data.length && data[count][index] !== "") {
+        count++;
+    }
+    return count;
+};
+
 function MessagePage() {
     const navigate = useNavigate();
 
@@ -18,6 +27,7 @@ function MessagePage() {
     const [ProfileImg, setProfileImg] = useState("");
     const [ChatId, setChatId] = useState("");
     const [CSVText, setCSVText] = useState([]);
+    const [ReplyCount, setReplyCount] = useState(0);
 
     useEffect(() => {
         let chatId = window.location.pathname;
@@ -53,6 +63,7 @@ function MessagePage() {
                         }
                     }
                     setCSVText(dataByLine[0]);
+                    setReplyCount(countReply(dataCSV.slice(3, dataCSV.length), i));
                     break;
                 }
             }
@@ -191,7 +202,7 @@ function MessagePage() {
                 </div>
                 <div className="footer-right">
                     <div className="footer-icon" onClick={onChatPage}><CommentOutlined /></div>
-                    <p>댓글</p>
+                    <p>댓글 ({ReplyCount})</p>
                 </div>
             </div>
         </div>

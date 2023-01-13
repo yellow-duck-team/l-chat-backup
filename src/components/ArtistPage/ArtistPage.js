@@ -11,6 +11,13 @@ const artistName = [
     "이브 • Yves", "츄 • Chuu", "고원 • Go Won", "올리비아 혜 • Olivia Hye"
 ];
 
+const convertDate = (date) => {
+    let dateText = date.split(".");
+    if (dateText[1].length < 2) dateText[1] = "0" + dateText[1];
+    if (dateText[2].length < 2) dateText[2] = "0" + dateText[2];
+    return `${dateText[0]}년 ${dateText[1]}월 ${dateText[2]}일`;
+};
+
 function ArtistPage() {
     const navigate = useNavigate();
 
@@ -47,7 +54,7 @@ function ArtistPage() {
                 // Get text data by line
                 dataByMsg.push({ 
                     msgNum: dataCSV[0][i], 
-                    data: dataCSV[2].slice(i, i + 4) 
+                    data: dataCSV[2].slice(i, i + 4),
                 });
                 i += 4;
             }
@@ -65,24 +72,30 @@ function ArtistPage() {
     };
 
     const msgImg = CSVText !== [] ? CSVText.map((data, index) => {
+        // Message with a video
         if (data.data[0] === "(Video)") {
             return (
                 <div key={index} className="artist-msg" onClick={() => onClickThumbnail(data.msgNum)}>
+                    <p>{convertDate(data.data[3].slice(0, 10))}</p>
                     <video width="750" height="500" >
                         <source src={require(`../../assets/${ArtistNum}/media/${data.msgNum.length === 1 ? "0" + data.msgNum : data.msgNum}_0.mp4`)} type="video/mp4"/>
                     </video>
                 </div>
             );
         }
+        // Message without media
         if (!data.data[0].includes("Image")) {
             return (
                 <div key={index} className="artist-msg" onClick={() => onClickThumbnail(data.msgNum)}>
-                <img src={require(`../../assets/empty.jpg`)} />
-            </div>
+                    <p>{convertDate(data.data[3].slice(0, 10))}</p>
+                    <img src={require(`../../assets/empty.jpg`)} />
+                </div>
             );
         }
+        // Message with an image
         return (
             <div key={index} className="artist-msg" onClick={() => onClickThumbnail(data.msgNum)}>
+                <p>{convertDate(data.data[3].slice(0, 10))}</p>
                 <img src={require(`../../assets/${ArtistNum}/media/${data.msgNum.length === 1 ? "0" + data.msgNum : data.msgNum}_0.jpg`)} />
             </div>
         );

@@ -15,7 +15,15 @@
     cursor: pointer;
 }
 
+.artist-list {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: center;
+    align-items: center;
+}
+
 .artist-list-img {
+    margin: 10px;
     border-radius: 100px;
     width: 200px;
     height: 200px;
