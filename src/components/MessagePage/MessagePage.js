@@ -98,7 +98,7 @@ function MessagePage() {
             ); 
         }
         // If text or image text
-        console.log(CSVText[0]);
+        // console.log(CSVText[0]);
         const msgText = CSVText[0].split('\n');
         let imgCount = 0;
         for (let i = 0; i < msgText.length; i++) {
@@ -120,7 +120,7 @@ function MessagePage() {
                 } else {
                     // Color and Size
                     msgText[i] = styleText(msgText[i]);
-                    msgText[i] = <p key={i}>{msgText[i]}</p>;
+                    msgText[i] = <p key={`msgText-${i}`}>{msgText[i]}</p>;
                 }
             }
         }

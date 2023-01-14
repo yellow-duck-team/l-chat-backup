@@ -47,6 +47,10 @@
   height: 100%;
 }
 
+.mobile.mobile-chat .block .top>.date {
+  margin-right: 20px;
+}
+
 .header>.top>.top-icon {
   font-size: 18px;
 }

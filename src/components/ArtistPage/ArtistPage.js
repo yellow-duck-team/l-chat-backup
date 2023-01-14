@@ -1,6 +1,8 @@
 import react, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { readString } from 'react-papaparse';
+// Components
+import { convertDate } from '../../App';
 // Style
 import { ArrowLeftOutlined, MoreOutlined } from '@ant-design/icons';
 import './ArtistPage.css';
@@ -10,13 +12,6 @@ const artistName = [
     "비비 • ViVi", "김립 • Kim Lip", "진솔 • JinSoul", "최리 • Choerry", 
     "이브 • Yves", "츄 • Chuu", "고원 • Go Won", "올리비아 혜 • Olivia Hye"
 ];
-
-const convertDate = (date) => {
-    let dateText = date.split(".");
-    if (dateText[1].length < 2) dateText[1] = "0" + dateText[1];
-    if (dateText[2].length < 2) dateText[2] = "0" + dateText[2];
-    return `${dateText[0]}년 ${dateText[1]}월 ${dateText[2]}일`;
-};
 
 function ArtistPage() {
     const navigate = useNavigate();
@@ -75,7 +70,7 @@ function ArtistPage() {
         // Message with a video
         if (data.data[0] === "(Video)") {
             return (
-                <div key={index} className="artist-msg" onClick={() => onClickThumbnail(data.msgNum)}>
+                <div key={`img-${index}`} className="artist-msg" onClick={() => onClickThumbnail(data.msgNum)}>
                     <p>{convertDate(data.data[3].slice(0, 10))}</p>
                     <video width="750" height="500" >
                         <source src={require(`../../assets/${ArtistNum}/media/${data.msgNum.length === 1 ? "0" + data.msgNum : data.msgNum}_0.mp4`)} type="video/mp4"/>
@@ -86,7 +81,7 @@ function ArtistPage() {
         // Message without media
         if (!data.data[0].includes("Image")) {
             return (
-                <div key={index} className="artist-msg" onClick={() => onClickThumbnail(data.msgNum)}>
+                <div key={`img-${index}`} className="artist-msg" onClick={() => onClickThumbnail(data.msgNum)}>
                     <p>{convertDate(data.data[3].slice(0, 10))}</p>
                     <img src={require(`../../assets/empty.jpg`)} />
                 </div>
@@ -94,7 +89,7 @@ function ArtistPage() {
         }
         // Message with an image
         return (
-            <div key={index} className="artist-msg" onClick={() => onClickThumbnail(data.msgNum)}>
+            <div key={`img-${index}`} className="artist-msg" onClick={() => onClickThumbnail(data.msgNum)}>
                 <p>{convertDate(data.data[3].slice(0, 10))}</p>
                 <img src={require(`../../assets/${ArtistNum}/media/${data.msgNum.length === 1 ? "0" + data.msgNum : data.msgNum}_0.jpg`)} />
             </div>

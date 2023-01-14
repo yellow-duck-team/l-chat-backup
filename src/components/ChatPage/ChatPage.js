@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { readString } from 'react-papaparse';
 // Components
-import Chat from './items/Chat';
+import Chats from './items/Chats';
 // Style
 import { ArrowLeftOutlined, MoreOutlined } from '@ant-design/icons';
 
@@ -68,7 +68,7 @@ function ChatPage() {
                 </div>
             </div>
             <div className="body">
-                <Chat artistNum={ArtistNum} chatId={ChatId} chatData={CSVText} />
+                <Chats artistNum={ArtistNum} chatId={ChatId} chatData={CSVText} />
             </div>
         </div>
     );

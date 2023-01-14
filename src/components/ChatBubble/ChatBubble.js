@@ -9,7 +9,7 @@ function ChatBubble(props) {
     useEffect(() => {
         if (props) {
             if (props.chat) {
-                const chat = props.chat.split('\n').map(str => <p key={props.index}>{str}</p>);
+                const chat = props.chat.split('\n').map((str, index) => <p key={`bubble-chat-${props.index}-${index}`}>{str}</p>);
                 setText(chat);
             }
         }
@@ -19,7 +19,7 @@ function ChatBubble(props) {
     if (props.reply) {
         return (
             <div className="bubble">
-                <div className="bubble-reply"><p key={props.index}>{props.reply}</p></div>
+                <div className="bubble-reply"><p key={`bubble-reply-${props.index}`}>{props.reply}</p></div>
                 {Text}
             </div>
         );
@@ -28,7 +28,7 @@ function ChatBubble(props) {
     // Emoji
     if (props.emoji) {
         return (
-            <p key={props.index} className="bubble-emoji">{props.emoji}</p>
+            <p key={`bubble-emoji-${props.index}`} className="bubble-emoji">{props.emoji}</p>
         );
     }
 
@@ -45,7 +45,7 @@ function ChatBubble(props) {
     if (props.notice) {
         return (
             <div className="bubble notice">
-                <p key={props.index}>{props.notice}</p>
+                <p key={`bubble-notice-${props.index}`}>{props.notice}</p>
             </div>
         );
     }
