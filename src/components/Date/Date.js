@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { convertDate } from '../../App';
 import './Date.css';
 
 function Date(props) {
@@ -17,7 +18,7 @@ function Date(props) {
 
     return (
         <div className="date">
-            {ChatDate}
+            {convertDate(ChatDate)}
         </div>
     );
 }

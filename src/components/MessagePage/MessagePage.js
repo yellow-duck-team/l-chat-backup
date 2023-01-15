@@ -1,6 +1,8 @@
 import react, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { readString } from 'react-papaparse';
+// Component
+import MediaSlide from './MediaSlide';
 // Style
 import { ArrowLeftOutlined, CommentOutlined, MoreOutlined } from '@ant-design/icons';
 import './MessagePage.css';
@@ -28,6 +30,8 @@ function MessagePage() {
     const [ChatId, setChatId] = useState("");
     const [CSVText, setCSVText] = useState([]);
     const [ReplyCount, setReplyCount] = useState(0);
+    const [Media, setMedia] = useState(null);
+    const [OpenMedia, setOpenMedia] = useState(false);
 
     useEffect(() => {
         let chatId = window.location.pathname;
@@ -109,7 +113,18 @@ function MessagePage() {
                 let msgImg = [];
                 let j = imgCount;
                 while (j < num) {
-                    msgImg.push(<img key={`img-${i}`} src={require(`../../assets/${ArtistNum}/media/${ChatId.length === 1 ? "0" + ChatId : ChatId}_${j}.jpg`)} />)
+                    let currImg = j;
+                    msgImg.push(<img 
+                        key={`img-${i}-${j}`} 
+                        src={require(`../../assets/${ArtistNum}/media/${ChatId.length === 1 ? "0" + ChatId : ChatId}_${j}.jpg`)} 
+                        onClick={() => onOpenMedia(
+                            true, 
+                            require(`../../assets/${ArtistNum}/media/${ChatId.length === 1 ? "0" + ChatId : ChatId}_${currImg}.jpg`),
+                            `../../assets/${ArtistNum}/media/${ChatId.length === 1 ? "0" + ChatId : ChatId}`, 
+                            currImg, 
+                            num
+                        )} 
+                    />);
                     j++;
                 }
                 msgText[i] = <div key={`text-${i}`} className={`artist-msg msg-img-${lineImgCount}`}>{msgImg}</div>;
@@ -174,6 +189,17 @@ function MessagePage() {
         return text;
     };
 
+    // Media slide
+    const onOpenMedia = (open, media, path, currImg, imgCount) => {
+        if (open && path && path !== "") {
+            console.log(path);
+            setMedia({ media: media, path: path, currImg: currImg, imgCount: imgCount });
+        } else {
+            setMedia(null);
+        }
+        setOpenMedia(open);
+    };
+
     // Go back to artist page
     const onArtistPage = () => {
         navigate(`/l-chat-backup/chat/${ArtistNum}/`);
@@ -185,6 +211,7 @@ function MessagePage() {
 
     return (
         <div className="msgpage">
+            {OpenMedia && Media && <MediaSlide openMedia={() => onOpenMedia()} media={Media} />}
             <div className="top">
                 <div className="top-icon" onClick={onArtistPage}><ArrowLeftOutlined /></div>
                 <div className="top-icon"><MoreOutlined /></div>

@@ -39,7 +39,7 @@ function Chats(props) {
                 return <ChatBubble index={index} emoji={chat[0]} />;
             }
             if (chat[2] === "Voice") {
-                return <ChatBubble index={index} voice={true} chat={"음성 댓글"} />;
+                return <ChatBubble index={index} voice={true} chat={chat[0]} artistNum={props.artistNum} chatId={props.chatId} />;
             }
             if (chat[2] === "Notice") {
                 return <ChatBubble index={index} notice={chat[0]} />;

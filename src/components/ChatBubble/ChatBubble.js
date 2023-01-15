@@ -34,9 +34,18 @@ function ChatBubble(props) {
 
     // Voice
     if (props.voice) {
+        if (props.chat === "" || props.chat === "-") {
+            return (
+                <div className="bubble voice">
+                    <StopOutlined /><p>음성 댓글</p>
+                </div>
+            );
+        }
         return (
-            <div className="bubble voice">
-                <StopOutlined />{Text}
+            <div className="bubble voice audio">
+                <audio src={require(`../../assets/${props.artistNum}/voice/${props.chatId}_${props.chat}.m4a`)} controls>
+                    Your browser does not support the audio element.
+                </audio>
             </div>
         );
     }

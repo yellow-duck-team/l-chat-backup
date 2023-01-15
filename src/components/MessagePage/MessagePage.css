@@ -18,7 +18,8 @@
     justify-content: space-between;
     align-items: center;
     width: 100%;
-    height: 60px;
+    height: 74.13px;
+    /* height: 60px; */
 }
   
 .msgpage .top>.top-icon {
@@ -191,4 +192,40 @@
     text-align: center;
     margin: 0;
     font-size: 12px;
+}
+
+.msg-img {
+    z-index: 500;
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 50.63%;
+    height: 90%;
+    min-width: 390px;
+    min-height: 693.33px;
+    max-width: 400px;
+    max-height: 711.11px;
+    background-color: rgba(0, 0, 0, .75);
+}
+
+.msg-img img {
+    width: 350px;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 0 20px rgba(0, 0, 0, .3);
+}
+
+.msg-img button {
+    margin-top: 20px;
+    padding: 10px;
+    border: none;
+    border-radius: 100px;
+    background-color: rgba(255, 255, 255, 0.75);
+    cursor: pointer;
+}
+
+.msg-img button:hover {
+    background-color: rgba(255, 255, 255, 0.5);
 }

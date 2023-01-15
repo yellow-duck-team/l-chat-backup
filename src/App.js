@@ -9,6 +9,7 @@ import ChatPage from './components/ChatPage/ChatPage';
 import SearchPage from './components/SearchPage/SearchPage';
 
 export const convertDate = (date) => {
+  if (date === "") return "";
   let dateText = date.split(".");
   if (dateText[1].length < 2) dateText[1] = "0" + dateText[1];
   if (dateText[2].length < 2) dateText[2] = "0" + dateText[2];

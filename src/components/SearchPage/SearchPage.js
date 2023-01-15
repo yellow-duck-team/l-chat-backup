@@ -82,7 +82,7 @@ function SearchPage() {
                 </div>
             </div>
             <div className="search-results">
-                <h2>댓글 검색</h2>
+                <h2>"{SearchText}" 검색 결과</h2>
                 <div className="search-block">
                     {searchResults}
                 </div>
