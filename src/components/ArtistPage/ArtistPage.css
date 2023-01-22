@@ -76,6 +76,10 @@
     cursor: pointer;
 }
 
+.artist-msg:hover {
+    opacity: 0.8;
+}
+
 .artist-msg p {
     position: absolute;
     margin: 5px;
