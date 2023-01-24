@@ -6,18 +6,68 @@ import './ChatBubble.css';
 function ChatBubble(props) {
     const [Text, setText] = useState("");
 
-    useEffect(() => {
-        if (props) {
-            if (props.chat) {
-                const chat = props.chat.split('\n').map((str, index) => str === "" ? <p key={`bubble-chat-${props.index}-${index}`}><br/></p> : <p key={`bubble-chat-${props.index}-${index}`}>{str}</p>);
-                setText(chat);
+    // Convert emojis to display properly
+    const displayEmojis = (str, index) => {
+        const emojis = ['♥️', '☺️', '☺'];
+        for (let i = index; i < emojis.length; i++) {
+            const emoji = emojis[i];
+            // Check if emoji is in str
+            if (str.includes(emoji)) {
+                let textList = str.split(emoji);
+                // If emoji is in str
+                if (textList.length > 1) {
+                    // Change font of the emoji
+                    return (
+                        <span>
+                            {displayEmojis(textList[0], i + 1)}
+                            <span className="emoji-display">{emoji}</span>
+                            {displayEmojis(textList.slice(1).join(emoji), i)}
+                        </span>
+                    );
+                }
             }
+        }
+        return displayKaomojis(str, 0);
+    };
+
+    // Convert kaomojis to display properly
+    const displayKaomojis = (str, index) => {
+        const kaomojis = ["ᕙ( ︡’︡益’︠)ง"];
+        for (let i = index; i < kaomojis.length; i++) {
+            const kaomoji = kaomojis[i];
+            // Check if kaomoji is in str
+            if (str.includes(kaomoji)) {
+                let textList = str.split(kaomoji);
+                // If kaomoji is in str
+                if (textList.length > 1) {
+                    // Change font of the kaomoji
+                    return (
+                        <span>
+                            {displayKaomojis(textList[0], i + 1)}
+                            <span className="kaomoji-display">{kaomoji}</span>
+                            {displayKaomojis(textList.slice(1).join(kaomoji), i)}
+                        </span>
+                    );
+                }
+            }
+        }
+        return str;
+    };
+
+    useEffect(() => {
+        if (props && props.chat) {
+            const chat = props.chat.split('\n').map((str, index) => str === "" 
+                ? <p key={`bubble-chat-${props.index}-${index}`}><br/></p> 
+                : <p key={`bubble-chat-${props.index}-${index}`}>{displayEmojis(str, 0)}</p>);
+            setText(chat);
         }
     }, [props]);
 
     // Reply
     if (props.reply) {
-        const reply = props.reply.split('\n').map((str, index) => str === "" ? <p key={`bubble-reply-${props.index}-${index}`}><br/></p> : <p key={`bubble-reply-${props.index}-${index}`}>{str}</p>);
+        const reply = props.reply.split('\n').map((str, index) => str === "" 
+            ? <p key={`bubble-reply-${props.index}-${index}`}><br/></p> 
+            : <p key={`bubble-reply-${props.index}-${index}`}>{displayEmojis(str, 0)}</p>);
         return (
             <div className="bubble">
                 <div className="bubble-reply">{reply}</div>
@@ -28,8 +78,9 @@ function ChatBubble(props) {
     
     // Emoji
     if (props.emoji) {
+        const emoji = props.emoji;
         return (
-            <p key={`bubble-emoji-${props.index}`} className="bubble-emoji">{props.emoji}</p>
+            <p key={`bubble-emoji-${props.index}`} className="bubble-emoji">{displayEmojis(emoji, 0)}</p>
         );
     }
 
