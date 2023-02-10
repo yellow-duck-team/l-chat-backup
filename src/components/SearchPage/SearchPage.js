@@ -65,7 +65,7 @@ function SearchPage() {
         return (
             <div className="search-result">
                 <h5>{convertDate(result.chatDate.split(" ")[0])} #{result.chatId}</h5>
-                <div className="search-bubble" onClick={() => navigate(`/l-chat-backup/chat/${ArtistNum}/${result.chatId}/msg`)}>
+                <div className="search-bubble" onClick={() => navigate(`/chat/${ArtistNum}/${result.chatId}/msg`)}>
                     <Chat artistNum={ArtistNum} chatId={result.chatId} chatData={result.chatText} noDate={true} />
                 </div>
             </div>
@@ -77,7 +77,7 @@ function SearchPage() {
         <div className="mobile">
             <div className="header">
                 <div className="top">
-                    <div className="top-icon"><ArrowLeftOutlined onClick={() => navigate('/l-chat-backup')} /></div>
+                    <div className="top-icon"><ArrowLeftOutlined onClick={() => navigate('/')} /></div>
                     <div className="top-icon"><MoreOutlined /></div>
                 </div>
             </div>

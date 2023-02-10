@@ -63,7 +63,7 @@ function ArtistPage() {
     };
 
     const onClickThumbnail = (msgNum) => {
-        navigate(`/l-chat-backup/chat/${ArtistNum}/${msgNum}`);
+        navigate(`/chat/${ArtistNum}/${msgNum}`);
     };
 
     const msgImg = CSVText !== [] ? CSVText.map((data, index) => {
@@ -99,7 +99,7 @@ function ArtistPage() {
     return (
         <div className="artistpage">
             <div className="top">
-                <div className="top-icon" onClick={() => navigate('/l-chat-backup')}><ArrowLeftOutlined /></div>
+                <div className="top-icon" onClick={() => navigate('/')}><ArrowLeftOutlined /></div>
                 <div className="top-icon"><MoreOutlined /></div>
             </div>
             <img src={ProfileImg} className="artist-profile" />

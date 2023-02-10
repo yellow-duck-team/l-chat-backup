@@ -15,7 +15,7 @@ function Chat(props) {
     useEffect(() => {
         if (props && props.artistNum && props.chatId && props.chatData) {
             setChatData(props.chatData);
-            console.log(props);
+            // console.log(props);
         }
     }, [props]);
 

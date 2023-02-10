@@ -60,7 +60,7 @@ function ChatPage() {
         <div className="mobile mobile-chat">
             <div className="header">
                 <div className="top">
-                    <div className="top-icon"><ArrowLeftOutlined onClick={() => navigate(`/l-chat-backup/chat/${ArtistNum}/${ChatId}`)} /></div>
+                    <div className="top-icon"><ArrowLeftOutlined onClick={() => navigate(`/chat/${ArtistNum}/${ChatId}`)} /></div>
                     <div className="text">
                         <p className="header-title">댓글</p>
                     </div>

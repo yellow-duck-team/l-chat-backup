@@ -7,6 +7,7 @@ import ArtistPage from './components/ArtistPage/ArtistPage';
 import MessagePage from './components/MessagePage/MessagePage';
 import ChatPage from './components/ChatPage/ChatPage';
 import SearchPage from './components/SearchPage/SearchPage';
+import NotFound from './components/NotFoundPage/NotFound';
 
 export const convertDate = (date) => {
   if (date === "") return "";
@@ -20,11 +21,12 @@ function App() {
   return (
     <div className="App">
       <Routes>
-        <Route path='/l-chat-backup' element={<ArtistListPage />} />
-        <Route path='/l-chat-backup/chat/:artistId' element={<ArtistPage />} />
-        <Route path='/l-chat-backup/chat/:artistId/:chatId' element={<MessagePage />} />
-        <Route path='/l-chat-backup/chat/:artistId/:chatId/msg' element={<ChatPage />} />
-        <Route path='/l-chat-backup/search' element={<SearchPage />} />
+        <Route exact path='/' element={<ArtistListPage />} />
+        <Route path='/chat/:artistId' element={<ArtistPage />} />
+        <Route path='/chat/:artistId/:chatId' element={<MessagePage />} />
+        <Route path='/chat/:artistId/:chatId/msg' element={<ChatPage />} />
+        <Route path='/search' element={<SearchPage />} />
+        <Route component={NotFound} />
       </Routes>
     </div>
   );

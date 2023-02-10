@@ -50,8 +50,8 @@ function ArtistListPage() {
 
     // Search replies
     const onSearch = () => {
-        // console.log(`/l-chat-backup/search?member=${Artist}&text=${SearchText}`);
-        navigate(`/l-chat-backup/search?member=${Artist}&text=${SearchText}`);
+        // console.log(`/search?member=${Artist}&text=${SearchText}`);
+        navigate(`/search?member=${Artist}&text=${SearchText}`);
     };
 
     return (
@@ -59,7 +59,7 @@ function ArtistListPage() {
             <div className="artist-list">
                 {artists && artists.length === 12 && artists.map((artistImg, index) => {
                     if (artistImg.profileImg !== "") {
-                        return <img key={`artist-${index}`} src={artistImg.profileImg} className="artist-list-img" onClick={() => navigate(`/l-chat-backup/chat/${index + 1}`)} />;
+                        return <img key={`artist-${index}`} src={artistImg.profileImg} className="artist-list-img" onClick={() => navigate(`/chat/${index + 1}`)} />;
                     }
                 })}
             </div>

@@ -202,11 +202,11 @@ function MessagePage() {
 
     // Go back to artist page
     const onArtistPage = () => {
-        navigate(`/l-chat-backup/chat/${ArtistNum}/`);
+        navigate(`/chat/${ArtistNum}/`);
     };
 
     const onChatPage = () => {
-        navigate(`/l-chat-backup/chat/${ArtistNum}/${ChatId}/msg`);
+        navigate(`/chat/${ArtistNum}/${ChatId}/msg`);
     };
 
     return (
