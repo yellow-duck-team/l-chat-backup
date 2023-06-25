@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { convertDate } from 'App';
+import { convertDate } from 'lib/date';
 import './Date.css';
 
 function Date(props) {

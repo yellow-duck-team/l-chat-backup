@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { convertDate } from 'App';
+import { convertDate } from 'lib/date';
 import Chat from 'Fab/components/Chat';
 import LoadingSpinner from 'components/LoadingSpinner/LoadingSpinner';
 import MobileLayout from 'components/MobileLayout';

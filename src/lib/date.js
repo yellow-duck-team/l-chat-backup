@@ -1,3 +1,11 @@
+export const convertDate = (date) => {
+  if (date === '') return '';
+  let dateText = date.split('.');
+  if (dateText[1].length < 2) dateText[1] = '0' + dateText[1];
+  if (dateText[2].length < 2) dateText[2] = '0' + dateText[2];
+  return `${dateText[0]}년 ${dateText[1]}월 ${dateText[2]}일`;
+};
+
 export const parseDate = (dateStr) => {
   if (dateStr && typeof dateStr === 'string' && dateStr.length > 0) {
     const [yyyy, mm, dd] = dateStr.split('.');

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { convertDate } from 'App';
+import { convertDate } from 'lib/date';
 import { getFabPromise } from 'api/getData';
 import { chatByMsg } from 'lib/group';
 import { useFabDataContext } from 'context/fabDataState';
