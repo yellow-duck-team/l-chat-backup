@@ -7,19 +7,17 @@ import Profile from './Profile';
 import { NotificationOutlined } from '@ant-design/icons';
 import './Chats.css';
 
-function Chats(props) {
+function Chats({ artistNum, chatId, chatData }) {
   let chatDate = '';
 
   const [ChatData, setChatData] = useState([]);
 
   useEffect(() => {
-    if (props && props.chatId && props.chatData) {
-      const chatData = props.chatData;
-      if (chatData && chatData[0]) {
-        setChatData(chatData.slice(1));
-      }
+    if (!chatId || !chatData) return;
+    if (chatData && chatData[0]) {
+      setChatData(chatData.slice(1));
     }
-  }, [props]);
+  }, [chatId, chatData]);
 
   const Bubbles = ChatData.map((chat, index) => {
     const showChatDate = () => {
@@ -46,8 +44,8 @@ function Chats(props) {
             index={index}
             voice={true}
             chat={chat[0]}
-            artistNum={props.artistNum}
-            chatId={props.chatId}
+            artistNum={artistNum}
+            chatId={chatId}
           />
         );
       }
@@ -66,7 +64,7 @@ function Chats(props) {
               <NotificationOutlined />
             </div>
           ) : (
-            <Profile artistNum={props.artistNum} />
+            <Profile artistNum={artistNum} />
           )}
           <div className="message">{textBubble()}</div>
         </div>

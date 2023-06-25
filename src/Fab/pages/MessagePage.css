@@ -1,26 +1,25 @@
-.mobile.msgpage {
-  justify-content: space-between;
-  align-items: center;
-  background-color: white;
-}
-
-.mobile.msgpage .header {
+.fab.fab-msgpage .header {
   border-bottom: 1px solid #eee;
 }
 
-.mobile.msgpage .body {
+.fab .msgpage {
   position: relative;
+  display: grid;
+  grid-template-rows: auto 60px;
+  background-color: white;
+  overflow-y: scroll;
+  overflow: overlay;
 }
 
 .msgpage .msg-body {
+  grid-row: 1 / 2;
   display: flex;
   flex-flow: row wrap;
   justify-content: flex-start;
   align-items: center;
   padding: 0;
   width: 100%;
-  /* height: 100%; */
-  height: calc(100% - 60px);
+  height: 100%;
   background-color: white;
   overflow-y: scroll;
   overflow: overlay;
@@ -30,7 +29,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 0 10px;
+  padding: 20px 10px;
   width: 100%;
   height: 100%;
   text-align: center;
@@ -68,6 +67,7 @@
 }
 
 .msgpage .artist-msg {
+  margin-bottom: 5px;
   aspect-ratio: 0;
 }
 
@@ -127,17 +127,16 @@
   border: none;
 }
 
-.msgpage .msg-footer {
+.fab .msgpage .msg-footer {
+  grid-row: 2 / 3;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  padding: 10px 0 10px 0;
+  padding: 10px 0;
   border-top: 1px solid #eee;
-  border-bottom-left-radius: 5px;
-  border-bottom-right-radius: 5px;
   width: 100%;
-  height: 60px;
+  height: 100%;
   background-color: white;
 }
 
@@ -181,7 +180,7 @@
 }
 
 .msgpage .msg-footer .footer-right > .footer-icon {
-  margin: 0 10px 5px 10px;
+  margin: 0 10px 0 10px;
   font-size: 18px;
   color: #000;
   cursor: pointer;

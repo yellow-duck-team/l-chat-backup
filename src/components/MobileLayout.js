@@ -1,4 +1,5 @@
 import Header from './Header/Header';
+import './MobileLayout.css';
 
 function MobileLayout({
   className = '',
@@ -7,10 +8,12 @@ function MobileLayout({
   isHeader = true
 }) {
   return (
-    <div className={`mobile ${className}`}>
-      {isHeader && <Header url={headerUrl} />}
-      {children}
-    </div>
+    <>
+      <div className={`mobile ${className}`}>
+        {isHeader && <Header url={headerUrl} />}
+        {children}
+      </div>
+    </>
   );
 }
 

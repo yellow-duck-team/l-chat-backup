@@ -1,0 +1,18 @@
+.mobile {
+  grid-row: 2 / 3;
+  display: grid;
+  grid-template-rows: 60px auto;
+  grid-auto-flow: column;
+  border-radius: 5px;
+  aspect-ratio: 9/16;
+  width: 100%;
+  background-color: var(--light-gray1);
+}
+
+.mobile > div:not(.header) {
+  grid-row: 2 / 3;
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+  width: 100%;
+  height: 100%;
+}

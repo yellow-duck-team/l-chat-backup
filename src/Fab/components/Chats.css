@@ -1,19 +1,6 @@
 .fab .chat {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: flex-start;
+  width: 100%;
   height: 100%;
-}
-
-.fab .chat {
-  overflow-y: scroll;
-  overflow: overlay;
-  margin-left: 20px;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: flex-start;
 }
 
 .chat > .block {
@@ -22,15 +9,6 @@
   justify-content: center;
   align-items: flex-start;
   width: 100%;
-  /* width: 380px; */
-}
-
-/* .chat>.block:first-child {
-    margin-top: 50px;
-} */
-
-.chat > .block:last-child {
-  margin-bottom: 20px;
 }
 
 .chat > .block:not(:first-child) {

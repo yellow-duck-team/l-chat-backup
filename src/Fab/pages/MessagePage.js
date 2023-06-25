@@ -276,8 +276,8 @@ function MessagePage() {
   };
 
   return (
-    <MobileLayout className="msgpage" headerUrl={`/fab/${ArtistNum}/`}>
-      <div className="body">
+    <MobileLayout className="fab fab-msgpage" headerUrl={`/fab/${ArtistNum}/`}>
+      <div className="msgpage">
         {OpenMedia && Media && (
           <MediaSlide openMedia={() => onOpenMedia()} media={Media} />
         )}

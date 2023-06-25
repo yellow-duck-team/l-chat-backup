@@ -7,7 +7,7 @@ import MobileLayout from 'components/MobileLayout';
 import { chatByMsgLine } from 'lib/group';
 import { getFabPromise } from 'api/getData';
 import { useFabDataContext } from 'context/fabDataState';
-import '../components/Chats.css';
+import './ChatPage.css';
 
 function ChatPage() {
   const { fabData, setFabData } = useFabDataContext();
@@ -73,7 +73,7 @@ function ChatPage() {
       {isFetching ? (
         <LoadingSpinner />
       ) : CSVText && CSVText.length > 1 ? (
-        <div className="body">
+        <div className="chat-page">
           <Chats artistNum={artistNum} chatId={chatId} chatData={CSVText} />
         </div>
       ) : (

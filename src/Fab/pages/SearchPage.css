@@ -1,14 +1,17 @@
 .fab .search-results {
   flex-grow: 1;
-  padding: 10px;
-  width: 85%;
-  height: 90%;
+  padding: 20px;
+  width: 100%;
+  height: 100%;
+  overflow-y: scroll;
+  overflow: overlay;
   user-select: none;
 }
 
 .search-block {
   height: 90%;
   overflow-y: scroll;
+  overflow: overlay;
 }
 
 .search-block h5 {
