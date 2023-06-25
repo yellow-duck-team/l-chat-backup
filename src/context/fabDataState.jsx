@@ -4,13 +4,18 @@ import fabArtists from 'assets/fab/artist_info.json';
 
 const initialState = {
   fabData: [],
-  setFabData: () => {}
+  setFabData: () => {},
+  onOpenMedia: () => {},
+  media: null,
+  openMedia: false
 };
 
 export const FabDataContext = createContext(initialState);
 
 export function FabDataProvider({ children }) {
   const [fabData, setFabData] = useState(null);
+  const [media, setMedia] = useState(null);
+  const [openMedia, setOpenMedia] = useState(false);
 
   useEffect(() => {
     // Create a controller
@@ -30,8 +35,19 @@ export function FabDataProvider({ children }) {
     return () => controller?.abort();
   }, []);
 
+  const onOpenMedia = (open, m, path, currImg, imgCount) => {
+    if (open && path && path !== '') {
+      setMedia({ media: m, path, currImg, imgCount });
+    } else {
+      setMedia(null);
+    }
+    setOpenMedia(open);
+  };
+
   return (
-    <FabDataContext.Provider value={{ fabData, setFabData }}>
+    <FabDataContext.Provider
+      value={{ fabData, setFabData, media, openMedia, onOpenMedia }}
+    >
       {children}
     </FabDataContext.Provider>
   );

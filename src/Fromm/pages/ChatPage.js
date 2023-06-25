@@ -3,6 +3,7 @@ import { useLocation } from 'react-router-dom';
 import Profile from 'Fromm/components/Profile';
 import ChatBubble from 'Fromm/components/ChatBubble';
 import Date from 'Fromm/components/Date';
+import MediaSlide from 'components/MediaSlide/MediaSlide';
 import LoadingSpinner from 'components/LoadingSpinner/LoadingSpinner';
 import EmptyList from 'components/EmptyList';
 import MobileLayout from 'components/MobileLayout';
@@ -82,13 +83,16 @@ export function Chats({ artistNum, chatData, isChatList = true }) {
  * @returns Chat page component
  */
 function ChatPage() {
-  const { frommData, setFrommData } = useFrommDataContext();
+  const { frommData, setFrommData, media, openMedia, onOpenMedia } =
+    useFrommDataContext();
   const location = useLocation();
 
   const [ArtistNum, setArtistNum] = useState('');
   const [QueryDate, setQueryDate] = useState([]);
   const [CSVText, setCSVText] = useState([]);
   const [isFetching, setIsFetching] = useState(true);
+  const [Media, setMedia] = useState(null);
+  const [OpenMedia, setOpenMedia] = useState(false);
 
   useEffect(() => {
     const artistNum = location.pathname.split('/')[2];
@@ -137,10 +141,18 @@ function ChatPage() {
     return () => clearTimeout(timerId);
   });
 
+  useEffect(() => {
+    setMedia(media);
+    setOpenMedia(openMedia);
+  }, [media, openMedia]);
+
   const isLoading = isFetching;
 
   return (
-    <MobileLayout className="fromm" headerUrl="/fromm">
+    <MobileLayout className="fromm chatpage-media" headerUrl="/fromm">
+      {OpenMedia && Media && onOpenMedia && (
+        <MediaSlide openMedia={() => onOpenMedia()} media={Media} />
+      )}
       <div className="chatpage">
         {isLoading ? (
           <LoadingSpinner />

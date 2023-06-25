@@ -10,9 +10,13 @@
 }
 
 .mobile > div:not(.header) {
-  grid-row: 2 / 3;
+  grid-row: 1 / 3;
   border-bottom-left-radius: 5px;
   border-bottom-right-radius: 5px;
   width: 100%;
   height: 100%;
+}
+
+.mobile.mobile-header > div:not(.header) {
+  grid-row: 2 / 3;
 }

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import MediaSlide from 'Fab/components/MediaSlide';
+import MediaSlide from 'components/MediaSlide/MediaSlide';
 import LoadingSpinner from 'components/LoadingSpinner/LoadingSpinner';
 import MobileLayout from 'components/MobileLayout';
 import fabArtists from 'assets/fab/artist_info.json';
@@ -190,7 +190,8 @@ function Message({ chatId, CSVText, artistNum, onOpenMedia }) {
 }
 
 function MessagePage() {
-  const { fabData, setFabData } = useFabDataContext();
+  const { fabData, setFabData, media, openMedia, onOpenMedia } =
+    useFabDataContext();
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -256,20 +257,10 @@ function MessagePage() {
     return () => clearTimeout(timerId);
   });
 
-  // Media slide
-  const onOpenMedia = (open, media, path, currImg, imgCount) => {
-    if (open && path && path !== '') {
-      setMedia({
-        media: media,
-        path: path,
-        currImg: currImg,
-        imgCount: imgCount
-      });
-    } else {
-      setMedia(null);
-    }
-    setOpenMedia(open);
-  };
+  useEffect(() => {
+    setMedia(media);
+    setOpenMedia(openMedia);
+  }, [media, openMedia]);
 
   const onChatPage = () => {
     navigate(`/fab/${ArtistNum}/${ChatId}/msg`);

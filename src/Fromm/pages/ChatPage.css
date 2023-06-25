@@ -1,3 +1,7 @@
+.fromm.chatpage-media {
+  position: relative;
+}
+
 .fromm .chatpage {
   position: relative;
   padding-top: 20px;
@@ -129,6 +133,11 @@
   width: 200px;
   height: 200px;
   object-fit: cover;
+  cursor: pointer;
+}
+
+.fromm .bubble.image img:hover {
+  opacity: 0.8;
 }
 
 .fromm .bubble .mention {

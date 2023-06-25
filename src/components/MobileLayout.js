@@ -9,7 +9,7 @@ function MobileLayout({
 }) {
   return (
     <>
-      <div className={`mobile ${className}`}>
+      <div className={`mobile ${className} ${isHeader && 'mobile-header'}`}>
         {isHeader && <Header url={headerUrl} />}
         {children}
       </div>

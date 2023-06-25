@@ -3,6 +3,7 @@ import { parseDate } from 'lib/date';
 import '../pages/ChatPage.css';
 import LoadingSpinner from 'components/LoadingSpinner/LoadingSpinner';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
+import { useFrommDataContext } from 'context/frommDataState';
 
 const mentionedText = (text) => {
   if (!text.includes('@ ')) return errorText(text);
@@ -46,6 +47,8 @@ const newLine = (text) => {
 };
 
 function ChatBubble({ dateStr, artistNum, text, type }) {
+  const { onOpenMedia } = useFrommDataContext();
+
   const [ImageName, setImageName] = useState('');
   const [isLoading, setIsLoading] = useState(true);
 
@@ -95,6 +98,15 @@ function ChatBubble({ dateStr, artistNum, text, type }) {
           src={image}
           alt=""
           onLoad={onMediaLoad}
+          onClick={() =>
+            onOpenMedia(
+              true,
+              require(`assets/fromm/${artistNum}/media/${ImageName}_${text}.PNG`),
+              `assets/fromm/${artistNum}/media/${ImageName}_${text}`,
+              null,
+              null
+            )
+          }
         />
       </div>
     );

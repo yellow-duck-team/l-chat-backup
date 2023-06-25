@@ -4,13 +4,18 @@ import frommArtists from 'assets/fromm/artist_info.json';
 
 const initialState = {
   frommData: [],
-  setFrommData: () => {}
+  setFrommData: () => {},
+  onOpenMedia: () => {},
+  media: null,
+  openMedia: false
 };
 
 export const FrommDataContext = createContext(initialState);
 
 export function FrommDataProvider({ children }) {
   const [frommData, setFrommData] = useState(null);
+  const [media, setMedia] = useState(null);
+  const [openMedia, setOpenMedia] = useState(false);
 
   useEffect(() => {
     // Create a controller
@@ -30,8 +35,19 @@ export function FrommDataProvider({ children }) {
     return () => controller?.abort();
   }, []);
 
+  const onOpenMedia = (open, m, path, currImg, imgCount) => {
+    if (open && path && path !== '') {
+      setMedia({ media: m, path, currImg, imgCount });
+    } else {
+      setMedia(null);
+    }
+    setOpenMedia(open);
+  };
+
   return (
-    <FrommDataContext.Provider value={{ frommData, setFrommData }}>
+    <FrommDataContext.Provider
+      value={{ frommData, setFrommData, media, openMedia, onOpenMedia }}
+    >
       {children}
     </FrommDataContext.Provider>
   );

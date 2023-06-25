@@ -21,18 +21,20 @@ function HomePage() {
   };
 
   return (
-    <MobileLayout className="flex-col select-none" isHeader={false}>
-      {platforms.map((platform, index) => (
-        <div
-          key={`platform-logo-${index}`}
-          className="platform-logo flex-center"
-          onClick={() => onPlatform(platform.name)}
-        >
-          <div className="flex-center">
-            <img src={platform.icon} alt="" />
+    <MobileLayout className="select-none" isHeader={false}>
+      <div className="homepage flex-col">
+        {platforms.map((platform, index) => (
+          <div
+            key={`platform-logo-${index}`}
+            className="platform-logo flex-center"
+            onClick={() => onPlatform(platform.name)}
+          >
+            <div className="flex-center">
+              <img src={platform.icon} alt="" />
+            </div>
           </div>
-        </div>
-      ))}
+        ))}
+      </div>
     </MobileLayout>
   );
 }
