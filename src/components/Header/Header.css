@@ -1,0 +1,25 @@
+.header {
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+  width: 100%;
+  height: 60px;
+  background-color: #fff;
+  user-select: none;
+}
+
+.header .top-icon {
+  font-size: 18px !important;
+}
+
+@media (max-height: 620px) {
+  .header {
+    height: 40px;
+  }
+
+  .header .top-icon {
+    font-size: 14px !important;
+  }
+}

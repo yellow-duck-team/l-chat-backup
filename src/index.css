@@ -1,3 +1,28 @@
+:root {
+  --fab-bg: #f5f4f5;
+  --fromm-bg: #17181b;
+  --fromm-subtext: #595c65;
+  --fromm-chat-date-bg: #26282e;
+  --fromm-chat-date-text: #7e7f88;
+  --fromm-chat-bg: #37383e;
+  --fromm-chat-text: #d3d4d9;
+  --fromm-chat-artist: #84848f;
+  --fromm-chat-time: #5b5c65;
+  --fromm-voice-bg: #311f25;
+  --fromm-voice-text: #e86277;
+  /* Dark: 8457DD */
+  /* Light: E1DDED */
+  --light-gray1: #f5f4f5;
+  --light-gray2: #f1f0f4;
+  --light-gray2-hover: #cfcdd4;
+}
+
+* {
+  -webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
+  -moz-box-sizing: border-box; /* Firefox, other Gecko */
+  box-sizing: border-box; /* Opera/IE 8+ */
+}
+
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
@@ -7,15 +32,63 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+h2 {
+  font-size: 1.875em;
+}
+
+h3 {
+  font-size: 1.705em;
+}
+
+h4 {
+  font-size: 1.535em;
+}
+
+h5 {
+  font-size: 1.365em;
+}
+
+p,
+div {
+  font-size: 0.875em;
+}
+
+select,
+input,
+button {
+  font-size: 0.875em !important;
+}
+
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
 
 .emoji-display {
-  font-family: "Noto Color Emoji", "Apple Color Emoji", "Segoe UI Emoji", Times, Symbola, Aegyptus, Code2000, Code2001, Code2002, Musica, serif, LastResort !important;
+  font-family: 'Noto Color Emoji', 'Apple Color Emoji', 'Segoe UI Emoji', Times,
+    Symbola, Aegyptus, Code2000, Code2001, Code2002, Musica, serif, LastResort !important;
 }
 
 .kaomoji-display {
-  font-family: "Gill Sans" !important;
+  font-family: 'Gill Sans' !important;
+}
+
+::-webkit-scrollbar {
+  border-radius: 5px !important;
+  background-color: rgba(238, 238, 238, 0.1) !important;
+}
+
+::-webkit-scrollbar-track {
+  border-radius: 5px !important;
+  background-color: rgba(220, 220, 220, 0.5) !important;
+}
+
+::-webkit-scrollbar-track-piece {
+  border-radius: 5px !important;
+  background-color: rgba(220, 220, 220, 0.5) !important;
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 50px !important;
+  background-color: rgba(102, 102, 102, 0.9) !important;
 }

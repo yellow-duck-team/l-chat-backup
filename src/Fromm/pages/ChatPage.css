@@ -1,0 +1,189 @@
+.fromm .chatpage {
+  position: relative;
+  padding-top: 20px;
+  width: 100%;
+  height: 100%;
+  background-color: var(--fromm-bg);
+  overflow-y: scroll;
+  overflow: overlay;
+}
+
+.fromm .chat-date {
+  margin: 15px 0;
+}
+
+.fromm .chat-date.first-date {
+  margin-top: 0;
+}
+
+.fromm .chat-date-text {
+  padding: 8px 16px;
+  border-radius: 30px;
+  width: fit-content;
+  background-color: var(--fromm-chat-date-bg);
+  font-size: 12px;
+  color: var(--fromm-chat-date-text);
+}
+
+.fromm .chat-piece {
+  margin: 0 0 15px 15px;
+}
+
+.fromm .profile > img {
+  width: 40px;
+  aspect-ratio: 1/1;
+  object-fit: cover;
+  border-radius: 100px;
+}
+
+.fromm .chat-r {
+  margin-left: 10px;
+}
+
+.fromm .artist-name {
+  margin-top: 0;
+  margin-bottom: 5px;
+  font-size: 12px;
+  color: var(--fromm-chat-artist);
+}
+
+.fromm .bubble {
+  border-radius: 2px 20px 20px 20px;
+  padding: 13px 14px;
+  background-color: var(--fromm-chat-bg);
+  max-width: 200px;
+  color: var(--fromm-chat-text);
+  /* white-space: normal; */
+  word-break: break-all;
+  overflow-wrap: break-all;
+}
+
+.fromm .bubble,
+.fromm .bubble .mention,
+.fromm .bubble p,
+.fromm .bubble span {
+  font-size: 14px !important;
+}
+
+.fromm .bubble.deleted {
+  color: var(--fromm-chat-time);
+  user-select: none;
+}
+
+.fromm .bubble.deleted span {
+  margin-right: 5px;
+}
+
+.fromm .bubble.voice {
+  border-radius: 20px;
+  padding: 0;
+  width: 200px;
+  height: 32px;
+}
+
+.fromm .bubble.voice audio {
+  border-radius: 20px;
+  padding: 0 !;
+  width: 100%;
+  height: 100%;
+  background-color: var(--fromm-chat-bg);
+}
+
+.fromm .bubble.voice audio::-webkit-media-controls-panel {
+  background-color: var(--fromm-chat-bg);
+}
+
+.fromm .bubble.voice audio::-webkit-media-controls-panel {
+  padding: 0;
+}
+
+.fromm .bubble.voice audio::-webkit-media-controls-current-time-display,
+.fromm .bubble.voice audio::-webkit-media-controls-time-remaining-display {
+  font-size: 10px !important;
+  color: var(--fromm-chat-text);
+}
+
+.fromm .bubble.video {
+  border-radius: 20px;
+  padding: 0;
+  width: 200px;
+}
+
+.fromm .bubble.video video {
+  border-radius: 20px;
+  border: none;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.fromm .bubble.image {
+  border-radius: 20px;
+  padding: 0;
+  width: 200px;
+  height: 200px;
+}
+
+.fromm .bubble.image img {
+  border-radius: 20px;
+  width: 200px;
+  height: 200px;
+  object-fit: cover;
+}
+
+.fromm .bubble .mention {
+  font-weight: bold;
+  color: skyblue;
+}
+
+.fromm .bubble-time {
+  justify-content: flex-end;
+  align-items: flex-start;
+  margin: 0 5px;
+  font-size: 12px;
+  color: var(--fromm-chat-time);
+}
+
+@media (max-height: 620px) {
+  .fromm .chat-date-text {
+    font-size: 0.8em;
+  }
+
+  .fromm .profile > img {
+    width: 30px;
+  }
+
+  .fromm .artist-name {
+    font-size: 0.8em;
+  }
+
+  .fromm .bubble {
+    border-radius: 2px 13px 13px 13px;
+    padding: 9px 11px;
+    max-width: 100px;
+  }
+
+  .fromm .bubble,
+  .fromm .bubble .mention,
+  .fromm .bubble p,
+  .fromm .bubble span {
+    font-size: 0.875em !important;
+  }
+
+  .fromm .bubble.video,
+  .fromm .bubble.video video {
+    border-radius: 13px;
+    width: 100px;
+  }
+
+  .fromm .bubble.image,
+  .fromm .bubble.image img {
+    border-radius: 13px;
+    width: 100px;
+    height: 100px;
+  }
+
+  .fromm .bubble-time {
+    font-size: 0.8em;
+  }
+}

@@ -1,0 +1,115 @@
+.fromm-artist-list {
+  position: relative;
+  padding-top: 20px;
+  width: 100%;
+  height: 100%;
+  background-color: var(--fromm-bg);
+  user-select: none;
+}
+
+.fromm-artist {
+  margin: 0 10px;
+  justify-content: flex-start;
+  align-items: center;
+  border-radius: 10px;
+  padding: 10px 10px;
+  color: white;
+  cursor: pointer;
+}
+
+.fromm-artist:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.fromm-artist img {
+  margin-right: 20px;
+  border-radius: 100px;
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+}
+
+.from-artist-info {
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.from-artist-info p {
+  margin: 0;
+  font-size: 14px;
+}
+
+.from-artist-info .description {
+  margin-top: 5px;
+  font-size: 12px;
+  color: var(--fromm-subtext);
+}
+
+/* Categorize Modal */
+.categorize-modal-bg {
+  z-index: 500;
+  position: absolute;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.75);
+}
+
+.categorize-modal {
+  justify-content: space-between;
+  align-items: center;
+  width: 60%;
+  height: 150px;
+  border-radius: 10px;
+  background-color: var(--light-gray2);
+}
+
+.categorize-modal.categorize-modal-date {
+  max-height: 150px;
+  overflow-y: scroll;
+  overflow: overlay;
+}
+
+.category-btn {
+  flex: 1;
+  padding: 15px;
+  width: 100%;
+  background-color: var(--light-gray2);
+  font-size: 2em;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.category-btn:first-child {
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+}
+
+.category-btn:last-child {
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+}
+
+.category-btn:not(:last-child) {
+  border-bottom: 1px solid var(--light-gray2-hover);
+}
+
+.categorize-modal div:hover {
+  background-color: var(--light-gray2-hover);
+}
+
+@media (max-height: 620px) {
+  .fromm-artist img {
+    margin-right: 15px;
+    width: 35px;
+    height: 35px;
+  }
+
+  .from-artist-info p {
+    font-size: 0.9em;
+  }
+
+  .from-artist-info .description {
+    font-size: 0.8em;
+  }
+}

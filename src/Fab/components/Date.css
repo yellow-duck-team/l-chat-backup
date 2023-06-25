@@ -1,0 +1,19 @@
+.date {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 5px;
+  margin-bottom: 15px;
+  border-radius: 50px;
+  padding: 6px 13px;
+  background-color: #bcbcbd;
+  font-size: 12px;
+  font-weight: 500;
+  color: white;
+}
+
+@media (max-height: 620px) {
+  .date {
+    font-size: 0.9em;
+  }
+}

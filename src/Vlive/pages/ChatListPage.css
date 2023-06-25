@@ -1,0 +1,27 @@
+.vlive-chat-list {
+  justify-content: flex-start;
+  align-items: center;
+  padding: 10px 30px;
+  width: 100%;
+  height: 100%;
+  overflow-y: visible;
+}
+
+.vlive .chat-preview {
+  margin-bottom: 15px;
+  padding: 15px;
+  border-radius: 5px;
+  width: 100%;
+  background-color: #ddd;
+  color: #969696;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.vlive .chat-preview:hover {
+  background-color: #ccc;
+}
+
+.vlive .chat-preview h3 {
+  margin: 0;
+}

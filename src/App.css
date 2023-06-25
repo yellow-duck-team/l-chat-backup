@@ -1,87 +1,80 @@
-/* Dark: 8457DD */
-/* Light: E1DDED */
-
-.App {
+.App-bg {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
   background-color: rgb(30, 30, 30);
+  width: 100vw;
+  height: 100vh;
+}
+
+.App {
+  display: grid;
+  grid-template-rows: repeat(12, minmax(0, 1fr));
+  grid-auto-flow: column;
+  aspect-ratio: 9/16;
+  height: 80%;
 }
 
 .mobile {
+  grid-row: 2 / span 12;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  width: 50.63%;
-  height: 90%;
-  min-width: 390px;
-  min-height: 693.33px;
-  max-width: 400px;
-  max-height: 711.11px;
-  background-color: #F5F4F5;
+  border-radius: 5px;
+  width: 100%;
+  height: 100%;
+  background-color: var(--fab-bg);
 }
 
 .mobile.mobile-chat {
   justify-content: flex-start;
 }
 
-.mobile>.header {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: center;
-  width: 100%;
-  height: 60px;
-  background-color: #FFF;
-  user-select: none;
-}
-
-.header>.top {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  width: 90%;
-  height: 100%;
-}
-
-.mobile.mobile-chat .block .top>.date {
+.mobile.mobile-chat .block .top > .date {
   margin-right: 20px;
 }
 
-.header>.top>.top-icon {
-  font-size: 18px;
-}
-
-.header>.top>.text {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
-
-.header>.top>.text>.header-title {
-  font-size: 14px;
-  font-weight: bold;
-}
-
-.mobile>.body {
+.mobile > .body {
   width: 100%;
-  height: calc(100% - 60px);
-  background-color: #F5F4F5;
+  height: calc(100% - 54.93px);
+  /* height: 100%; */
+  background-color: var(--light-gray1);
 }
 
 .App-link {
   color: #61dafb;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.flex-row {
+  display: flex;
+  flex-direction: row;
+}
+
+.flex-col {
+  display: flex;
+  flex-direction: column;
+}
+
+.flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.select-none {
+  user-select: none;
+}
+
+.hidden {
+  visibility: hidden;
+}
+
+.horizontal-line {
+  margin: 10px 0 20px;
+  border-bottom: 1px solid #fff;
+  width: 100%;
+  text-align: center;
+  line-height: 0.1em;
+  user-select: none;
 }
