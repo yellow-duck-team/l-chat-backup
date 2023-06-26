@@ -69,7 +69,8 @@
 
 @media (max-height: 800px) {
   .App {
-    width: 95%;
+    aspect-ratio: 1/2;
+    width: 80%;
     height: auto;
   }
 }
