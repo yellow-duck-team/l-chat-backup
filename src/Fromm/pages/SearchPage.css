@@ -1,4 +1,10 @@
+.fromm-search-bar {
+  width: 90%;
+  cursor: unset;
+}
+
 .fromm-search {
+  grid-column: 3 / 4;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -34,10 +40,6 @@
 .fromm .search-list {
   align-items: center;
   height: 100%;
-}
-
-.fromm-search-bar {
-  width: 90%;
 }
 
 .fromm .search-results {
