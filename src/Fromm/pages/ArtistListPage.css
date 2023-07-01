@@ -10,9 +10,10 @@
 }
 
 .fromm-artist {
+  display: grid;
+  grid-template-columns: 50px 20px auto;
+  grid-auto-flow: row;
   margin: 0 10px;
-  justify-content: flex-start;
-  align-items: center;
   border-radius: 10px;
   padding: 10px 10px;
   color: white;
@@ -24,7 +25,7 @@
 }
 
 .fromm-artist img {
-  margin-right: 20px;
+  grid-column: 1 / 2;
   border-radius: 100px;
   width: 50px;
   height: 50px;
@@ -32,13 +33,19 @@
 }
 
 .from-artist-info {
+  grid-column: 3 / 4;
   justify-content: center;
   align-items: flex-start;
+  min-width: 100%;
 }
 
 .from-artist-info p {
   margin: 0;
   font-size: 14px;
+  width: 100%;
+  text-overflow: ellipsis;
+  overflow-x: hidden;
+  white-space: nowrap;
 }
 
 .from-artist-info .description {
@@ -108,6 +115,7 @@
   }
 
   .from-artist-info p {
+    max-width: 200px;
     font-size: 0.9em;
   }
 

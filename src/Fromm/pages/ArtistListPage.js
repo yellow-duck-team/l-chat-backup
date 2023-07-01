@@ -22,15 +22,15 @@ function Artist({ artist, showModal }) {
   };
 
   return (
-    <div className="fromm-artist flex-row" onClick={onArtist}>
+    <div className="fromm-artist" onClick={onArtist}>
       <img
         src={require(`assets/fromm/${artist.num}/profile/${artist.profile}.PNG`)}
         alt=""
       />
       <div className="from-artist-info flex-col">
         <p>{artist.name}</p>
-        {artist.description !== '' && (
-          <p className="description">{artist.description}</p>
+        {artist.description && artist.description.length > 0 && artist.description.slice(-1) && (
+          <p className="description">{artist.description.slice(-1)}</p>
         )}
       </div>
     </div>
