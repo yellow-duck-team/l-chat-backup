@@ -1,17 +1,41 @@
 {
   "9": {
-    "name": "💟",
+    "name": ["이브", "여보", "건강보험", "내사랑ㅋ", "💟", "🍎🐰"],
     "description": ["", "피할 수 없다면 즐.. 즐입니다", "피할 수 없다면 즐"],
-    "profile": "00"
+    "profileText": [
+      { "name": 0, "description": 0 },
+      { "name": 0, "description": 1 },
+      { "name": 1, "description": 1 },
+      { "name": 2, "description": 1 },
+      { "name": 3, "description": 1 },
+      { "name": 4, "description": 1 },
+      { "name": 5, "description": 1 },
+      { "name": 5, "description": 2 }
+    ],
+    "profile": "01",
+    "background": "00"
   },
   "11": {
-    "name": "고원",
-    "description": ["", "오빛니가너무좋아답을알려줘어떻게해야할지니가너무좋다고어떻게하면너를덜좋아할수있는지알려달라고정말미치겠단말이야"],
-    "profile": "00"
+    "name": ["고원"],
+    "description": [
+      "",
+      "오빛니가너무좋아답을알려줘어떻게해야할지니가너무좋다고어떻게하면너를덜좋아할수있는지알려달라고정말미치겠단말이야"
+    ],
+    "profileText": [
+      { "name": 0, "description": 0 },
+      { "name": 0, "description": 1 }
+    ],
+    "profile": "01",
+    "background": "00"
   },
   "12": {
-    "name": "혜주",
+    "name": ["혜주"],
     "description": ["", "21살이에요"],
-    "profile": "00"
+    "profileText": [
+      { "name": 0, "description": 0 },
+      { "name": 0, "description": 1 }
+    ],
+    "profile": "02",
+    "background": "00"
   }
 }

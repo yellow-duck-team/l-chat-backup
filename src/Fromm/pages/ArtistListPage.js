@@ -28,10 +28,12 @@ function Artist({ artist, showModal }) {
         alt=""
       />
       <div className="from-artist-info flex-col">
-        <p>{artist.name}</p>
-        {artist.description && artist.description.length > 0 && artist.description.slice(-1) && (
-          <p className="description">{artist.description.slice(-1)}</p>
-        )}
+        <p>{artist.name && artist.name.length > 0 && artist.name.slice(-1)}</p>
+        {artist.description &&
+          artist.description.length > 0 &&
+          artist.description.slice(-1) && (
+            <p className="description">{artist.description.slice(-1)}</p>
+          )}
       </div>
     </div>
   );

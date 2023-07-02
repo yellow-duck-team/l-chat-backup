@@ -60,9 +60,10 @@ function CategorizeModal({ artistNum, showModal, isHidden }) {
     e.preventDefault();
     e.stopPropagation();
     // Navigate by categorization
-    if (category === 1) navigate(`/fromm/${artistNum}`);
-    if (category === 2) setCategorize(true);
-    if (category === 3) navigate(`/fromm/${artistNum}/search`);
+    if (category === 1) navigate(`/fromm/profile/${artistNum}`);
+    if (category === 2) navigate(`/fromm/${artistNum}`);
+    if (category === 3) setCategorize(true);
+    if (category === 4) navigate(`/fromm/${artistNum}/search`);
   };
 
   const onClickDate = (e, date) => {
@@ -108,17 +109,23 @@ function CategorizeModal({ artistNum, showModal, isHidden }) {
             className="category-btn flex-center"
             onClick={(e) => onClickCategory(e, 1)}
           >
-            전체 채팅 보기
+            프로필 보기
           </div>
           <div
             className="category-btn flex-center"
             onClick={(e) => onClickCategory(e, 2)}
           >
-            날짜 별로 보기
+            전체 채팅 보기
           </div>
           <div
             className="category-btn flex-center"
             onClick={(e) => onClickCategory(e, 3)}
+          >
+            날짜 별로 보기
+          </div>
+          <div
+            className="category-btn flex-center"
+            onClick={(e) => onClickCategory(e, 4)}
           >
             댓글 검색
           </div>

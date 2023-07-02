@@ -1,0 +1,75 @@
+.fromm .profile-page {
+  z-index: 600;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background-color: #000;
+  user-select: none;
+}
+
+.fromm .profile-page .profile-front {
+  z-index: 600;
+  display: grid;
+  grid-template-rows: auto 50px;
+  grid-auto-flow: column;
+  padding: 20px;
+  width: 100%;
+  height: 100%;
+}
+
+.fromm .profile-front .profile {
+  grid-row: 1 / 2;
+  z-index: 600;
+  justify-content: flex-end;
+  align-items: center;
+  padding-bottom: 50px;
+  color: #fff;
+}
+
+.fromm .profile-front .profile .profile-name {
+  font-size: 2em;
+  font-weight: bold;
+}
+
+.fromm .profile-front .profile .profile-description {
+  margin: 0;
+  font-size: 1.6em;
+}
+
+.fromm .profile-front .profile-img {
+  border-radius: 100px;
+  width: 120px;
+  height: 120px;
+  object-fit: cover;
+}
+
+.fromm .profile-front .profile-button {
+  z-index: 600;
+  border-radius: 10px;
+  background-color: var(--fromm-button);
+  color: #fff;
+  font-size: 2em;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.fromm .profile-front .profile-button:hover {
+  background-color: var(--fromm-voice-text);
+}
+
+.fromm .profile-page .bg-img {
+  grid-row: 2 / 3;
+  z-index: 100;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  margin-left: auto;
+  margin-right: auto;
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.5;
+}

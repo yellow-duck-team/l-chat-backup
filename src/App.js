@@ -21,6 +21,8 @@ import FabSearchPage from 'Fab/pages/SearchPage';
 import FrommArtistListPage from 'Fromm/pages/ArtistListPage';
 import FrommChatPage from 'Fromm/pages/ChatPage';
 import FrommSearchPage from 'Fromm/pages/SearchPage';
+import FrommProfilePage from 'Fromm/pages/ProfilePage';
+import FrommProfileHistoryPage from 'Fromm/pages/ProfileHistoryPage';
 
 const contextProvider = (service, children) => {
   if (service === 1) return <VliveDataProvider>{children}</VliveDataProvider>;
@@ -74,6 +76,14 @@ function App() {
           <Route
             path="/fromm/:artistId/search"
             element={contextProvider(3, <FrommSearchPage />)}
+          />
+          <Route
+            path="/fromm/profile/:artistId"
+            element={contextProvider(3, <FrommProfilePage />)}
+          />
+          <Route
+            path="/fromm/profile/:artistId/history"
+            element={contextProvider(3, <FrommProfileHistoryPage />)}
           />
           <Route component={NotFound} />
         </Routes>
