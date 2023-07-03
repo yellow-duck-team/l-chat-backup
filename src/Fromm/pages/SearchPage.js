@@ -137,9 +137,9 @@ function SearchPage() {
       <div
         key={`fromm-search-chat-${index}`}
         className="search-result-chat"
-        onClick={() => onResult(chat.Date)}
+        onClick={() => onResult(chat.date)}
       >
-        <h4>{chat.Date}</h4>
+        <h4>{chat.date}</h4>
         <Chat
           artistNum={ArtistNum.num}
           chatData={[]}

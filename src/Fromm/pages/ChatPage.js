@@ -17,11 +17,11 @@ export function Chat({ artistNum, chatData, chat, index, isChatList }) {
   const chatDate = () => {
     if (index !== 0) {
       const prevChat = chatData[index - 1];
-      if (prevChat.Type === 'Default' || prevChat.Date !== chat.Date) {
-        return <Date date={chat.Date} />;
+      if (prevChat.type === 'Default' || prevChat.date !== chat.date) {
+        return <Date date={chat.date} />;
       }
-    } else if (chatData[index].Type !== 'Default') {
-      return <Date date={chat.Date} index={index} />;
+    } else if (chatData[index].type !== 'Default') {
+      return <Date date={chat.date} index={index} />;
     }
   };
 
@@ -29,18 +29,20 @@ export function Chat({ artistNum, chatData, chat, index, isChatList }) {
     <div className="chat">
       {isChatList && chatDate()}
       <div className="chat-piece flex-row">
-        <Profile artistNum={artistNum} imgNum={chat.Profile} />
+        <Profile artistNum={artistNum} imgNum={chat.profile} />
         <div className="chat-r">
-          <p className="artist-name select-none">{chat.Name}</p>
+          <p className="artist-name select-none">{chat.name}</p>
           <div className="chat-r-b flex-row">
             <ChatBubble
               artistNum={artistNum}
-              dateStr={chat.Date}
-              text={chat.Text}
-              type={chat.Type}
+              dateStr={chat.date}
+              text={chat.text}
+              type={chat.type}
+              mediaurl={chat.mediaurl}
+              extension={chat.extension}
             />
             <p className="bubble-time flex-col select-none">
-              {formatTime(chat.Time)}
+              {formatTime(chat.time)}
             </p>
           </div>
         </div>
@@ -52,12 +54,12 @@ export function Chat({ artistNum, chatData, chat, index, isChatList }) {
 export function Chats({ artistNum, chatData, isChatList = true }) {
   const chatBubble = chatData.map((chat, index) => {
     if (
-      chat.Date === '' ||
-      chat.Text === '' ||
-      chat.Type === '' ||
-      chat.Name === '' ||
-      chat.Profile === '' ||
-      chat.Background === ''
+      chat.date === '' ||
+      chat.text === '' ||
+      chat.type === '' ||
+      chat.name === '' ||
+      chat.profile === '' ||
+      chat.background === ''
     )
       return;
 
@@ -116,7 +118,7 @@ function ChatPage() {
     setIsFetching(true);
     if (frommData && Object.keys(frommData).length === 3) {
       if (frommData[ArtistNum] && frommData[ArtistNum].length > 0) {
-        setCSVText(groupByDate(QueryDate, 'Date', frommData[ArtistNum]));
+        setCSVText(groupByDate(QueryDate, 'date', frommData[ArtistNum]));
       }
       setIsFetching(false);
     }
@@ -131,7 +133,7 @@ function ChatPage() {
           const fromm = JSON.parse(JSON.stringify(res));
           if (fromm && fromm.length > 0) {
             setFrommData(fromm);
-            setCSVText(groupByDate(QueryDate, 'Date', fromm));
+            setCSVText(groupByDate(QueryDate, 'date', fromm));
           }
         });
       }

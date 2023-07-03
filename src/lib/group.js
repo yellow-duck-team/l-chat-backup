@@ -27,11 +27,11 @@ export const groupByDate = (date, key, data) => {
 export const chatObjByDate = (data, date, dateStr) => {
   let chatList = [];
   for (let i = 1; i < data.length; i++) {
-    if (dateStr === data[i].Date) {
+    if (dateStr === data[i].date) {
       chatList.push({
         date: date,
-        text: data[i].Text,
-        type: data[i].Type
+        text: data[i].text,
+        type: data[i].type
       });
     } else if (chatList.length > 0) {
       break;
@@ -109,9 +109,9 @@ export const chatByMsgLine = (chatId, data, searchText = null) => {
 export const searchText = (data, text) => {
   let dataArr = [];
   for (let i = 1; i < data.length - 1; i++) {
-    const slicedText = data[i].Text;
+    const slicedText = data[i].text;
     if (!slicedText || slicedText === '') break;
-    if (data[i].Type === 'Text' && slicedText.includes(text)) {
+    if (data[i].type === 'Text' && slicedText.includes(text)) {
       dataArr.push(data[i]);
     }
   }

@@ -4,6 +4,7 @@ import '../pages/ChatPage.css';
 import LoadingSpinner from 'components/LoadingSpinner/LoadingSpinner';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 import { useFrommDataContext } from 'context/frommDataState';
+import { spaceId } from 'contentful/contentfulApi';
 
 const mentionedText = (text) => {
   if (!text.includes('@ ')) return errorText(text);
@@ -46,7 +47,7 @@ const newLine = (text) => {
   );
 };
 
-function ChatBubble({ dateStr, artistNum, text, type }) {
+function ChatBubble({ dateStr, artistNum, text, type, mediaurl, extension }) {
   const { onOpenMedia } = useFrommDataContext();
 
   const [ImageName, setImageName] = useState('');
@@ -89,7 +90,12 @@ function ChatBubble({ dateStr, artistNum, text, type }) {
   // Image
   if (type === 'Image') {
     if (!dateStr || ImageName === '') return <LoadingSpinner />;
-    const image = require(`assets/fromm/${artistNum}/media/${ImageName}_${text}.PNG`);
+    let image;
+    if (mediaurl && mediaurl !== '' && extension && extension !== '') {
+      image = `https://images.ctfassets.net/${spaceId}/${mediaurl}/${ImageName}_${text}.${extension}`;
+    } else {
+      image = require(`assets/fromm/${artistNum}/media/${ImageName}_${text}.PNG`);
+    }
     return (
       <div className="bubble image">
         {isLoading && <LoadingSpinner />}
@@ -101,7 +107,7 @@ function ChatBubble({ dateStr, artistNum, text, type }) {
           onClick={() =>
             onOpenMedia(
               true,
-              require(`assets/fromm/${artistNum}/media/${ImageName}_${text}.PNG`),
+              image,
               `assets/fromm/${artistNum}/media/${ImageName}_${text}`,
               null,
               null

@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
+import { useFrommDataContext } from 'context/frommDataState';
 import ArtistInfo from 'assets/fromm/artist_info.json';
 import MobileLayout from 'components/MobileLayout';
 import LoadingSpinner from 'components/LoadingSpinner/LoadingSpinner';
-import './ProfileHistoryPage.css';
-import { useFrommDataContext } from 'context/frommDataState';
 import MediaSlide from 'components/MediaSlide/MediaSlide';
+import './ProfileHistoryPage.css';
 
 // List of artists in fromm
 const artistList = [];
@@ -22,7 +22,7 @@ function ProfileText({ name, description }) {
   );
 }
 
-function ProfileMediaList({ artistNum, type, mediaNum }) {
+function ProfileMediaList({ artistNum, type, media, mediaNum }) {
   const { onOpenMedia } = useFrommDataContext();
   let fetchedMedia = 0;
 
@@ -35,18 +35,14 @@ function ProfileMediaList({ artistNum, type, mediaNum }) {
     fetchedMedia++;
   };
 
-  useEffect(() => {
-    if (!artistNum || !type || mediaNum === undefined || mediaNum === null)
-      return;
-    let i = 0;
+  const getMediaList = (num) => {
     const images = [];
-    while (i < mediaNum + 1) {
-      const imgPath = `assets/fromm/${artistNum}/${type}/${
-        i < 10 ? `0${i}` : `${i}`
-      }.PNG`;
-      const image = require(`assets/fromm/${artistNum}/${type}/${
-        i < 10 ? `0${i}` : `${i}`
-      }.PNG`);
+    for (let i = 0; i < num; i++) {
+      const numStr = i < 10 ? `0${i}` : `${i}`;
+      const imgPath = `assets/fromm/${artistNum}/${type}/${numStr}.PNG`;
+      let image = media
+        ? media[i]
+        : require(`assets/fromm/${artistNum}/${type}/${numStr}.PNG`);
       images.push(
         <div
           key={`profile-history-image-${type}-${i}`}
@@ -60,8 +56,18 @@ function ProfileMediaList({ artistNum, type, mediaNum }) {
           />
         </div>
       );
-      i++;
     }
+    return images;
+  };
+
+  useEffect(() => {
+    if (!artistNum || !type) return;
+    if (
+      (media === undefined || media === null) &&
+      (mediaNum === undefined || mediaNum === null)
+    )
+      return;
+    let images = getMediaList(mediaNum ? mediaNum + 1 : media.length);
     setMediaList(images);
   }, [artistNum, type, mediaNum, isLoading]);
 
@@ -69,8 +75,8 @@ function ProfileMediaList({ artistNum, type, mediaNum }) {
     if (
       !artistNum ||
       !type ||
-      mediaNum === undefined ||
-      mediaNum === null ||
+      ((media === undefined || media === null) &&
+        (mediaNum === undefined || mediaNum === null)) ||
       !isLoading ||
       !MediaList
     )
@@ -91,7 +97,7 @@ function ProfileMediaList({ artistNum, type, mediaNum }) {
  * @returns Artist list page component
  */
 function ProfileHistoryPage() {
-  const { media, openMedia, onOpenMedia } = useFrommDataContext();
+  const { profile, media, openMedia, onOpenMedia } = useFrommDataContext();
   const location = useLocation();
 
   const [Artist, setArtist] = useState(null);
@@ -102,13 +108,34 @@ function ProfileHistoryPage() {
   useEffect(() => {
     if (!location.pathname) return;
     const artistNum = location.pathname.split('/')[3];
-    for (let i = 0; i < artistList.length; i++) {
-      if (artistList[i].num === artistNum) {
-        setArtist(artistList[i]);
+    if (profile && profile[artistNum]) {
+      const artist = profile[artistNum];
+      setArtist({
+        num: artistNum,
+        name: artist.name,
+        description: artist.description,
+        profileText: artist.profileText.toReversed(),
+        profile: artist.profile,
+        background: artist.background
+      });
+    } else {
+      for (let i = 0; i < artistList.length; i++) {
+        const artist = artistList[i];
+        if (artist.num === artistNum) {
+          setArtist({
+            num: artistNum,
+            name: artist.name,
+            description: artist.description,
+            profileText: artist.profileText.toReversed(),
+            profile: artist.profile,
+            background: artist.background
+          });
+          break;
+        }
       }
     }
     setIsFetching(false);
-  }, [location.pathname]);
+  }, [location.pathname, profile]);
 
   useEffect(() => {
     setMedia(media);
@@ -134,15 +161,13 @@ function ProfileHistoryPage() {
               className={`profile-text-list flex-col ${isFetching && 'hidden'}`}
             >
               {Artist?.profileText?.length > 0 &&
-                Artist.profileText
-                  .toReversed()
-                  .map((a, index) => (
-                    <ProfileText
-                      key={`profile-history-text-${index}`}
-                      name={Artist.name[a.name]}
-                      description={Artist.description[a.description]}
-                    />
-                  ))}
+                Artist.profileText.map((a, index) => (
+                  <ProfileText
+                    key={`profile-history-text-${index}`}
+                    name={Artist.name[a.name]}
+                    description={Artist.description[a.description]}
+                  />
+                ))}
             </div>
           </div>
         </div>
@@ -157,6 +182,7 @@ function ProfileHistoryPage() {
               <ProfileMediaList
                 artistNum={Artist.num}
                 type="profile"
+                media={Artist.profile}
                 mediaNum={Artist?.profile ? Number(Artist.profile) : -1}
               />
             )}
@@ -173,6 +199,7 @@ function ProfileHistoryPage() {
               <ProfileMediaList
                 artistNum={Artist.num}
                 type="background"
+                media={Artist.background}
                 mediaNum={Artist?.background ? Number(Artist.background) : -1}
               />
             )}

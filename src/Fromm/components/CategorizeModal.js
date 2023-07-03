@@ -32,7 +32,7 @@ function CategorizeModal({ artistNum, showModal, isHidden }) {
     // Fetch data
     if (frommData && Object.keys(frommData).length === 3) {
       if (frommData[artistNum] && frommData[artistNum].length > 0) {
-        setCSVText(Object.keys(groupByKey(frommData[artistNum], 'Date')));
+        setCSVText(Object.keys(groupByKey(frommData[artistNum], 'date')));
       }
       setIsFetching(false);
     }
@@ -46,7 +46,7 @@ function CategorizeModal({ artistNum, showModal, isHidden }) {
         const fromm = JSON.parse(JSON.stringify(res));
         if (fromm && fromm.length > 0) {
           setFrommData(fromm);
-          setCSVText(Object.keys(groupByKey(fromm, 'Date')));
+          setCSVText(Object.keys(groupByKey(fromm, 'date')));
         }
         setIsFetching(false);
       });

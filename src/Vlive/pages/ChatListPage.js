@@ -46,8 +46,8 @@ function ChatListPage() {
     if (vliveData && vliveData.length > 0) {
       let chatList = [];
       for (let i = 1; i < vliveData.length; i++) {
-        if (!chatList.includes(vliveData[i].Date)) {
-          chatList.push(vliveData[i].Date);
+        if (!chatList.includes(vliveData[i].date)) {
+          chatList.push(vliveData[i].date);
         }
       }
       setChatList(chatList);
@@ -65,8 +65,8 @@ function ChatListPage() {
             setVliveData(vlive);
             let chatList = [];
             for (let i = 1; i < vlive.length; i++) {
-              if (!chatList.includes(vlive[i].Date)) {
-                chatList.push(vlive[i].Date);
+              if (!chatList.includes(vlive[i].date)) {
+                chatList.push(vlive[i].date);
               }
             }
             setChatList(chatList);

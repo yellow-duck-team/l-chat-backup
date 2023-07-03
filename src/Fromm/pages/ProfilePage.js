@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import ArtistInfo from 'assets/fromm/artist_info.json';
 import MobileLayout from 'components/MobileLayout';
 import LoadingSpinner from 'components/LoadingSpinner/LoadingSpinner';
+import { useFrommDataContext } from 'context/frommDataState';
 import './ProfilePage.css';
 
 // List of artists in fromm
@@ -16,6 +17,7 @@ for (const artist in ArtistInfo) {
  * @returns Artist list page component
  */
 function ProfilePage() {
+  const { profile } = useFrommDataContext();
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -27,13 +29,32 @@ function ProfilePage() {
   useEffect(() => {
     if (!location.pathname) return;
     const artistNum = location.pathname.split('/')[3];
-    for (let i = 0; i < artistList.length; i++) {
-      if (artistList[i].num === artistNum) {
-        setArtist(artistList[i]);
+    if (profile && profile[artistNum]) {
+      const artist = profile[artistNum];
+      setArtist({
+        num: artistNum,
+        name: artist.name.slice(-1),
+        description: artist.description.slice(-1),
+        profile: artist.profile.slice(-1),
+        background: artist.background.slice(-1)
+      });
+    } else {
+      for (let i = 0; i < artistList.length; i++) {
+        const artist = artistList[i];
+        if (artist.num === artistNum) {
+          setArtist({
+            num: artistNum,
+            name: artist.name.slice(-1),
+            description: artist.description.slice(-1),
+            profile: `assets/fromm/${artistNum}/profile/${artist.profile}.PNG`,
+            background: `assets/fromm/${artistNum}/background/${artist.background}.PNG`
+          });
+          break;
+        }
       }
     }
     setIsFetching(false);
-  }, [location.pathname]);
+  }, [location.pathname, profile]);
 
   const onMediaLoad = (type) => {
     if (type === 0) setIsProfileLoading(false);
@@ -54,15 +75,13 @@ function ProfilePage() {
           {Artist && (
             <div className="profile flex-col">
               <img
-                src={require(`assets/fromm/${Artist.num}/profile/${Artist.profile}.PNG`)}
+                src={Artist.profile}
                 alt=""
                 className="profile-img"
                 onLoad={() => onMediaLoad(0)}
               />
-              <p className="profile-name">{Artist.name.slice(-1)}</p>
-              <p className="profile-description">
-                {Artist.description.slice(-1)}
-              </p>
+              <p className="profile-name">{Artist.name}</p>
+              <p className="profile-description">{Artist.description}</p>
             </div>
           )}
           <div className="profile-button flex-center" onClick={onButton}>
@@ -71,7 +90,7 @@ function ProfilePage() {
         </div>
         {Artist && (
           <img
-            src={require(`assets/fromm/${Artist.num}/background/${Artist.background}.PNG`)}
+            src={Artist.background}
             alt=""
             className="bg-img"
             onLoad={() => onMediaLoad(1)}
