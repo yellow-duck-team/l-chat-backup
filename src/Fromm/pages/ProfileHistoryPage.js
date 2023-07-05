@@ -39,7 +39,6 @@ function ProfileMediaList({ artistNum, type, media, mediaNum }) {
     const images = [];
     for (let i = 0; i < num; i++) {
       const numStr = i < 10 ? `0${i}` : `${i}`;
-      const imgPath = `assets/fromm/${artistNum}/${type}/${numStr}.PNG`;
       let image = media
         ? media[i]
         : require(`assets/fromm/${artistNum}/${type}/${numStr}.PNG`);
@@ -52,7 +51,7 @@ function ProfileMediaList({ artistNum, type, media, mediaNum }) {
             src={image}
             alt=""
             onLoad={onMediaLoad}
-            onClick={() => onOpenMedia(true, image, imgPath, null, null)}
+            onClick={() => onOpenMedia(true, image, null, null)}
           />
         </div>
       );

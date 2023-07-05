@@ -74,15 +74,7 @@ const renderRichTextImgGrid = (
         <img
           src={image}
           onClick={() =>
-            onOpenMedia(
-              true,
-              image,
-              `assets/fab/${artistNum}/media/${
-                chatId.length === 1 ? '0' + chatId : chatId
-              }`,
-              currImg,
-              totalImgCount + imgCount
-            )
+            onOpenMedia(true, image, currImg, totalImgCount + imgCount)
           }
           alt=""
           className={isLoading ? 'hidden' : ''}

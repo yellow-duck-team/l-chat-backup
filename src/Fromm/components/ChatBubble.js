@@ -107,15 +107,7 @@ function ChatBubble({ dateStr, artistNum, text, type, mediaurl, extension }) {
           src={image}
           alt=""
           onLoad={onMediaLoad}
-          onClick={() =>
-            onOpenMedia(
-              true,
-              image,
-              `assets/fromm/${artistNum}/media/${ImageName}_${text}`,
-              null,
-              null
-            )
-          }
+          onClick={() => onOpenMedia(true, image, null, null)}
         />
       </div>
     );

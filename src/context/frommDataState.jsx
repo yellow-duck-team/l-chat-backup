@@ -70,9 +70,9 @@ export function FrommDataProvider({ children }) {
     return () => controller?.abort();
   }, []);
 
-  const onOpenMedia = (open, m, path, currImg, imgCount) => {
-    if (open && path && path !== '') {
-      setMedia({ media: m, path, currImg, imgCount });
+  const onOpenMedia = (open, m, currImg, imgCount) => {
+    if (open && m) {
+      setMedia({ media: m, currImg, imgCount });
     } else {
       setMedia(null);
     }
