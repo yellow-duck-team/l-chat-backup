@@ -42,30 +42,6 @@
   white-space: pre-wrap;
 }
 
-.msg-text p .msg-text-small {
-  font-size: 10px;
-}
-
-.msg-text p .msg-text-big {
-  font-size: 14px;
-}
-
-.msg-text p .msg-text-red {
-  color: #ed4032;
-}
-
-.msg-text p .msg-text-blue {
-  color: #3e8dec;
-}
-
-.msg-text p .msg-text-green {
-  color: #58ba36;
-}
-
-.msg-text p .msg-text-pink {
-  color: #ea3bc9;
-}
-
 .msgpage .artist-msg {
   margin-bottom: 5px;
   aspect-ratio: 0;
@@ -81,13 +57,13 @@
   margin-right: 5px;
 }
 
-.msg-text .artist-msg.msg-img-1 img {
+.msg-text .rich-img-1 img {
   /* One image in a line */
   width: 305px;
   height: 305px;
 }
 
-.msg-text .artist-msg.msg-img-2 img {
+.msg-text .rich-img-2 img {
   /* Two images in a line */
   width: 150px;
   height: 150px;
@@ -193,13 +169,13 @@
 }
 
 @media (max-height: 620px) {
-  .msg-text .artist-msg.msg-img-1 img {
+  .msg-text .rich-img-1 img {
     /* One image in a line */
     width: 200px;
     height: 200px;
   }
 
-  .msg-text .artist-msg.msg-img-2 img {
+  .msg-text .rich-img-2 img {
     /* Two images in a line */
     width: 100px;
     height: 100px;

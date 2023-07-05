@@ -83,10 +83,7 @@ function ChatBubble({ dateStr, artistNum, text, type, mediaurl, extension }) {
     }
     return (
       <div className="bubble voice audio">
-        <audio
-          src={audioMedia}
-          controls
-        >
+        <audio src={audioMedia} controls>
           Your browser does not support the audio element.
         </audio>
       </div>
