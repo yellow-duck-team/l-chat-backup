@@ -75,10 +75,16 @@ function ChatBubble({ dateStr, artistNum, text, type, mediaurl, extension }) {
   // Voice
   if (type === 'Voice') {
     if (!dateStr || ImageName === '') return <LoadingSpinner />;
+    let audioMedia;
+    if (mediaurl && mediaurl !== '' && extension && extension !== '') {
+      audioMedia = `https://assets.ctfassets.net/${spaceId}/${mediaurl}/${ImageName}_${text}.${extension}`;
+    } else {
+      audioMedia = require(`assets/fromm/${artistNum}/voice/${ImageName}_${text}.m4a`);
+    }
     return (
       <div className="bubble voice audio">
         <audio
-          src={require(`assets/fromm/${artistNum}/voice/${ImageName}_${text}.m4a`)}
+          src={audioMedia}
           controls
         >
           Your browser does not support the audio element.
@@ -121,7 +127,12 @@ function ChatBubble({ dateStr, artistNum, text, type, mediaurl, extension }) {
   // Video
   if (type === 'Video') {
     if (!dateStr || ImageName === '') return <LoadingSpinner />;
-    const videoMedia = require(`assets/fromm/${artistNum}/video/${ImageName}_${text}.MP4`);
+    let videoMedia;
+    if (mediaurl && mediaurl !== '' && extension && extension !== '') {
+      videoMedia = `https://videos.ctfassets.net/${spaceId}/${mediaurl}/${ImageName}_${text}.${extension}`;
+    } else {
+      videoMedia = require(`assets/fromm/${artistNum}/video/${ImageName}_${text}.MP4`);
+    }
     return (
       <div className="bubble video">
         {isLoading && <LoadingSpinner />}
