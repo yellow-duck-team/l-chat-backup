@@ -1,10 +1,8 @@
 import LoadingSpinner from 'components/LoadingSpinner/LoadingSpinner';
-
+import React from 'react';
+import { richTextStyles } from 'lib/constants';
 import 'Fab/pages/MessagePage.css';
 import './RichText.css';
-import React from 'react';
-
-const richTextStyles = ['small', 'big', 'blue', 'green', 'red', 'pink'];
 
 // Render rich text
 export const renderRichText = (

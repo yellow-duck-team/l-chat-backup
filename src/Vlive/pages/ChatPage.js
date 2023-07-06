@@ -1,8 +1,8 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import ChatBubbleBlue from 'Vlive/components/ChatBubbleBlue';
 import EmptyList from 'components/EmptyList';
 import MobileLayout from 'components/MobileLayout';
 import LoadingSpinner from 'components/LoadingSpinner/LoadingSpinner';
+import ChatBubble from 'components/ChatBubble/ChatBubble';
 import { useLocation } from 'react-router';
 import { parseDate } from 'lib/date';
 import { chatObjByDate } from 'lib/group';
@@ -67,9 +67,10 @@ function ChatPage() {
           <LoadingSpinner />
         ) : ChatList && ChatList.length > 0 ? (
           ChatList.map((chat, index) => (
-            <ChatBubbleBlue
+            <ChatBubble
               key={`vlive-chat-bubble-${dateStr}-${index}`}
-              date={chat.date}
+              service='vlive'
+              dateStr={chat.date}
               text={chat.text}
               type={chat.type}
             />

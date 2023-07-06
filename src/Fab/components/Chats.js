@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 // Components
-import ChatBubble from './ChatBubble';
+import ChatBubble from 'components/ChatBubble/ChatBubble';
 import Date from './Date';
 import Profile from './Profile';
 // Style
@@ -31,30 +31,6 @@ function Chats({ artistNum, chatId, chatData }) {
       }
     };
 
-    const textBubble = () => {
-      if (chat[2] === 'Reply' || chat[1] !== '') {
-        return <ChatBubble index={index} chat={chat[0]} reply={chat[1]} />;
-      }
-      if (chat[2] === 'Emoji') {
-        return <ChatBubble index={index} emoji={chat[0]} />;
-      }
-      if (chat[2] === 'Voice') {
-        return (
-          <ChatBubble
-            index={index}
-            voice={true}
-            chat={chat[0]}
-            artistNum={artistNum}
-            chatId={chatId}
-          />
-        );
-      }
-      if (chat[2] === 'Notice') {
-        return <ChatBubble index={index} notice={chat[0]} />;
-      }
-      return <ChatBubble index={index} chat={chat[0]} />;
-    };
-
     return (
       <div key={`bubble-${index}`} className="block">
         {showChatDate()}
@@ -66,7 +42,17 @@ function Chats({ artistNum, chatId, chatData }) {
           ) : (
             <Profile artistNum={artistNum} />
           )}
-          <div className="message">{textBubble()}</div>
+          <div className="message">
+            <ChatBubble
+              service="fab"
+              artistNum={artistNum}
+              chatId={chatId}
+              text={chat[0]}
+              type={chat[2]}
+              emoji={chat[0]}
+              reply={chat[1]}
+            />
+          </div>
         </div>
         <div className="right">
           <p className="time">{chat[3].split(' ')[1]}</p>

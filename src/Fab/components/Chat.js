@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 // Components
-import ChatBubble from './ChatBubble';
+import ChatBubble from 'components/ChatBubble/ChatBubble';
 import Profile from './Profile';
 // Style
 import { NotificationOutlined } from '@ant-design/icons';
@@ -26,32 +26,6 @@ function Chat(props) {
   //     }
   // };
 
-  const textBubble = (index) => {
-    if (ChatData[2] === 'Reply' || ChatData[1] !== '') {
-      return (
-        <ChatBubble index={index} chat={ChatData[0]} reply={ChatData[1]} />
-      );
-    }
-    if (ChatData[2] === 'Emoji') {
-      return <ChatBubble index={index} emoji={ChatData[0]} />;
-    }
-    if (ChatData[2] === 'Voice') {
-      return (
-        <ChatBubble
-          index={index}
-          voice={true}
-          chat={ChatData[0]}
-          artistNum={props.artistNum}
-          chatId={props.chatId}
-        />
-      );
-    }
-    if (ChatData[2] === 'Notice') {
-      return <ChatBubble index={index} notice={ChatData[0]} />;
-    }
-    return <ChatBubble index={index} chat={ChatData[0]} />;
-  };
-
   return (
     <div className="fab chat">
       {ChatData !== [] && ChatData.length > 0 && (
@@ -64,7 +38,17 @@ function Chat(props) {
             ) : (
               <Profile artistNum={props.artistNum} />
             )}
-            <div className="message">{textBubble()}</div>
+            <div className="message">
+              <ChatBubble
+                service="fab"
+                artistNum={props.artistNum}
+                chatId={props.chatId}
+                text={ChatData[0]}
+                type={ChatData[2]}
+                emoji={ChatData[0]}
+                reply={ChatData[1]}
+              />
+            </div>
           </div>
           {!props.noDate && (
             <div className="right">

@@ -13,63 +13,9 @@
   overflow-y: scroll;
 }
 
-.vlive .chat-bubble-blue {
-  margin: 5px 20px;
-  padding: 13px;
-  width: auto;
-  background-color: #86f3fc;
-}
-
-.vlive .chat-bubble-blue.chat-eng {
-  background-color: rgb(140, 220, 255);
-}
-
-.vlive .chat-bubble-blue p {
-  margin: 0;
-  font-size: 14px;
-}
-
-.vlive .chat-bubble-blue .artist-name {
-  margin-bottom: 5px;
-  font-size: 12px;
-  color: #40797d;
-  font-weight: bold;
-  user-select: none;
-}
-
-.vlive .chat-img-blue {
-  margin: 5px 20px;
-  width: 250px;
-}
-
-.vlive .chat-voice-blue {
-  margin: 5px 20px;
-  height: 42.5px;
-  background-color: #86f3fc;
-}
-
-.vlive .chat-voice-blue audio {
-  height: 42.5px;
-}
-
-audio::-webkit-media-controls-panel {
-  background-color: #86f3fc;
-}
 
 @media (max-height: 620px) {
   .vlive .chats {
     padding: 10px 0;
-  }
-
-  .vlive .chat-bubble-blue {
-    padding: 10px;
-  }
-
-  .vlive .chat-bubble-blue p {
-    font-size: 0.9em;
-  }
-
-  .vlive .chat-bubble-blue .artist-name {
-    font-size: 0.8em;
   }
 }

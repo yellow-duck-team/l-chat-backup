@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import Profile from 'Fromm/components/Profile';
-import ChatBubble from 'Fromm/components/ChatBubble';
+import ChatBubble from 'components/ChatBubble/ChatBubble';
 import Date from 'Fromm/components/Date';
 import MediaSlide from 'components/MediaSlide/MediaSlide';
 import LoadingSpinner from 'components/LoadingSpinner/LoadingSpinner';
@@ -34,6 +34,7 @@ export function Chat({ artistNum, chatData, chat, index, isChatList }) {
           <p className="artist-name select-none">{chat.name}</p>
           <div className="chat-r-b flex-row">
             <ChatBubble
+              service='fromm'
               artistNum={artistNum}
               dateStr={chat.date}
               text={chat.text}

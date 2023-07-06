@@ -1,0 +1,249 @@
+.bubble {
+  padding: 13px 14px;
+}
+
+.fab .bubble,
+.fromm .bubble,
+.fromm .bubble .mention,
+.fromm .bubble p,
+.fromm .bubble span {
+  font-size: 14px !important;
+}
+
+.fab .bubble {
+  border-radius: 18px 18px 18px 2px;
+  background-color: #fff;
+  max-width: 230px;
+  color: #000;
+  word-wrap: break-word;
+}
+
+.fab .bubble.voice {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  background-color: #d5d5d9;
+  color: #c1c1c7;
+}
+
+/* .bubble.notice {
+    background-color: #D5D5D9;
+    color: #fff;
+} */
+
+.fab .bubble .bubble-reply {
+  margin-bottom: 10px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #f2f1f2;
+  font-size: 14px;
+  color: #555555;
+}
+
+.fab .bubble-emoji {
+  font-size: 40px;
+  margin: 0;
+}
+
+.fab .bubble p {
+  margin: 0;
+}
+
+.fab .bubble.voice p {
+  margin-left: 5px;
+}
+
+.fab .bubble.voice.audio {
+  padding: 0;
+  background-color: #fff;
+}
+
+.fab .bubble.voice audio {
+  height: 42.5px;
+}
+
+.fab .bubble.voice audio::-webkit-media-controls-panel {
+  font-size: 14px;
+  background-color: #fff;
+}
+
+.fromm .bubble {
+  border-radius: 2px 20px 20px 20px;
+  background-color: var(--fromm-chat-bg);
+  max-width: 200px;
+  color: var(--fromm-chat-text);
+  word-break: break-all;
+  overflow-wrap: break-all;
+}
+
+.fromm .bubble.deleted {
+  color: var(--fromm-chat-time);
+  user-select: none;
+}
+
+.fromm .bubble.deleted span {
+  margin-right: 5px;
+}
+
+.fromm .bubble.voice {
+  border-radius: 20px;
+  padding: 0;
+  width: 200px;
+  height: 32px;
+}
+
+.fromm .bubble.voice audio {
+  border-radius: 20px;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  background-color: var(--fromm-chat-bg);
+}
+
+.fromm .bubble.voice audio::-webkit-media-controls-panel {
+  background-color: var(--fromm-chat-bg);
+}
+
+.fromm .bubble.voice audio::-webkit-media-controls-panel {
+  padding: 0;
+}
+
+.fromm .bubble.voice audio::-webkit-media-controls-current-time-display,
+.fromm .bubble.voice audio::-webkit-media-controls-time-remaining-display {
+  font-size: 10px !important;
+  color: var(--fromm-chat-text);
+}
+
+.fromm .bubble.video {
+  border-radius: 20px;
+  padding: 0;
+  width: 200px;
+}
+
+.fromm .bubble.video video {
+  border-radius: 20px;
+  border: none;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.fromm .bubble.image {
+  border-radius: 20px;
+  padding: 0;
+  width: 200px;
+  height: auto;
+}
+
+.fromm .bubble.image img {
+  border-radius: 20px;
+  width: 200px;
+  height: 100%;
+  cursor: pointer;
+}
+
+.fromm .bubble.image img:hover {
+  opacity: 0.8;
+}
+
+.fromm .bubble .mention {
+  font-weight: bold;
+  color: skyblue;
+}
+
+.vlive .chat-bubble-blue {
+  margin: 5px 20px;
+  padding: 13px;
+  width: auto;
+  background-color: #86f3fc;
+}
+
+.vlive .chat-bubble-blue.chat-eng {
+  background-color: rgb(140, 220, 255);
+}
+
+.vlive .chat-bubble-blue p {
+  margin: 0;
+  font-size: 14px;
+}
+
+.vlive .chat-bubble-blue .artist-name {
+  margin-bottom: 5px;
+  font-size: 12px;
+  color: #40797d;
+  font-weight: bold;
+  user-select: none;
+}
+
+.vlive .chat-img-blue {
+  margin: 5px 20px;
+  width: 250px;
+  cursor: pointer;
+}
+
+.vlive .chat-img-blue:hover {
+  opacity: 0.8;
+}
+
+.vlive .chat-voice-blue {
+  margin: 5px 20px;
+  height: 42.5px;
+  background-color: #86f3fc;
+}
+
+.vlive .chat-voice-blue audio {
+  height: 42.5px;
+}
+
+.vlive .chat-voice-blue audio::-webkit-media-controls-panel {
+  background-color: #86f3fc;
+}
+
+@media (max-height: 620px) {
+  .bubble {
+    padding: 9px 11px;
+  }
+
+  .fab .bubble,
+  .fromm .bubble,
+  .fromm .bubble .mention,
+  .fromm .bubble p,
+  .fromm .bubble span {
+    font-size: 0.875em !important;
+  }
+  
+  .fab .bubble {
+    border-radius: 13px 13px 13px 2px;
+    max-width: 130px;
+  }
+
+  .fromm .bubble {
+    border-radius: 2px 13px 13px 13px;
+    max-width: 100px;
+  }
+
+  .fromm .bubble.video,
+  .fromm .bubble.video video {
+    border-radius: 13px;
+    width: 100px;
+  }
+
+  .fromm .bubble.image,
+  .fromm .bubble.image img {
+    border-radius: 13px;
+    width: 100px;
+    height: 100px;
+  }
+  
+  .vlive .chat-bubble-blue {
+    padding: 10px;
+  }
+
+  .vlive .chat-bubble-blue p {
+    font-size: 0.9em;
+  }
+
+  .vlive .chat-bubble-blue .artist-name {
+    font-size: 0.8em;
+  }
+}
