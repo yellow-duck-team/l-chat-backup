@@ -127,7 +127,6 @@ function ChatBubble({
       const date = parseDate(dateStr);
       setImageName(date.year.slice(2) + date.month + date.date);
     }
-    
   }, [dateStr]);
 
   // Show loading spinner until media is successfully loaded
@@ -158,15 +157,19 @@ function ChatBubble({
       audioMedia = require(`assets/fab/${artistNum}/voice/${chatId}_${text}.m4a`);
     } else if (!dateStr || ImageName === '') {
       return <LoadingSpinner />;
-    } else if (service === "vlive") {
-      audioMedia = require(`assets/vlive/voice/${ImageName}_${text}.m4a`)
+    } else if (service === 'vlive') {
+      audioMedia = require(`assets/vlive/voice/${ImageName}_${text}.m4a`);
     } else if (mediaurl && mediaurl !== '' && extension && extension !== '') {
       audioMedia = `https://assets.ctfassets.net/${spaceId}/${mediaurl}/${ImageName}_${text}.${extension}`;
     } else {
       audioMedia = require(`assets/fromm/${artistNum}/voice/${ImageName}_${text}.m4a`);
     }
     return (
-      <div className={service === 'vlive' ? "chat-voice-blue" : "bubble voice audio"}>
+      <div
+        className={
+          service === 'vlive' ? 'chat-voice-blue' : 'bubble voice audio'
+        }
+      >
         <audio src={audioMedia} controls>
           {noSupport.audio}
         </audio>
@@ -184,7 +187,7 @@ function ChatBubble({
         <>
           {isLoading && <LoadingSpinner />}
           <img
-            className={`${isLoading && "hidden"} chat-img-blue`}
+            className={`${isLoading && 'hidden'} chat-img-blue`}
             src={image}
             alt=""
             onLoad={onMediaLoad}
@@ -202,7 +205,7 @@ function ChatBubble({
       <div className="bubble image">
         {isLoading && <LoadingSpinner />}
         <img
-          className={`${isLoading && "hidden"}`}
+          className={`${isLoading && 'hidden'}`}
           src={image}
           alt=""
           onLoad={onMediaLoad}

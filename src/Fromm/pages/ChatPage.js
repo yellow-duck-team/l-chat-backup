@@ -34,7 +34,7 @@ export function Chat({ artistNum, chatData, chat, index, isChatList }) {
           <p className="artist-name select-none">{chat.name}</p>
           <div className="chat-r-b flex-row">
             <ChatBubble
-              service='fromm'
+              service="fromm"
               artistNum={artistNum}
               dateStr={chat.date}
               text={chat.text}

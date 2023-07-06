@@ -69,7 +69,7 @@ function ChatPage() {
           ChatList.map((chat, index) => (
             <ChatBubble
               key={`vlive-chat-bubble-${dateStr}-${index}`}
-              service='vlive'
+              service="vlive"
               dateStr={chat.date}
               text={chat.text}
               type={chat.type}
