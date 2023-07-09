@@ -41,7 +41,7 @@ function CategorizeModal({ artistNum, showModal, isHidden }) {
   // If data cannot be pulled from context API
   useEffect(() => {
     const timerId = setTimeout(() => {
-      if (!artistNum || artistNum === '' || CSVText.length === 0) return;
+      if (!isFetching || !artistNum || artistNum === '' || CSVText.length === 0) return;
       getFrommPromise(artistNum).then((res) => {
         const fromm = JSON.parse(JSON.stringify(res));
         if (fromm && fromm.length > 0) {

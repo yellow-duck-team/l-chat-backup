@@ -1,5 +1,5 @@
 export const richTextStyles = ['small', 'big', 'blue', 'green', 'red', 'pink'];
-export const emojis = ['♥️', '☺️', '☺'];
+export const emojis = ['♥️', '☺️', '☺', '‼️'];
 export const kaomojis = ['ᕙ( ︡’︡益’︠)ง'];
 
 export const noSupport = {
