@@ -88,7 +88,7 @@
   grid-row: 5 / 6;
 }
 
-.fromm .profile-profile .profile-img-list {
+.fromm .profile-body .profile-img-list {
   display: flex;
   flex-flow: row wrap;
   justify-content: flex-start;
