@@ -1,13 +1,18 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import ArtistInfo from 'assets/fromm/artist_info.json';
 import CategorizeModal from 'Fromm/components/CategorizeModal';
 import MobileLayout from 'components/MobileLayout';
 import './ArtistListPage.css';
+import { useFrommDataContext } from 'context/frommDataState';
 
 // List of artists in fromm
 const artistList = [];
 for (const artist in ArtistInfo) {
-  artistList.push({ num: artist, ...ArtistInfo[artist] });
+  artistList.push({
+    num: artist,
+    profile: require(`assets/fromm/${artist}/profile/${ArtistInfo[artist].profile}.PNG`),
+    ...ArtistInfo[artist]
+  });
 }
 
 /**
@@ -23,10 +28,7 @@ function Artist({ artist, showModal }) {
 
   return (
     <div className="fromm-artist" onClick={onArtist}>
-      <img
-        src={require(`assets/fromm/${artist.num}/profile/${artist.profile}.PNG`)}
-        alt=""
-      />
+      <img src={artist.profile} alt="" />
       <div className="from-artist-info flex-col">
         <p>{artist.name && artist.name.length > 0 && artist.name.slice(-1)}</p>
         {artist.description &&
@@ -44,8 +46,26 @@ function Artist({ artist, showModal }) {
  * @returns Artist list page component
  */
 function ArtistListPage() {
+  const { profile } = useFrommDataContext();
+
+  const [ArtistList, setArtistList] = useState(artistList);
   const [ArtistNum, setArtistNum] = useState(null);
   const [ShowModal, setShowModal] = useState(false);
+
+  useEffect(() => {
+    if (profile && Object.keys(profile).length > 0) {
+      const artists = [];
+      for (let [key, value] of Object.entries(profile)) {
+        artists.push({
+          num: key,
+          name: value.name,
+          description: value.description,
+          profile: value.profile.slice(-1)
+        });
+      }
+      setArtistList(artists);
+    }
+  }, [profile]);
 
   const showModal = (artistNum) => {
     if (artistNum === null) {
@@ -64,7 +84,7 @@ function ArtistListPage() {
           showModal={showModal}
           isHidden={!ShowModal}
         />
-        {artistList.map((artist, index) => (
+        {ArtistList.map((artist, index) => (
           <Artist key={index} artist={artist} showModal={showModal} />
         ))}
       </div>
