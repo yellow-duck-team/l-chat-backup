@@ -60,8 +60,9 @@ function MessagePage() {
   // If data cannot be pulled from context API
   useEffect(() => {
     const timerId = setTimeout(() => {
+      if (!isFetching) return;
       if (!ArtistNum || ArtistNum === '') return;
-      if (!CSVText || CSVText === [] || CSVText.length === 0) {
+      if (!CSVText || CSVText.length === 0) {
         getFabPromise(ArtistNum).then((res) => {
           const fab = JSON.parse(JSON.stringify(res));
           if (fab && fab.length > 0) {

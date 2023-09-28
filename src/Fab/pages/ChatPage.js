@@ -47,6 +47,7 @@ function ChatPage() {
   // If data cannot be pulled from context API
   useEffect(() => {
     const timerId = setTimeout(() => {
+      if (!isFetching) return;
       if (!artistNum || artistNum === '' || chatId === '') return;
       if (!CSVText || CSVText.length === 0) {
         getFabPromise(artistNum).then((res) => {

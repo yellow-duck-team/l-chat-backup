@@ -17,28 +17,29 @@ for (const artist in ArtistInfo) {
 
 /**
  * Search bar component
- * @param {Object} artist: artist information to display
+ * @param {Object} artistNum: artist number
  * @returns Search bar component
  */
-function SearchBar({ artist }) {
+function SearchBar({ artistNum }) {
+  const { profile } = useFrommDataContext();
   const navigate = useNavigate();
 
   const [SearchText, setSearchText] = useState('');
 
-  if (!artist) return <div></div>;
+  if (!artistNum) return <div></div>;
 
   const onSearch = () => {
     if (typeof SearchText === 'string' && SearchText.length > 0)
-      navigate(`/fromm/${artist.num}/search?text=${SearchText}`);
-    else navigate(`/fromm/${artist.num}/search`);
+      navigate(`/fromm/${artistNum}/search?text=${SearchText}`);
+    else navigate(`/fromm/${artistNum}/search`);
   };
 
   return (
     <div className="fromm-artist fromm-search-bar flex-row">
-      <img
-        src={require(`assets/fromm/${artist.num}/profile/${artist.profile}.PNG`)}
+      {profile && profile[artistNum] && <img
+        src={profile[artistNum].profile.slice(-1)}
         alt=""
-      />
+      />}
       <div className="fromm-search flex-row">
         <input
           value={SearchText}
@@ -95,6 +96,7 @@ function SearchPage() {
       setIsFetching(false);
       return;
     }
+    if (!frommData) return;
     // Fetch data
     const data = frommData[ArtistNum.num];
     if (frommData && (data || Object.keys(frommData).length === 3)) {
@@ -110,7 +112,8 @@ function SearchPage() {
   useEffect(() => {
     if (!ArtistNum || ArtistNum.num === '') return;
     const timerId = setTimeout(() => {
-      if (SearchText !== '' || !FetchedData || FetchedData.length > 0) {
+      if (!isFetching) return;
+      if (SearchText !== '' || !FetchedData || FetchedData.length === 0) {
         getFrommPromise(ArtistNum.num).then((res) => {
           const fromm = JSON.parse(JSON.stringify(res));
           if (fromm && fromm.length > 0) {
@@ -155,7 +158,7 @@ function SearchPage() {
   return (
     <MobileLayout className="mobile-header fromm" headerUrl="/fromm">
       <div className="fromm-artist-list search-list flex-col">
-        {ArtistNum && ArtistNum !== null && <SearchBar artist={ArtistNum} />}
+        {ArtistNum && ArtistNum !== null && <SearchBar artistNum={ArtistNum} />}
         <div className="search-results">
           <h2>"{SearchText}" 검색 결과</h2>
           {isLoading ? <LoadingSpinner /> : searchResults}

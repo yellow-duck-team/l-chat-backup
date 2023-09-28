@@ -43,6 +43,7 @@ function ChatPage() {
   // If data cannot be pulled from context API
   useEffect(() => {
     const timerId = setTimeout(() => {
+      if (!isFetching) return;
       if (!ChatList || ChatList.length === 0) {
         getVlivePromise().then((res) => {
           const vlive = JSON.parse(JSON.stringify(res));

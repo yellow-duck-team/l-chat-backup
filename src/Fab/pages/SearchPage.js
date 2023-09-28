@@ -60,6 +60,7 @@ function SearchPage() {
   // If data cannot be pulled from context API
   useEffect(() => {
     const timerId = setTimeout(() => {
+      if (!isFetching) return;
       if (!ArtistNum || ArtistNum === '') return;
       if (SearchText === '' || CSVText.length === 0) {
         getFabPromise(ArtistNum).then((res) => {
