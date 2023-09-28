@@ -144,7 +144,7 @@ function ChatBubble({
 
   // Voice
   if (type === 'Voice') {
-    let audioMedia;
+    let audioMedia = null;
     if (service === 'fab') {
       if (text === '' || text === '-') {
         return (
@@ -161,8 +161,6 @@ function ChatBubble({
       audioMedia = require(`assets/vlive/voice/${ImageName}_${text}.m4a`);
     } else if (mediaurl && mediaurl !== '' && extension && extension !== '') {
       audioMedia = `https://assets.ctfassets.net/${spaceId}/${mediaurl}/${ImageName}_${text}.${extension}`;
-    } else {
-      audioMedia = require(`assets/fromm/${artistNum}/voice/${ImageName}_${text}.m4a`);
     }
     return (
       <div
@@ -180,7 +178,7 @@ function ChatBubble({
   // Image
   if (type === 'Image') {
     if (!dateStr || ImageName === '') return <LoadingSpinner />;
-    let image;
+    let image = null;
     if (service === 'vlive') {
       image = require(`assets/vlive/media/${ImageName}_${text}.JPG`);
       return (
@@ -198,8 +196,6 @@ function ChatBubble({
     }
     if (mediaurl && mediaurl !== '' && extension && extension !== '') {
       image = `https://images.ctfassets.net/${spaceId}/${mediaurl}/${ImageName}_${text}.${extension}`;
-    } else {
-      image = require(`assets/fromm/${artistNum}/media/${ImageName}_${text}.PNG`);
     }
     return (
       <div className="bubble image">
@@ -218,11 +214,9 @@ function ChatBubble({
   // Video
   if (type === 'Video') {
     if (!dateStr || ImageName === '') return <LoadingSpinner />;
-    let videoMedia;
+    let videoMedia = null;
     if (mediaurl && mediaurl !== '' && extension && extension !== '') {
       videoMedia = `https://videos.ctfassets.net/${spaceId}/${mediaurl}/${ImageName}_${text}.${extension}`;
-    } else {
-      videoMedia = require(`assets/fromm/${artistNum}/video/${ImageName}_${text}.MP4`);
     }
     return (
       <div className="bubble video">
