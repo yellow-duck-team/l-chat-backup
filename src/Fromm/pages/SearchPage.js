@@ -1,18 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import ArtistInfo from 'assets/fromm/artist_info.json';
 import MobileLayout from 'components/MobileLayout';
 import LoadingSpinner from 'components/LoadingSpinner/LoadingSpinner';
 import { searchText } from 'lib/group';
 import { useFrommDataContext } from 'context/frommDataState';
 import { Chat } from 'Fromm/pages/ChatPage';
 import './SearchPage.css';
-
-// List of artists in fromm
-const artistList = [];
-for (const artist in ArtistInfo) {
-  artistList.push({ num: artist, ...ArtistInfo[artist] });
-}
 
 /**
  * Search bar component
@@ -54,10 +47,11 @@ function SearchBar({ artistNum }) {
  * @returns Artist list page component
  */
 function SearchPage() {
-  const { frommData } = useFrommDataContext();
+  const { frommData, profile } = useFrommDataContext();
   const location = useLocation();
   const navigate = useNavigate();
 
+  const [ArtistList, setArtistList] = useState([]);
   const [ArtistNum, setArtistNum] = useState(null);
   const [SearchText, setSearchText] = useState('');
   const [FetchedData, setFetchedData] = useState([]);
@@ -65,22 +59,32 @@ function SearchPage() {
   const [isFetching, setIsFetching] = useState(true);
 
   useEffect(() => {
+    if (profile && Object.keys(profile).length > 0) {
+      const artists = [];
+      for (let [key, value] of Object.entries(profile)) {
+        artists.push(key);
+      }
+      setArtistList(artists);
+    }
+  }, [profile]);
+
+  useEffect(() => {
     if (!location.pathname) return;
     const artistNum = location.pathname.split('/')[2];
-    for (let i = 0; i < artistList.length; i++) {
-      if (artistList[i].num === artistNum) {
-        setArtistNum(artistList[i]);
+    for (let i = 0; i < ArtistList.length; i++) {
+      if (ArtistList[i] === artistNum) {
+        setArtistNum(ArtistList[i]);
       }
     }
     if (location.search !== '' && location.search.includes('text=')) {
       const searchText = location.search.split('text=')[1];
       setSearchText(decodeURIComponent(searchText));
     }
-  }, [location.pathname, location.search]);
+  }, [location.pathname, location.search, ArtistList]);
 
   useEffect(() => {
     // Missing artist number
-    if (!ArtistNum || ArtistNum.num === '') return;
+    if (!ArtistNum || ArtistNum === '') return;
     setIsFetching(true);
     // Empty string
     if (SearchText === '') {
@@ -96,7 +100,7 @@ function SearchPage() {
     }
     if (!frommData) return;
     // Fetch data
-    const data = frommData[ArtistNum.num];
+    const data = frommData[ArtistNum];
     if (frommData && (data || Object.keys(frommData).length === 3)) {
       if (data && data.length > 0) {
         setFetchedData(data);
@@ -107,7 +111,7 @@ function SearchPage() {
   }, [ArtistNum, SearchText, frommData, CSVText.length]);
 
   const onResult = (date) => {
-    navigate(`/fromm/${ArtistNum.num}?date=${date.split('.').join('-')}`);
+    navigate(`/fromm/${ArtistNum}?date=${date.split('.').join('-')}`);
   };
 
   const searchResults =
@@ -121,7 +125,7 @@ function SearchPage() {
       >
         <h4>{chat.date}</h4>
         <Chat
-          artistNum={ArtistNum.num}
+          artistNum={ArtistNum}
           chatData={[]}
           chat={chat}
           index={index}
