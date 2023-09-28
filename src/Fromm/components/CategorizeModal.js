@@ -32,7 +32,9 @@ function CategorizeModal({ artistNum, showModal, isHidden }) {
     // Fetch data
     if (frommData && Object.keys(frommData).length === 3) {
       if (frommData[artistNum] && frommData[artistNum].length > 0) {
-        setCSVText(Object.keys(groupByKey(frommData[artistNum], 'date')));
+        setCSVText(
+          Object.keys(groupByKey(frommData[artistNum], 'date')).reverse()
+        );
       }
       setIsFetching(false);
     }
@@ -41,8 +43,8 @@ function CategorizeModal({ artistNum, showModal, isHidden }) {
   // If data cannot be pulled from context API
   useEffect(() => {
     const timerId = setTimeout(() => {
-      if (!isFetching || !artistNum || artistNum === '' || CSVText.length === 0)
-        return;
+      if (!isFetching || CSVText.length === 0) return;
+      if (!artistNum || artistNum === '') return;
       getFrommPromise(artistNum).then((res) => {
         const fromm = JSON.parse(JSON.stringify(res));
         if (fromm && fromm.length > 0) {
@@ -88,7 +90,7 @@ function CategorizeModal({ artistNum, showModal, isHidden }) {
       }`}
       onClick={onCancelCategory}
     >
-      {Categorize && CSVText && CSVText !== [] ? (
+      {Categorize && CSVText ? (
         isFetching ? (
           <LoadingSpinner />
         ) : (

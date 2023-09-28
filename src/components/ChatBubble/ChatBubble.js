@@ -68,7 +68,7 @@ const mentionedText = (text) => {
   return (
     <span>
       {textList[0]}
-      <span className="mention select-none">오빛 </span>
+      <span className="mention select-none">크루 </span> {/* 오빛 */}
       {mentionedText(textList[1])}
     </span>
   );

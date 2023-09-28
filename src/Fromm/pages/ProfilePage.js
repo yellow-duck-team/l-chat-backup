@@ -1,16 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import ArtistInfo from 'assets/fromm/artist_info.json';
 import MobileLayout from 'components/MobileLayout';
 import LoadingSpinner from 'components/LoadingSpinner/LoadingSpinner';
 import { useFrommDataContext } from 'context/frommDataState';
 import './ProfilePage.css';
-
-// List of artists in fromm
-const artistList = [];
-for (const artist in ArtistInfo) {
-  artistList.push({ num: artist, ...ArtistInfo[artist] });
-}
 
 /**
  * Artitst list page component
@@ -27,6 +20,7 @@ function ProfilePage() {
   const [isBgLoading, setIsBgLoading] = useState(true);
 
   useEffect(() => {
+    if (!isFetching) return;
     if (!location.pathname) return;
     const artistNum = location.pathname.split('/')[3];
     if (profile && profile[artistNum]) {
@@ -38,22 +32,8 @@ function ProfilePage() {
         profile: artist.profile.slice(-1),
         background: artist.background.slice(-1)
       });
-    } else {
-      for (let i = 0; i < artistList.length; i++) {
-        const artist = artistList[i];
-        if (artist.num === artistNum) {
-          setArtist({
-            num: artistNum,
-            name: artist.name.slice(-1),
-            description: artist.description.slice(-1),
-            profile: `assets/fromm/${artistNum}/profile/${artist.profile}.PNG`,
-            background: `assets/fromm/${artistNum}/background/${artist.background}.PNG`
-          });
-          break;
-        }
-      }
+      setIsFetching(false);
     }
-    setIsFetching(false);
   }, [location.pathname, profile]);
 
   const onMediaLoad = (type) => {

@@ -1,17 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useFrommDataContext } from 'context/frommDataState';
-import ArtistInfo from 'assets/fromm/artist_info.json';
 import MobileLayout from 'components/MobileLayout';
 import LoadingSpinner from 'components/LoadingSpinner/LoadingSpinner';
 import MediaSlide from 'components/MediaSlide/MediaSlide';
 import './ProfileHistoryPage.css';
-
-// List of artists in fromm
-const artistList = [];
-for (const artist in ArtistInfo) {
-  artistList.push({ num: artist, ...ArtistInfo[artist] });
-}
 
 function ProfileText({ name, description }) {
   return (
@@ -36,22 +29,19 @@ function ProfileMediaList({ artistNum, type, media, mediaNum }) {
   };
 
   const getMediaList = (num) => {
+    if (!media) return null;
     const images = [];
     for (let i = 0; i < num; i++) {
-      const numStr = i < 10 ? `0${i}` : `${i}`;
-      let image = media
-        ? media[i]
-        : require(`assets/fromm/${artistNum}/${type}/${numStr}.PNG`);
       images.push(
         <div
           key={`profile-history-image-${type}-${i}`}
           className={`profile-img ${isLoading && 'hidden'}`}
         >
           <img
-            src={image}
+            src={media[i]}
             alt=""
             onLoad={onMediaLoad}
-            onClick={() => onOpenMedia(true, image, null, null)}
+            onClick={() => onOpenMedia(true, media[i], null, null)}
           />
         </div>
       );
@@ -105,6 +95,7 @@ function ProfileHistoryPage() {
   const [isFetching, setIsFetching] = useState(true);
 
   useEffect(() => {
+    if (!isFetching) return;
     if (!location.pathname) return;
     const artistNum = location.pathname.split('/')[3];
     if (profile && profile[artistNum]) {
@@ -117,23 +108,8 @@ function ProfileHistoryPage() {
         profile: artist.profile,
         background: artist.background
       });
-    } else {
-      for (let i = 0; i < artistList.length; i++) {
-        const artist = artistList[i];
-        if (artist.num === artistNum) {
-          setArtist({
-            num: artistNum,
-            name: artist.name,
-            description: artist.description,
-            profileText: artist.profileText.toReversed(),
-            profile: artist.profile,
-            background: artist.background
-          });
-          break;
-        }
-      }
+      setIsFetching(false);
     }
-    setIsFetching(false);
   }, [location.pathname, profile]);
 
   useEffect(() => {

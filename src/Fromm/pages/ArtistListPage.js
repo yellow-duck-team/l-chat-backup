@@ -1,19 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import ArtistInfo from 'assets/fromm/artist_info.json';
 import CategorizeModal from 'Fromm/components/CategorizeModal';
 import MobileLayout from 'components/MobileLayout';
 import './ArtistListPage.css';
 import { useFrommDataContext } from 'context/frommDataState';
-
-// List of artists in fromm
-const artistList = [];
-for (const artist in ArtistInfo) {
-  artistList.push({
-    num: artist,
-    profile: require(`assets/fromm/${artist}/profile/${ArtistInfo[artist].profile}.PNG`),
-    ...ArtistInfo[artist]
-  });
-}
 
 /**
  * Artist profile component
@@ -48,7 +37,7 @@ function Artist({ artist, showModal }) {
 function ArtistListPage() {
   const { profile } = useFrommDataContext();
 
-  const [ArtistList, setArtistList] = useState(artistList);
+  const [ArtistList, setArtistList] = useState([]);
   const [ArtistNum, setArtistNum] = useState(null);
   const [ShowModal, setShowModal] = useState(false);
 

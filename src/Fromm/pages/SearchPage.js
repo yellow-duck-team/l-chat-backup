@@ -36,10 +36,9 @@ function SearchBar({ artistNum }) {
 
   return (
     <div className="fromm-artist fromm-search-bar flex-row">
-      {profile && profile[artistNum] && <img
-        src={profile[artistNum].profile.slice(-1)}
-        alt=""
-      />}
+      {profile && profile[artistNum] && (
+        <img src={profile[artistNum].profile.slice(-1)} alt="" />
+      )}
       <div className="fromm-search flex-row">
         <input
           value={SearchText}

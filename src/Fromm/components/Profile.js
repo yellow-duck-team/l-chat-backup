@@ -13,17 +13,16 @@ function Profile({ artistNum, imgNum }) {
   const { profile } = useFrommDataContext();
 
   const [ProfileImg, setProfileImg] = useState(null);
+  const [isFetching, setIsFetching] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     if (!artistNum || !imgNum) return;
     if (profile && profile[artistNum] && profile[artistNum].profile) {
       setProfileImg(profile[artistNum].profile[Number(imgNum)]);
-    } else {
-      const profileImg = require(`assets/fromm/${artistNum}/profile/${imgNum}.PNG`);
-      setProfileImg(profileImg);
+      setIsFetching(false);
     }
-  }, [artistNum, imgNum]);
+  }, [artistNum, imgNum, profile]);
 
   // Show loading spinner until profile image is successfully loaded
   const onMediaLoad = () => {
@@ -32,7 +31,7 @@ function Profile({ artistNum, imgNum }) {
 
   return (
     <div className="profile select-none">
-      {isLoading && <LoadingSpinner />}
+      {(isFetching || isLoading) && <LoadingSpinner />}
       <img
         className={isLoading ? 'hidden' : ''}
         src={ProfileImg}
