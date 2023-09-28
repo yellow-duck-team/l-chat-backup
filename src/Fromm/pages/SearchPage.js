@@ -5,7 +5,6 @@ import MobileLayout from 'components/MobileLayout';
 import LoadingSpinner from 'components/LoadingSpinner/LoadingSpinner';
 import { searchText } from 'lib/group';
 import { useFrommDataContext } from 'context/frommDataState';
-import { getFrommPromise } from 'api/getData';
 import { Chat } from 'Fromm/pages/ChatPage';
 import './SearchPage.css';
 
@@ -55,7 +54,7 @@ function SearchBar({ artistNum }) {
  * @returns Artist list page component
  */
 function SearchPage() {
-  const { frommData, setFrommData } = useFrommDataContext();
+  const { frommData } = useFrommDataContext();
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -106,27 +105,6 @@ function SearchPage() {
       setIsFetching(false);
     }
   }, [ArtistNum, SearchText, frommData, CSVText.length]);
-
-  // If data cannot be pulled from context API
-  useEffect(() => {
-    if (!ArtistNum || ArtistNum.num === '') return;
-    const timerId = setTimeout(() => {
-      if (!isFetching) return;
-      if (SearchText !== '' || !FetchedData || FetchedData.length === 0) {
-        getFrommPromise(ArtistNum.num).then((res) => {
-          const fromm = JSON.parse(JSON.stringify(res));
-          if (fromm && fromm.length > 0) {
-            setFrommData(fromm);
-            setFetchedData(fromm);
-            setCSVText(searchText(fromm, SearchText));
-          }
-        });
-      }
-      setIsFetching(false);
-    }, 3000);
-    // Cleanup the timer when component unmouts
-    return () => clearTimeout(timerId);
-  });
 
   const onResult = (date) => {
     navigate(`/fromm/${ArtistNum.num}?date=${date.split('.').join('-')}`);

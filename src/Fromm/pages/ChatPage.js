@@ -10,7 +10,6 @@ import MobileLayout from 'components/MobileLayout';
 import { formatTime } from 'lib/date';
 import { groupByDate } from 'lib/group';
 import { useFrommDataContext } from 'context/frommDataState';
-import { getFrommPromise } from 'api/getData';
 import './ChatPage.css';
 
 export function Chat({ artistNum, chatData, chat, index, isChatList }) {
@@ -86,8 +85,7 @@ export function Chats({ artistNum, chatData, isChatList = true }) {
  * @returns Chat page component
  */
 function ChatPage() {
-  const { frommData, setFrommData, media, openMedia, onOpenMedia } =
-    useFrommDataContext();
+  const { frommData, media, openMedia, onOpenMedia } = useFrommDataContext();
   const location = useLocation();
 
   const [ArtistNum, setArtistNum] = useState('');
@@ -108,6 +106,7 @@ function ChatPage() {
   }, [location.pathname, location.search]);
 
   useEffect(() => {
+    if (!isFetching) return;
     // Missing artist number
     if (ArtistNum === '') return;
     // Already fetched data
@@ -124,26 +123,6 @@ function ChatPage() {
       setIsFetching(false);
     }
   }, [ArtistNum, QueryDate, CSVText.length, frommData]);
-
-  // If data cannot be pulled from context API
-  useEffect(() => {
-    const timerId = setTimeout(() => {
-      if (!isFetching) return;
-      if (!ArtistNum || ArtistNum === '') return;
-      if (!CSVText || CSVText.length === 0) {
-        getFrommPromise(ArtistNum).then((res) => {
-          const fromm = JSON.parse(JSON.stringify(res));
-          if (fromm && fromm.length > 0) {
-            setFrommData(fromm);
-            setCSVText(groupByDate(QueryDate, 'date', fromm));
-          }
-        });
-      }
-      setIsFetching(false);
-    }, 3000);
-    // Cleanup the timer when component unmouts
-    return () => clearTimeout(timerId);
-  });
 
   useEffect(() => {
     setMedia(media);

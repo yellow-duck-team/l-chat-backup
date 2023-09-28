@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router';
 import { groupByKey } from 'lib/group';
 import { useFrommDataContext } from 'context/frommDataState';
 import '../pages/ArtistListPage.css';
-import { getFrommPromise } from 'api/getData';
 import LoadingSpinner from 'components/LoadingSpinner/LoadingSpinner';
 
 /**
@@ -14,7 +13,7 @@ import LoadingSpinner from 'components/LoadingSpinner/LoadingSpinner';
  * @returns Categorize modal component
  */
 function CategorizeModal({ artistNum, showModal, isHidden }) {
-  const { frommData, setFrommData } = useFrommDataContext();
+  const { frommData } = useFrommDataContext();
   const navigate = useNavigate();
 
   const [Categorize, setCategorize] = useState(false);
@@ -22,6 +21,7 @@ function CategorizeModal({ artistNum, showModal, isHidden }) {
   const [isFetching, setIsFetching] = useState(true);
 
   useEffect(() => {
+    if (!isFetching) return;
     // Missing artist number
     if (!Categorize || artistNum === null) return;
     // Already fetched data
@@ -39,24 +39,6 @@ function CategorizeModal({ artistNum, showModal, isHidden }) {
       setIsFetching(false);
     }
   }, [Categorize, CSVText.length, frommData, artistNum]);
-
-  // If data cannot be pulled from context API
-  useEffect(() => {
-    const timerId = setTimeout(() => {
-      if (!isFetching || CSVText.length === 0) return;
-      if (!artistNum || artistNum === '') return;
-      getFrommPromise(artistNum).then((res) => {
-        const fromm = JSON.parse(JSON.stringify(res));
-        if (fromm && fromm.length > 0) {
-          setFrommData(fromm);
-          setCSVText(Object.keys(groupByKey(fromm, 'date')));
-        }
-        setIsFetching(false);
-      });
-    }, 3000);
-    // Cleanup the timer when component unmouts
-    return () => clearTimeout(timerId);
-  });
 
   const onClickCategory = (e, category) => {
     // Prevent bubbling

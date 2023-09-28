@@ -1,11 +1,8 @@
 import { createContext, useContext, useEffect, useState } from 'react';
-import { getFrommPromise } from 'api/getData';
-import frommArtists from 'assets/fromm/artist_info.json';
 import getContentfulFromm from 'contentful/contentfulApi';
 
 const initialState = {
   frommData: [],
-  setFrommData: () => {},
   onOpenMedia: () => {},
   media: null,
   openMedia: false
@@ -56,15 +53,7 @@ export function FrommDataProvider({ children }) {
         setProfile(profile);
       });
     } catch (e) {
-      for (const artist in frommArtists) {
-        getFrommPromise(artist).then((res) => {
-          const fromm = JSON.parse(JSON.stringify(res));
-          if (fromm && fromm.length > 0) {
-            data[artist] = fromm;
-          }
-        });
-      }
-      setFrommData(data);
+      setFrommData([]);
     }
     // Aborts the request when the component umounts
     return () => controller?.abort();
@@ -83,7 +72,6 @@ export function FrommDataProvider({ children }) {
     <FrommDataContext.Provider
       value={{
         frommData,
-        setFrommData,
         profile,
         media,
         openMedia,
