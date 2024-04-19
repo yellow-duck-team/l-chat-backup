@@ -1,5 +1,7 @@
-function EmptyList({ listType = 'Chat history' }) {
-  return <h3 className="empty-list">{listType} is empty.</h3>;
+function EmptyList({ listType = 'Chat history', darkMode }) {
+  return (
+    <h3 className={`empty-list ${darkMode && 'dark'}`}>{listType} is empty.</h3>
+  );
 }
 
 export default EmptyList;

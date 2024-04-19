@@ -8,17 +8,18 @@ export const groupByKey = (xs, key) => {
 };
 
 // Group data by date
-export const groupByDate = (date, key, data) => {
+export const groupByDate = (date, key, data, isNull = false) => {
   // If data is invalid
   if (!data || data.length === 0) return [];
   // If date is valid
-  if (date && date !== []) {
+  if (date && date.length > 0) {
     const dataByKey = groupByKey(data, key);
     // group data by date
     const dataByDate = dataByKey[date.join('.')];
     if (dataByDate && dataByDate.length > 0) {
       return dataByDate;
     }
+    if (isNull) return [];
   }
   return data;
 };
