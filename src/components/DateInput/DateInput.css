@@ -1,0 +1,23 @@
+.date-input,
+.date-input .date-input .date-input-row,
+.date-input input {
+  width: 100%;
+}
+
+.date-input input {
+  padding: 5px 10px;
+}
+
+.date-input .date-input-row {
+  margin-bottom: 10px;
+}
+
+.header-modal-btn button {
+  margin-top: 10px;
+  padding: 5px 10px;
+  width: 100%;
+}
+
+.ant-picker-dropdown {
+  z-index: 2000;
+}

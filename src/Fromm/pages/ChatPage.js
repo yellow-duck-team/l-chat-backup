@@ -118,7 +118,7 @@ function ChatPage() {
     setIsFetching(true);
     if (frommData && Object.keys(frommData).length === 3) {
       if (frommData[ArtistNum] && frommData[ArtistNum].length > 0) {
-        setCSVText(groupByDate(QueryDate, 'date', frommData[ArtistNum]));
+        setCSVText(groupByDate(QueryDate, 'date', frommData[ArtistNum], true));
       }
       setIsFetching(false);
     }
@@ -129,10 +129,38 @@ function ChatPage() {
     setOpenMedia(openMedia);
   }, [media, openMedia]);
 
+  const moreButtonAction = [
+    {
+      action: 'navigate',
+      url: `/fromm/profile/${ArtistNum}`,
+      text: '프로필 보기'
+    },
+    {
+      action: 'navigate',
+      url: `/fromm/${ArtistNum}`,
+      text: '전체 채팅 보기'
+    },
+    {
+      action: 'dateSelect',
+      url: `/fromm/${ArtistNum}`,
+      date: QueryDate,
+      text: '날짜 선택'
+    },
+    {
+      action: 'navigate',
+      url: `/fromm/${ArtistNum}/search`,
+      text: '댓글 검색'
+    }
+  ];
+
   const isLoading = isFetching;
 
   return (
-    <MobileLayout className="fromm chatpage-media" headerUrl="/fromm">
+    <MobileLayout
+      className="fromm chatpage-media"
+      headerUrl="/fromm"
+      moreButtonAction={moreButtonAction}
+    >
       {OpenMedia && Media && onOpenMedia && (
         <MediaSlide openMedia={() => onOpenMedia()} media={Media} />
       )}
@@ -142,7 +170,7 @@ function ChatPage() {
         ) : CSVText && CSVText.length > 0 ? (
           <Chats artistNum={ArtistNum} chatData={CSVText} />
         ) : (
-          <EmptyList />
+          <EmptyList darkMode />
         )}
       </div>
     </MobileLayout>

@@ -16,6 +16,58 @@
   font-size: 18px !important;
 }
 
+.header .top-icon.active {
+  cursor: pointer;
+}
+
+.header-modal-bg {
+  z-index: 500;
+  position: absolute;
+  justify-content: center;
+  align-items: flex-end;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.75);
+}
+
+.header-modal {
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  border-radius: 10px;
+  background-color: var(--light-gray2);
+}
+
+.header-modal-btn {
+  flex: 1;
+  padding: 15px;
+  width: 100%;
+  background-color: var(--light-gray2);
+  font-size: 2em;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.header-modal-btn:first-child {
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+}
+
+.header-modal-btn:last-child {
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+}
+
+.header-modal-btn:not(:last-child) {
+  border-bottom: 1px solid var(--light-gray2-hover);
+}
+
+.header-modal-btn:hover {
+  background-color: var(--light-gray2-hover);
+}
+
 @media (max-height: 620px) {
   .header {
     height: 40px;

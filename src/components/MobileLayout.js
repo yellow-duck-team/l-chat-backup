@@ -5,12 +5,15 @@ function MobileLayout({
   className = '',
   headerUrl,
   children,
-  isHeader = true
+  isHeader = true,
+  moreButtonAction = null
 }) {
   return (
     <>
       <div className={`mobile ${className} ${isHeader && 'mobile-header'}`}>
-        {isHeader && <Header url={headerUrl} />}
+        {isHeader && (
+          <Header url={headerUrl} moreButtonAction={moreButtonAction} />
+        )}
         {children}
       </div>
     </>
