@@ -61,7 +61,7 @@ export function Chats({ artistNum, chatData, isChatList = true }) {
       chat.profile === '' ||
       chat.background === ''
     )
-      return;
+      return <></>;
 
     return (
       <Chat
