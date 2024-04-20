@@ -28,7 +28,8 @@ ReactDOM.render(
         window.__REDUX_DEVTOOLS_EXTENSION__()
     )}
   >
-    <BrowserRouter basename="/l-chat-backup">
+    {/* <BrowserRouter basename="/l-chat-backup"> */}
+    <BrowserRouter basename="/">
       <App />
     </BrowserRouter>
   </Provider>,
