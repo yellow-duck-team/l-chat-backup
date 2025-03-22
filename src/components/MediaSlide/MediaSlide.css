@@ -32,7 +32,7 @@
   background-color: rgba(255, 255, 255, 0.5);
 }
 
-@media (max-height: 620px) {
+@media (max-height: 620px) or (max-width: 350px) {
   .msg-img img {
     width: 60%;
     border: none;

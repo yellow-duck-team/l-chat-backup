@@ -13,7 +13,7 @@
   overflow-y: scroll;
 }
 
-@media (max-height: 620px) {
+@media (max-height: 620px) or (max-width: 350px) {
   .vlive .chats {
     padding: 10px 0;
   }

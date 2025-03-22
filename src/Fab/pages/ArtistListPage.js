@@ -89,7 +89,7 @@ function ArtistListPage() {
 
   return (
     <MobileLayout className="fab" headerUrl="/">
-      <div className="fab-artists-page flex-col flex-center">
+      <div className="mobile-inner fab-artists-page flex-col flex-center">
         <div className="artist-list flex-col flex-center">
           {artists &&
             artists.length > 0 &&

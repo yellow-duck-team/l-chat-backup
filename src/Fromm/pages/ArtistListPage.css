@@ -68,7 +68,7 @@
   justify-content: space-between;
   align-items: center;
   width: 60%;
-  height: 150px;
+  min-height: 150px;
   border-radius: 10px;
   background-color: var(--light-gray2);
 }
@@ -107,9 +107,13 @@
   background-color: var(--light-gray2-hover);
 }
 
-@media (max-height: 620px) {
+@media (max-height: 620px) or (max-width: 350px) {
+  .fromm-artist {
+    grid-template-columns: 35px 15px auto;
+  }
+
   .fromm-artist img {
-    margin-right: 15px;
+    margin-right: 0;
     width: 35px;
     height: 35px;
   }

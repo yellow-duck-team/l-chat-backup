@@ -2,9 +2,10 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  padding: 10px;
   background-color: rgb(30, 30, 30);
   width: 100vw;
-  height: 100vh;
+  height: 100dvh;
 }
 
 .App {
@@ -72,10 +73,70 @@
   color: white;
 }
 
+/* Very small screens (max-width: 330px) */
+@media (max-width: 330px) and (max-height: 770px) {
+  .App {
+    width: 95%;
+    height: auto;
+    max-height: 95%;
+  }
+}
+
+@media (max-width: 330px) and (max-height: 600px) {
+  .App {
+    width: auto;
+    max-width: 95%;
+    height: 95%;
+  }
+}
+
+/* Small mobile devices */
+@media (max-width: 425px) {
+  .App {
+    width: auto;
+    max-width: 95%;
+    height: 95%;
+    max-height: 95%;
+  }
+}
+
+@media (max-width: 425px) and (min-height: 770px) {
+  .App {
+    width: 90%;
+    height: auto;
+    max-height: 95%;
+  }
+}
+
+/* Short screens */
 @media (max-height: 800px) {
   .App {
-    aspect-ratio: 1/2;
-    width: 85%;
+    width: auto;
+    max-width: 90%;
+    height: 90%;
+  }
+}
+
+@media (max-height: 800px) and (max-width: 800px) {
+  .App {
+    width: auto;
+    height: 85%;
+  }
+}
+
+/* Non-mobile, very short screens */
+@media not (max-width: 425px) and (max-height: 620px) {
+  .App {
+    grid-template-rows: 35px auto;
+    width: auto;
+    max-height: 95%;
+  }
+}
+
+@media (max-width: 425px) and (min-height: 770px) {
+  .App {
+    width: 90%;
     height: auto;
+    max-height: 95%;
   }
 }

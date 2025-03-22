@@ -23,6 +23,13 @@
   background-color: white;
   overflow-y: scroll;
   overflow: overlay;
+  /* scrollbar-gutter: stable both-edges; */
+  -ms-overflow-style: none; /* Internet Explorer 10+ */
+  scrollbar-width: none; /* Safari, Chrome, Firefox */
+}
+
+.msgpage .msg-body::-webkit-scrollbar {
+  display: none; /* Old Safari and Chrome */
 }
 
 .msg-text {
@@ -35,6 +42,10 @@
   text-align: center;
 }
 
+.msg-text > *:last-child {
+  padding-bottom: 20px;
+}
+
 .msg-text p {
   margin: 0;
   font-size: 12px;
@@ -43,30 +54,32 @@
 }
 
 .msgpage .artist-msg {
+  display: flex;
+  justify-content: center;
+  gap: 5px;
   margin-bottom: 5px;
+  width: 100%;
   aspect-ratio: 0;
 }
 
 .msg-text .artist-msg img {
+  height: auto;
   object-fit: cover;
+  aspect-ratio: 1;
   border: none;
   cursor: pointer;
 }
 
-.msg-text .artist-msg img:not(:last-child) {
-  margin-right: 5px;
-}
-
 .msg-text .rich-img-1 img {
   /* One image in a line */
-  width: 305px;
-  height: 305px;
+  width: 100%;
 }
 
 .msg-text .rich-img-2 img {
   /* Two images in a line */
-  width: 150px;
-  height: 150px;
+  width: calc(50% - 2.5px);
+  height: auto;
+  aspect-ratio: 1;
 }
 
 .msg-text .artist-msg:hover {
@@ -169,18 +182,6 @@
 }
 
 @media (max-height: 620px) {
-  .msg-text .rich-img-1 img {
-    /* One image in a line */
-    width: 200px;
-    height: 200px;
-  }
-
-  .msg-text .rich-img-2 img {
-    /* Two images in a line */
-    width: 100px;
-    height: 100px;
-  }
-
   .msg-text p {
     font-size: 0.875em;
     line-height: 2.5em;
@@ -188,5 +189,37 @@
 
   .msgpage .msg-footer .footer-left .profile-name {
     font-size: 1.1em;
+  }
+}
+
+@media (max-height: 620px) or (max-width: 350px) {
+  .msgpage .msg-footer .footer-left .artist-profile {
+    margin-right: 5px;
+    width: 40px;
+  }
+
+  .msgpage .msg-footer .footer-left .profile-name {
+    margin-bottom: 3px;
+    font-size: 1em;
+  }
+
+  .msgpage .msg-footer .footer-right p {
+    font-size: 1em;
+  }
+}
+
+@media (max-height: 475px) {
+  .msgpage .msg-footer .footer-left .artist-profile {
+    margin-right: 5px;
+    width: 30px;
+  }
+
+  .msgpage .msg-footer .footer-left .profile-name {
+    margin-bottom: 3px;
+    font-size: 0.9em;
+  }
+
+  .msgpage .msg-footer .footer-right p {
+    font-size: 0.9em;
   }
 }

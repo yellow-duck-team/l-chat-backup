@@ -97,10 +97,10 @@
 @media (max-width: 425px) {
 }
 
-@media (max-height: 620px) {
+@media (max-height: 620px) or (max-width: 350px) {
   .fab .artist-list {
     flex-direction: row;
     justify-content: center;
-    align-items: space-between;
+    align-items: center;
   }
 }

@@ -12,7 +12,7 @@
   color: white;
 }
 
-@media (max-height: 620px) {
+@media (max-height: 620px) or (max-width: 350px) {
   .date {
     font-size: 0.9em;
   }

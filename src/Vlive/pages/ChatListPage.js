@@ -82,17 +82,19 @@ function ChatListPage() {
 
   return (
     <MobileLayout className="vlive select-none" headerUrl="/">
-      <div className="vlive-chat-list flex-col">
+      <div className="vlive-chat flex-col">
         <h2>Loona+ Chats</h2>
-        {isFetching ? (
-          <LoadingSpinner />
-        ) : (
-          ChatList &&
-          ChatList.length > 0 &&
-          ChatList.map((date, index) => (
-            <ChatPreview key={`vlive-chat-preview-${index}`} date={date} />
-          ))
-        )}
+        <div className="vlive-chat-list">
+          {isFetching ? (
+            <LoadingSpinner />
+          ) : (
+            ChatList &&
+            ChatList.length > 0 &&
+            ChatList.map((date, index) => (
+              <ChatPreview key={`vlive-chat-preview-${index}`} date={date} />
+            ))
+          )}
+        </div>
       </div>
     </MobileLayout>
   );

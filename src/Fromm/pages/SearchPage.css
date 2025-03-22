@@ -82,7 +82,7 @@
   margin-left: 0;
 }
 
-@media (max-height: 620px) {
+@media (max-height: 620px) or (max-width: 350px) {
   .fromm-search input {
     font-size: 0.875em;
   }

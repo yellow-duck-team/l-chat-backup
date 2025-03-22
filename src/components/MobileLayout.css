@@ -4,7 +4,7 @@
   grid-template-rows: 60px auto;
   grid-auto-flow: column;
   border-radius: 5px;
-  aspect-ratio: 9/16;
+  aspect-ratio: 9 / 16;
   width: 100%;
   background-color: var(--light-gray1);
 }
@@ -19,4 +19,19 @@
 
 .mobile.mobile-header > div:not(.header) {
   grid-row: 2 / 3;
+}
+
+@media (max-height: 620px) or (max-width: 350px) {
+  .mobile {
+    grid-template-rows: 40px auto;
+    width: auto;
+    height: 100%;
+    grid-row: 2 / 4;
+  }
+
+  .mobile > .mobile-inner {
+    width: auto !important;
+    height: 100% !important;
+    overflow-y: hidden;
+  }
 }

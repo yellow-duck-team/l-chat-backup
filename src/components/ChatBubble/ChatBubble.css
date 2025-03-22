@@ -199,12 +199,15 @@
   background-color: #86f3fc;
 }
 
-@media (max-height: 620px) {
+@media (max-height: 620px) or (max-width: 350px) {
   .bubble {
     padding: 9px 11px;
   }
 
   .fab .bubble,
+  .fab .bubble span,
+  .fab .bubble-reply,
+  .fab .bubble-reply span,
   .fromm .bubble,
   .fromm .bubble .mention,
   .fromm .bubble p,

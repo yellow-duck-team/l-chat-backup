@@ -20,8 +20,14 @@
   color: white;
 }
 
-@media (max-height: 620px) {
+@media (max-height: 620px) or (max-width: 350px) {
   .profile > img {
-    width: 38px;
+    width: 35px;
+  }
+}
+
+@media (max-height: 475px) {
+  .profile > img {
+    width: 30px;
   }
 }

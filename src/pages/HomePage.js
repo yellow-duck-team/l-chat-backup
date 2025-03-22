@@ -22,7 +22,7 @@ function HomePage() {
 
   return (
     <MobileLayout className="select-none" isHeader={false}>
-      <div className="homepage flex-col">
+      <div className="mobile-inner homepage flex-col">
         {platforms.map((platform, index) => (
           <div
             key={`platform-logo-${index}`}

@@ -9,7 +9,14 @@
   height: 100%;
   background-color: var(--fromm-bg);
   overflow-y: scroll;
-  overflow: overlay;
+  /* overflow: overlay; */
+  /* scrollbar-gutter: stable both-edges; */
+  -ms-overflow-style: none; /* Internet Explorer 10+ */
+  scrollbar-width: none; /* Safari, Chrome, Firefox */
+}
+
+.fromm .chatpage::-webkit-scrollbar {
+  display: none; /* Old Safari and Chrome */
 }
 
 .fromm .chat-date {
@@ -59,7 +66,7 @@
   color: var(--fromm-chat-time);
 }
 
-@media (max-height: 620px) {
+@media (max-height: 620px) or (max-width: 350px) {
   .fromm .chat-date-text {
     font-size: 0.8em;
   }

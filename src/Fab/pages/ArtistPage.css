@@ -90,6 +90,13 @@
   height: 100%;
   overflow-y: scroll;
   overflow: overlay;
+  /* scrollbar-gutter: stable both-edges; */
+  -ms-overflow-style: none; /* Internet Explorer 10+ */
+  scrollbar-width: none; /* Safari, Chrome, Firefox */
+}
+
+.artistpage .artist-body::-webkit-scrollbar {
+  display: none; /* Old Safari and Chrome */
 }
 
 .artistpage .artist-body > div {
@@ -102,7 +109,8 @@
 
 .artist-msg {
   position: relative;
-  width: 100%;
+  /* width: 100%; */
+  width: calc(33% - 2.5px);
   aspect-ratio: 9 / 16;
   cursor: pointer;
 }
@@ -153,7 +161,11 @@
   cursor: pointer;
 }
 
-@media (max-height: 620px) {
+@media (max-height: 620px) or (max-width: 350px) {
+  .artistpage .artist-profile {
+    margin-top: 25%;
+  }
+
   .artistpage .profile-name {
     padding-bottom: 5px;
     font-size: 0.8em;

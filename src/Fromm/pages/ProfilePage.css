@@ -73,3 +73,17 @@
   object-fit: cover;
   opacity: 0.5;
 }
+
+@media (max-height: 620px) or (max-width: 350px) {
+  .fromm .profile-front .profile-img {
+    width: 90px;
+    height: 90px;
+  }
+}
+
+@media (max-height: 475px) {
+  .fromm .profile-front .profile-img {
+    width: 70px;
+    height: 70px;
+  }
+}

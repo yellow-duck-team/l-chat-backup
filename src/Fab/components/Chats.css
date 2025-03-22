@@ -15,6 +15,10 @@
   margin-top: 15px;
 }
 
+.chat > .block:last-child {
+  padding-bottom: 15px;
+}
+
 .chat > .block > .top {
   display: flex;
   flex-direction: column;
@@ -61,8 +65,17 @@
   color: #969696;
 }
 
-@media (max-height: 620px) {
+@media (max-height: 620px) or (max-width: 350px) {
+  .chat > .block:not(:first-child) {
+    margin-top: 10px;
+  }
+
+  .chat > .block:last-child {
+    padding-bottom: 10px;
+  }
+
   .chat > .block .time {
-    font-size: 0.875em;
+    margin: 5px 0 0 38px;
+    font-size: 0.8em;
   }
 }
