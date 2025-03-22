@@ -5,15 +5,17 @@ import { getFabPromise } from 'api/getData';
 import { chatByMsg } from 'lib/group';
 import { useFabDataContext } from 'context/fabDataState';
 import fabArtists from 'assets/fab/artist_info.json';
+import EmptyList from 'components/EmptyList';
 import Header from 'components/Header/Header';
 import LoadingSpinner from 'components/LoadingSpinner/LoadingSpinner';
 import './ArtistPage.css';
-import EmptyList from 'components/EmptyList';
 
 function FabMsgImg({ artistNum, data }) {
+  const { fabMediaData } = useFabDataContext();
   const navigate = useNavigate();
 
   const [isLoading, setIsLoading] = useState(true);
+  const [mediaData, setMediaData] = useState(null);
 
   const onClickThumbnail = (msgNum) => {
     navigate(`/fab/${artistNum}/${msgNum}`);
@@ -24,8 +26,23 @@ function FabMsgImg({ artistNum, data }) {
     setIsLoading(false);
   };
 
+  useEffect(() => {
+    // Contentful load
+    if (data) {
+      const msgNum = data.msgNum;
+      if (artistNum && fabMediaData) {
+        if (fabMediaData[artistNum].messageImage[msgNum]) {
+          setMediaData(fabMediaData[artistNum].messageImage[msgNum][0]);
+        }
+      }
+    }
+  }, [artistNum, data, fabMediaData]);
+
   // Message without media
-  if (data.data[0] !== '(Video)' && !data.data[0].includes('Image')) {
+  if (
+    (data.data[0] !== '(Video)' && !data.data[0].includes('Image')) ||
+    !mediaData
+  ) {
     const emptyImg = require(`assets/fab/empty.jpg`);
     return (
       <div
@@ -44,12 +61,21 @@ function FabMsgImg({ artistNum, data }) {
     );
   }
 
-  let msgNum = data.msgNum;
-  if (msgNum.length === 1) msgNum = '0' + msgNum;
+  // Media file load
+  // if (msgNum.length === 1) msgNum = '0' + msgNum;
+  // const mediaData = mediaArr.find((d) => d["name"] === `${msgNum}_0`);
+
   let artistMedia = null;
+
   if (data.data[0] === '(Video)') {
     // Message with a video
-    const artistVideo = require(`assets/fab/${artistNum}/media/${msgNum}_0.mp4`);
+
+    // Media file load
+    // const artistVideo = require(`assets/fab/${artistNum}/media/${msgNum}_0.mp4`);
+
+    // Contentful file load
+    const artistVideo = mediaData;
+
     artistMedia = (
       <video
         className={isLoading ? 'hidden' : ''}
@@ -62,7 +88,13 @@ function FabMsgImg({ artistNum, data }) {
     );
   } else {
     // Message with an image
-    const artistImg = require(`assets/fab/${artistNum}/media/${msgNum}_0.jpg`);
+
+    // Media file load
+    // const artistImg = require(`assets/fab/${artistNum}/media/${msgNum}_0.jpg`);
+
+    // Contentful file load
+    const artistImg = mediaData;
+
     artistMedia = (
       <img
         className={isLoading ? 'hidden' : ''}
