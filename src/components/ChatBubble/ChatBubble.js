@@ -4,6 +4,7 @@ import './ChatBubble.css';
 import LoadingSpinner from 'components/LoadingSpinner/LoadingSpinner';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 import { useFrommDataContext } from 'context/frommDataState';
+import { useDriveManifest } from 'context/driveManifestState';
 import { spaceId } from 'contentful/contentfulApi';
 import { emojis, kaomojis, noSupport } from 'lib/constants';
 import { StopOutlined } from '@ant-design/icons';
@@ -115,6 +116,7 @@ function ChatBubble({
   extension = null
 }) {
   const { onOpenMedia } = useFrommDataContext();
+  const { driveImageUrl } = useDriveManifest();
 
   const [ImageName, setImageName] = useState('');
   const [isLoading, setIsLoading] = useState(true);
@@ -177,10 +179,15 @@ function ChatBubble({
 
   // Image
   if (type === 'Image') {
-    if (!dateStr || ImageName === '') return <LoadingSpinner />;
+    if (!dateStr || ImageName === '') {
+      return <LoadingSpinner />;
+    }
+
     let image = null;
+
     if (service === 'vlive') {
       image = require(`assets/vlive/media/${ImageName}_${text}.JPG`);
+
       return (
         <>
           {isLoading && <LoadingSpinner />}
@@ -194,9 +201,22 @@ function ChatBubble({
         </>
       );
     }
-    if (mediaurl && mediaurl !== '' && extension && extension !== '') {
-      image = `https://images.ctfassets.net/${spaceId}/${mediaurl}/${ImageName}_${text}.${extension}`;
+
+    let fallback = null;
+
+    if (extension && extension !== '') {
+      const file = `${ImageName}_${text}.${extension}`;
+      // Drive key
+      const key = `${service}/${artistNum}/${file}`;
+
+      // Keep Contentful url as a fallback for non migrated images
+      if (mediaurl && mediaurl !== '') {
+        fallback = `https://images.ctfassets.net/${spaceId}/${mediaurl}/${file}`;
+      }
+
+      image = driveImageUrl(key) || fallback;
     }
+
     return (
       <div className="bubble image">
         {isLoading && <LoadingSpinner />}
@@ -205,6 +225,12 @@ function ChatBubble({
           src={image}
           alt=""
           onLoad={onMediaLoad}
+          onError={(e) => {
+            // If drive url fails, swap to Contentful
+            if (fallback && e.target.src !== fallback) {
+              e.target.src = fallback;
+            }
+          }}
           onClick={() => onOpenMedia(true, image, null, null)}
         />
       </div>

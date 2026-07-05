@@ -1,6 +1,7 @@
 import { Route, Routes } from 'react-router-dom';
 import './App.css';
 // Context
+import { DriveManifestProvider } from 'context/driveManifestState';
 import { FabDataProvider } from 'context/fabDataState';
 import { FrommDataProvider } from 'context/frommDataState';
 import { VliveDataProvider } from 'context/vliveDataState';
@@ -35,58 +36,61 @@ function App() {
     <div className="App-bg">
       <div className="App">
         <NavBar />
-        <Routes>
-          <Route exact path="/" element={<HomePage />} />
-          <Route
-            path="/vlive"
-            element={contextProvider(1, <VliveChatListPage />)}
-          />
-          <Route
-            path="/vlive/:chatDate"
-            element={contextProvider(1, <VliveChatPage />)}
-          />
-          <Route
-            path="/fab"
-            element={contextProvider(2, <FabArtistListPage />)}
-          />
-          <Route
-            path="/fab/:artistId"
-            element={contextProvider(2, <FabArtistPage />)}
-          />
-          <Route
-            path="/fab/:artistId/:chatId"
-            element={contextProvider(2, <FabMessagePage />)}
-          />
-          <Route
-            path="/fab/:artistId/:chatId/msg"
-            element={contextProvider(2, <FabChatPage />)}
-          />
-          <Route
-            path="/fab/search"
-            element={contextProvider(2, <FabSearchPage />)}
-          />
-          <Route
-            path="/fromm"
-            element={contextProvider(3, <FrommArtistListPage />)}
-          />
-          <Route
-            path="/fromm/:artistId"
-            element={contextProvider(3, <FrommChatPage />)}
-          />
-          <Route
-            path="/fromm/:artistId/search"
-            element={contextProvider(3, <FrommSearchPage />)}
-          />
-          <Route
-            path="/fromm/profile/:artistId"
-            element={contextProvider(3, <FrommProfilePage />)}
-          />
-          <Route
-            path="/fromm/profile/:artistId/history"
-            element={contextProvider(3, <FrommProfileHistoryPage />)}
-          />
-          <Route component={NotFound} />
-        </Routes>
+
+        <DriveManifestProvider>
+          <Routes>
+            <Route exact path="/" element={<HomePage />} />
+            <Route
+              path="/vlive"
+              element={contextProvider(1, <VliveChatListPage />)}
+            />
+            <Route
+              path="/vlive/:chatDate"
+              element={contextProvider(1, <VliveChatPage />)}
+            />
+            <Route
+              path="/fab"
+              element={contextProvider(2, <FabArtistListPage />)}
+            />
+            <Route
+              path="/fab/:artistId"
+              element={contextProvider(2, <FabArtistPage />)}
+            />
+            <Route
+              path="/fab/:artistId/:chatId"
+              element={contextProvider(2, <FabMessagePage />)}
+            />
+            <Route
+              path="/fab/:artistId/:chatId/msg"
+              element={contextProvider(2, <FabChatPage />)}
+            />
+            <Route
+              path="/fab/search"
+              element={contextProvider(2, <FabSearchPage />)}
+            />
+            <Route
+              path="/fromm"
+              element={contextProvider(3, <FrommArtistListPage />)}
+            />
+            <Route
+              path="/fromm/:artistId"
+              element={contextProvider(3, <FrommChatPage />)}
+            />
+            <Route
+              path="/fromm/:artistId/search"
+              element={contextProvider(3, <FrommSearchPage />)}
+            />
+            <Route
+              path="/fromm/profile/:artistId"
+              element={contextProvider(3, <FrommProfilePage />)}
+            />
+            <Route
+              path="/fromm/profile/:artistId/history"
+              element={contextProvider(3, <FrommProfileHistoryPage />)}
+            />
+            <Route component={NotFound} />
+          </Routes>
+        </DriveManifestProvider>
       </div>
     </div>
   );
