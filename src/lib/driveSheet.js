@@ -23,8 +23,18 @@ const prefixFor = (title) => {
   return `${title.slice(0, i)}/${title.slice(i + 1)}`;
 };
 
+// Fetch once and reuse the result for every caller
+let pending = null;
+export const loadDriveManifest = () => {
+  if (!pending) {
+    pending = fetchManifest();
+  }
+
+  return pending;
+};
+
 // Fetch all manifest tabs and build the lowercase key to id map
-export const loadDriveManifest = async () => {
+const fetchManifest = async () => {
   const id = sheetId(SHEET);
 
   if (!id || !API_KEY) {

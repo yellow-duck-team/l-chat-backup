@@ -1,8 +1,7 @@
 // Build Google Drive urls from a file id
 
 // Image url via the thumbnail endpoint
-// uc?export=view throws 403s so we use thumbnail instead
-// width caps the longest side, Drive has no reliable full res hotlink
+// Loads are funneled through DriveImage to dodge the concurrent request cap
 export const imageUrl = (id, width = 1600) =>
   id ? `https://drive.google.com/thumbnail?id=${id}&sz=w${width}` : null;
 
