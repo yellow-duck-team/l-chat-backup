@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { parseDate } from 'lib/date';
-import './ChatBubble.css';
-import LoadingSpinner from 'components/LoadingSpinner/LoadingSpinner';
-import { ExclamationCircleOutlined } from '@ant-design/icons';
-import { useFrommDataContext } from 'context/frommDataState';
+import { ExclamationCircleOutlined, StopOutlined } from '@ant-design/icons';
 import { useDriveManifest } from 'context/driveManifestState';
+import { useFrommDataContext } from 'context/frommDataState';
 import { spaceId } from 'contentful/contentfulApi';
+import { parseDate } from 'lib/date';
 import { emojis, kaomojis, noSupport } from 'lib/constants';
-import { StopOutlined } from '@ant-design/icons';
+import LoadingSpinner from 'components/LoadingSpinner/LoadingSpinner';
+import DriveImage from 'components/DriveImage';
+import './ChatBubble.css';
 
 // Convert kaomojis to display properly
 const displayKaomojis = (str, index) => {
@@ -203,6 +203,7 @@ function ChatBubble({
     }
 
     let fallback = null;
+    let driveUrl = null;
 
     if (extension && extension !== '') {
       const file = `${ImageName}_${text}.${extension}`;
@@ -214,23 +215,21 @@ function ChatBubble({
         fallback = `https://images.ctfassets.net/${spaceId}/${mediaurl}/${file}`;
       }
 
-      image = driveImageUrl(key) || fallback;
+      driveUrl = driveImageUrl(key);
+      image = driveUrl || fallback;
     }
 
     return (
       <div className="bubble image">
         {isLoading && <LoadingSpinner />}
-        <img
+        <DriveImage
           className={`${isLoading && 'hidden'}`}
           src={image}
+          width={400}
+          fallback={driveUrl ? fallback : null}
           alt=""
           onLoad={onMediaLoad}
-          onError={(e) => {
-            // If drive url fails, swap to Contentful
-            if (fallback && e.target.src !== fallback) {
-              e.target.src = fallback;
-            }
-          }}
+          onError={onMediaLoad}
           onClick={() => onOpenMedia(true, image, null, null)}
         />
       </div>

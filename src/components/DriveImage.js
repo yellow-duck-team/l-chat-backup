@@ -36,22 +36,22 @@ const sized = (src, width) =>
   width && src ? src.replace(/([?&]sz=w)\d+/, `$1${width}`) : src;
 
 // Image that loads through the shared limit and retries on error
-// A slot is held while loading and freed on load, error or unmount
-function DriveImage({ src, width, retries = 5, onLoad, onError, ...rest }) {
+function DriveImage({
+  src,
+  fallback,
+  width,
+  retries = 5,
+  timeout = 10000,
+  onLoad,
+  onError,
+  ...rest
+}) {
   const [url, setUrl] = useState(null);
   const attempt = useRef(0);
   const holding = useRef(false);
   const settled = useRef(false);
-
-  const startLoad = () => {
-    // The component unmounted while queued, hand the slot back
-    if (settled.current) {
-      release();
-      return;
-    }
-    holding.current = true;
-    setUrl(bust(sized(src, width), attempt.current));
-  };
+  const onFallback = useRef(false);
+  const timer = useRef(null);
 
   const freeSlot = () => {
     if (holding.current) {
@@ -60,45 +60,78 @@ function DriveImage({ src, width, retries = 5, onLoad, onError, ...rest }) {
     }
   };
 
+  const fail = () => {
+    clearTimeout(timer.current);
+    freeSlot();
+
+    // Retry the same source a few times
+    if (attempt.current < retries) {
+      attempt.current += 1;
+      const wait = 500 * attempt.current + Math.random() * 700;
+
+      setTimeout(() => {
+        if (!settled.current) acquire(startLoad);
+      }, wait);
+
+      return;
+    }
+
+    // Swap to the fallback url once
+    if (fallback && !onFallback.current) {
+      onFallback.current = true;
+      attempt.current = 0;
+      acquire(startLoad);
+
+      return;
+    }
+
+    settled.current = true;
+
+    if (onError) onError();
+  };
+
+  const startLoad = () => {
+    // The component settled while queued, hand the slot back
+    if (settled.current) {
+      release();
+      return;
+    }
+
+    holding.current = true;
+    const base = onFallback.current ? fallback : src;
+    setUrl(bust(sized(base, width), attempt.current));
+
+    // Recover the slot if the request never loads or errors
+    clearTimeout(timer.current);
+    timer.current = setTimeout(fail, timeout);
+  };
+
+  const handleLoad = (e) => {
+    clearTimeout(timer.current);
+    settled.current = true;
+    freeSlot();
+
+    if (onLoad) onLoad(e);
+  };
+
   useEffect(() => {
+    if (!src) return undefined;
+
     settled.current = false;
     attempt.current = 0;
+    onFallback.current = false;
+
     acquire(startLoad);
     return () => {
       settled.current = true;
+      clearTimeout(timer.current);
       freeSlot();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [src]);
 
-  const handleLoad = (e) => {
-    settled.current = true;
-    freeSlot();
-    if (onLoad) onLoad(e);
-  };
-
-  const handleError = (e) => {
-    freeSlot();
-    if (attempt.current >= retries) {
-      settled.current = true;
-      if (onError) onError(e);
-      return;
-    }
-    attempt.current += 1;
-    // Re queue after a jittered delay so retries do not collide
-    const wait = 500 * attempt.current + Math.random() * 700;
-    setTimeout(() => {
-      if (!settled.current) acquire(startLoad);
-    }, wait);
-  };
-
   return (
-    <img
-      src={url || undefined}
-      onLoad={handleLoad}
-      onError={handleError}
-      {...rest}
-    />
+    <img src={url || undefined} onLoad={handleLoad} onError={fail} {...rest} />
   );
 }
 

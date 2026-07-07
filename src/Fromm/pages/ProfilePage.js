@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { useFrommDataContext } from 'context/frommDataState';
 import MobileLayout from 'components/MobileLayout';
 import LoadingSpinner from 'components/LoadingSpinner/LoadingSpinner';
-import { useFrommDataContext } from 'context/frommDataState';
+import DriveImage from 'components/DriveImage';
 import './ProfilePage.css';
 
 /**
@@ -29,8 +30,8 @@ function ProfilePage() {
         num: artistNum,
         name: artist.name.slice(-1),
         description: artist.description.slice(-1),
-        profile: artist.profile.slice(-1),
-        background: artist.background.slice(-1)
+        profile: artist.profile.at(-1),
+        background: artist.background.at(-1)
       });
       setIsFetching(false);
     }
@@ -54,11 +55,13 @@ function ProfilePage() {
         <div className={`profile-front ${isLoading && 'hidden'}`}>
           {Artist && (
             <div className="profile flex-col">
-              <img
+              <DriveImage
                 src={Artist.profile}
+                width={600}
                 alt=""
                 className="profile-img"
                 onLoad={() => onMediaLoad(0)}
+                onError={() => onMediaLoad(0)}
               />
               <p className="profile-name">{Artist.name}</p>
               <p className="profile-description">{Artist.description}</p>
@@ -69,11 +72,13 @@ function ProfilePage() {
           </div>
         </div>
         {Artist && (
-          <img
+          <DriveImage
             src={Artist.background}
+            width={800}
             alt=""
             className="bg-img"
             onLoad={() => onMediaLoad(1)}
+            onError={() => onMediaLoad(1)}
           />
         )}
       </div>
