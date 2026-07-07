@@ -22,6 +22,7 @@ function MediaSlide({ media, openMedia }) {
       {media && (
         <DriveImage
           src={media.media}
+          priority
           alt=""
           style={{ display: isLoading ? 'none' : undefined }}
           onLoad={onSettle}

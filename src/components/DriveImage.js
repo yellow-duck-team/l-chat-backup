@@ -14,8 +14,15 @@ const pump = () => {
   }
 };
 
+// Queue a load at the back
 const acquire = (run) => {
   waiting.push(run);
+  pump();
+};
+
+// Queue a load at the front so it runs before other waiting loads
+const acquireFront = (run) => {
+  waiting.unshift(run);
   pump();
 };
 
@@ -36,10 +43,12 @@ const sized = (src, width) =>
   width && src ? src.replace(/([?&]sz=w)\d+/, `$1${width}`) : src;
 
 // Image that loads through the shared limit and retries on error
+// A priority image jumps the queue but the limit still caps concurrency
 function DriveImage({
   src,
   fallback,
   width,
+  priority = false,
   retries = 5,
   timeout = 10000,
   onLoad,
@@ -52,6 +61,9 @@ function DriveImage({
   const settled = useRef(false);
   const onFallback = useRef(false);
   const timer = useRef(null);
+
+  // Priority jumps ahead of other waiting loads, concurrency stays capped
+  const enqueue = (run) => (priority ? acquireFront(run) : acquire(run));
 
   const freeSlot = () => {
     if (holding.current) {
@@ -70,7 +82,7 @@ function DriveImage({
       const wait = 500 * attempt.current + Math.random() * 700;
 
       setTimeout(() => {
-        if (!settled.current) acquire(startLoad);
+        if (!settled.current) enqueue(startLoad);
       }, wait);
 
       return;
@@ -80,7 +92,7 @@ function DriveImage({
     if (fallback && !onFallback.current) {
       onFallback.current = true;
       attempt.current = 0;
-      acquire(startLoad);
+      enqueue(startLoad);
 
       return;
     }
@@ -121,7 +133,7 @@ function DriveImage({
     attempt.current = 0;
     onFallback.current = false;
 
-    acquire(startLoad);
+    enqueue(startLoad);
     return () => {
       settled.current = true;
       clearTimeout(timer.current);
