@@ -131,7 +131,13 @@ function DriveImage({
   }, [src]);
 
   return (
-    <img src={url || undefined} onLoad={handleLoad} onError={fail} {...rest} />
+    <img
+      alt=""
+      src={url || undefined}
+      onLoad={handleLoad}
+      onError={fail}
+      {...rest}
+    />
   );
 }
 
