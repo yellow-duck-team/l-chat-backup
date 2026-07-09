@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { ExclamationCircleOutlined, StopOutlined } from '@ant-design/icons';
-import { useDriveManifest } from 'context/driveManifestState';
-import { useFrommDataContext } from 'context/frommDataState';
-import { spaceId } from 'contentful/contentfulApi';
 import { parseDate } from 'lib/date';
-import { emojis, kaomojis, noSupport } from 'lib/constants';
-import LoadingSpinner from 'components/LoadingSpinner/LoadingSpinner';
-import DriveImage from 'components/DriveImage';
 import './ChatBubble.css';
+import LoadingSpinner from 'components/LoadingSpinner/LoadingSpinner';
+import { ExclamationCircleOutlined } from '@ant-design/icons';
+import { useFrommDataContext } from 'context/frommDataState';
+import { useDriveManifest } from 'context/driveManifestState';
+import DriveImage from 'components/DriveImage';
+import { spaceId } from 'contentful/contentfulApi';
+import { emojis, kaomojis, noSupport } from 'lib/constants';
+import { StopOutlined } from '@ant-design/icons';
 
 // Convert kaomojis to display properly
 const displayKaomojis = (str, index) => {
@@ -116,7 +117,8 @@ function ChatBubble({
   extension = null
 }) {
   const { onOpenMedia } = useFrommDataContext();
-  const { driveImageUrl } = useDriveManifest();
+  const { driveImageUrl, drivePreviewUrl, driveDownloadUrl } =
+    useDriveManifest();
 
   const [ImageName, setImageName] = useState('');
   const [isLoading, setIsLoading] = useState(true);
@@ -162,7 +164,12 @@ function ChatBubble({
     } else if (service === 'vlive') {
       audioMedia = require(`assets/vlive/voice/${ImageName}_${text}.m4a`);
     } else if (mediaurl && mediaurl !== '' && extension && extension !== '') {
-      audioMedia = `https://assets.ctfassets.net/${spaceId}/${mediaurl}/${ImageName}_${text}.${extension}`;
+      const file = `${ImageName}_${text}.${extension}`;
+      const key = `${service}/${artistNum}/${file}`;
+      // Drive download first, Contentful fallback for non migrated audio
+      audioMedia =
+        driveDownloadUrl(key) ||
+        `https://assets.ctfassets.net/${spaceId}/${mediaurl}/${file}`;
     }
     return (
       <div
@@ -239,10 +246,42 @@ function ChatBubble({
   // Video
   if (type === 'Video') {
     if (!dateStr || ImageName === '') return <LoadingSpinner />;
+
+    let preview = null;
+    let poster = null;
     let videoMedia = null;
-    if (mediaurl && mediaurl !== '' && extension && extension !== '') {
-      videoMedia = `https://videos.ctfassets.net/${spaceId}/${mediaurl}/${ImageName}_${text}.${extension}`;
+    if (extension && extension !== '') {
+      const file = `${ImageName}_${text}.${extension}`;
+      const key = `${service}/${artistNum}/${file}`;
+      preview = drivePreviewUrl(key);
+      poster = driveImageUrl(key);
+      if (mediaurl && mediaurl !== '') {
+        videoMedia = `https://videos.ctfassets.net/${spaceId}/${mediaurl}/${file}`;
+      }
     }
+
+    // Drive video opens in a Drive tab, its embedded player crops when inlined
+    if (preview) {
+      const view = preview.replace('/preview', '/view');
+      return (
+        <div
+          className="bubble video video-poster"
+          onClick={() => window.open(view, '_blank', 'noopener')}
+        >
+          {isLoading && <LoadingSpinner />}
+          <DriveImage
+            className={`${isLoading && 'hidden'}`}
+            src={poster}
+            width={400}
+            alt=""
+            onLoad={onMediaLoad}
+            onError={onMediaLoad}
+          />
+          <span className="video-play" />
+        </div>
+      );
+    }
+
     return (
       <div className="bubble video">
         {isLoading && <LoadingSpinner />}

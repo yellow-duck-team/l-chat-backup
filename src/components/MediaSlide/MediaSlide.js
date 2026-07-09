@@ -18,7 +18,11 @@ function MediaSlide({ media, openMedia }) {
 
   return (
     <div className="msg-img">
-      {isLoading && <LoadingSpinner />}
+      {isLoading && (
+        <div className="modal-spinner">
+          <LoadingSpinner />
+        </div>
+      )}
       {media && (
         <DriveImage
           src={media.media}

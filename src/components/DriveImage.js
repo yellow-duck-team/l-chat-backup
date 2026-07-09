@@ -14,15 +14,8 @@ const pump = () => {
   }
 };
 
-// Queue a load at the back
 const acquire = (run) => {
   waiting.push(run);
-  pump();
-};
-
-// Queue a load at the front so it runs before other waiting loads
-const acquireFront = (run) => {
-  waiting.unshift(run);
   pump();
 };
 
@@ -62,8 +55,8 @@ function DriveImage({
   const onFallback = useRef(false);
   const timer = useRef(null);
 
-  // Priority jumps ahead of other waiting loads, concurrency stays capped
-  const enqueue = (run) => (priority ? acquireFront(run) : acquire(run));
+  // Priority loads immediately without waiting for a limiter slot
+  const enqueue = (run) => (priority ? run() : acquire(run));
 
   const freeSlot = () => {
     if (holding.current) {
@@ -105,11 +98,11 @@ function DriveImage({
   const startLoad = () => {
     // The component settled while queued, hand the slot back
     if (settled.current) {
-      release();
+      if (!priority) release();
       return;
     }
 
-    holding.current = true;
+    if (!priority) holding.current = true;
     const base = onFallback.current ? fallback : src;
     setUrl(bust(sized(base, width), attempt.current));
 
