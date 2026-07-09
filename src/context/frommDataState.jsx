@@ -1,13 +1,7 @@
 import { createContext, useContext, useEffect, useState } from 'react';
-import getContentfulFromm from 'contentful/contentfulApi';
+import { loadFrommFromSheet } from 'lib/frommSheet';
 import { loadDriveManifest } from 'lib/driveSheet';
 import { imageUrl } from 'lib/driveAsset';
-
-// Zero pad an index to two digits like 00 01
-const pad = (n) => String(n).padStart(2, '0');
-
-// Extension from a url like file.png
-const extOf = (url) => url.split('?')[0].split('.').pop();
 
 const initialState = {
   frommData: [],
@@ -25,16 +19,22 @@ export function FrommDataProvider({ children }) {
   const [openMedia, setOpenMedia] = useState(false);
 
   useEffect(() => {
-    // Create a controller
     const controller = new AbortController();
-    // Get Fromm Data
     let data = {};
+
     try {
-      Promise.all([getContentfulFromm(), loadDriveManifest()])
+      Promise.all([loadFrommFromSheet(), loadDriveManifest()])
         .then(([res, manifest]) => {
-          // Drive url from a key or the Contentful url when not migrated
-          const resolve = (key, cf) =>
-            imageUrl(manifest[key.toLowerCase()]) || cf;
+          // Ordered image urls for a folder, read from the Drive manifest
+          const imagesFor = (artistId, folder) => {
+            const prefix = `fromm/${artistId}/${folder}/`.toLowerCase();
+
+            return Object.keys(manifest)
+              .filter((k) => k.startsWith(prefix))
+              .sort()
+              .map((k) => imageUrl(manifest[k]));
+          };
+
           let profile = {};
 
           for (let i = 0; i < res.length; i++) {
@@ -42,28 +42,12 @@ export function FrommDataProvider({ children }) {
             const artistId = artistData.artistId;
             data[artistId] = artistData.chatData;
 
-            // Profile and background images
-            const profileImage = [];
-            const backgroundImage = [];
-
-            for (let j = 0; j < res[i].profileImage.length; j++) {
-              const cf = `https:${res[i].profileImage[j].fields.media.fields.file.url}`;
-              const key = `fromm/${artistId}/profile/${pad(j)}.${extOf(cf)}`;
-              profileImage.push(resolve(key, cf));
-            }
-
-            for (let j = 0; j < res[i].backgroundImage.length; j++) {
-              const cf = `https:${res[i].backgroundImage[j].fields.media.fields.file.url}`;
-              const key = `fromm/${artistId}/background/${pad(j)}.${extOf(cf)}`;
-              backgroundImage.push(resolve(key, cf));
-            }
-
             profile[artistId] = {
-              name: res[i].artistName,
-              description: res[i].artistDescription,
-              profileText: res[i].profileText,
-              profile: profileImage,
-              background: backgroundImage
+              name: artistData.artistName,
+              description: artistData.artistDescription,
+              profileText: artistData.profileText,
+              profile: imagesFor(artistId, 'profile'),
+              background: imagesFor(artistId, 'background')
             };
           }
 
