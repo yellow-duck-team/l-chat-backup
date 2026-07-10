@@ -31,15 +31,21 @@ const bust = (src, n) => {
   return `${src}${sep}r=${n}`;
 };
 
-// Rewrite the thumbnail size so grids can request small fast loads
+// Rewrite the thumbnail size for grids (only affects Drive thumbnail urls)
 const sized = (src, width) =>
   width && src ? src.replace(/([?&]sz=w)\d+/, `$1${width}`) : src;
 
-// Image that loads through the shared limit and retries on error
-// A priority image jumps the queue but the limit still caps concurrency
+// Drive urls throttle so they are retried, other hosts fail over at once
+const isDrive = (url) => !!url && url.includes('drive.google.com');
+
+/**
+ * Image component that loads images in order: R2 -> Drive -> Contentful
+ * Drive sources go through the shared limit and retry, others advance on error
+ */
 function DriveImage({
   src,
   fallback,
+  sources,
   width,
   priority = false,
   retries = 5,
@@ -48,11 +54,13 @@ function DriveImage({
   onError,
   ...rest
 }) {
+  const chain = (sources || [src, fallback]).filter(Boolean);
+  const chainKey = chain.join('|');
   const [url, setUrl] = useState(null);
+  const index = useRef(0);
   const attempt = useRef(0);
   const holding = useRef(false);
   const settled = useRef(false);
-  const onFallback = useRef(false);
   const timer = useRef(null);
 
   // Priority loads immediately without waiting for a limiter slot
@@ -69,8 +77,10 @@ function DriveImage({
     clearTimeout(timer.current);
     freeSlot();
 
-    // Retry the same source a few times
-    if (attempt.current < retries) {
+    const current = chain[index.current];
+
+    // Retry a throttled Drive source a few times
+    if (isDrive(current) && attempt.current < retries) {
       attempt.current += 1;
       const wait = 500 * attempt.current + Math.random() * 700;
 
@@ -81,9 +91,9 @@ function DriveImage({
       return;
     }
 
-    // Swap to the fallback url once
-    if (fallback && !onFallback.current) {
-      onFallback.current = true;
+    // Move on to the next source in the chain
+    if (index.current < chain.length - 1) {
+      index.current += 1;
       attempt.current = 0;
       enqueue(startLoad);
 
@@ -96,35 +106,35 @@ function DriveImage({
   };
 
   const startLoad = () => {
-    // The component settled while queued, hand the slot back
     if (settled.current) {
       if (!priority) release();
       return;
     }
-
     if (!priority) holding.current = true;
-    const base = onFallback.current ? fallback : src;
-    setUrl(bust(sized(base, width), attempt.current));
 
-    // Recover the slot if the request never loads or errors
+    const source = chain[index.current];
+    setUrl(bust(sized(source, width), attempt.current));
     clearTimeout(timer.current);
-    timer.current = setTimeout(fail, timeout);
+
+    // Only Drive throttles so only guard Drive sources
+    if (isDrive(source)) {
+      timer.current = setTimeout(fail, timeout);
+    }
   };
 
   const handleLoad = (e) => {
     clearTimeout(timer.current);
     settled.current = true;
     freeSlot();
-
     if (onLoad) onLoad(e);
   };
 
   useEffect(() => {
-    if (!src) return undefined;
+    if (chain.length === 0) return undefined;
 
     settled.current = false;
+    index.current = 0;
     attempt.current = 0;
-    onFallback.current = false;
 
     enqueue(startLoad);
     return () => {
@@ -133,7 +143,7 @@ function DriveImage({
       freeSlot();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [src]);
+  }, [chainKey]);
 
   return (
     <img

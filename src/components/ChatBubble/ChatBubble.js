@@ -6,6 +6,7 @@ import { ExclamationCircleOutlined } from '@ant-design/icons';
 import { useFrommDataContext } from 'context/frommDataState';
 import { useDriveManifest } from 'context/driveManifestState';
 import DriveImage from 'components/DriveImage';
+import { r2Url } from 'lib/driveAsset';
 import { spaceId } from 'contentful/contentfulApi';
 import { emojis, kaomojis, noSupport } from 'lib/constants';
 import { StopOutlined } from '@ant-design/icons';
@@ -209,21 +210,27 @@ function ChatBubble({
       );
     }
 
-    let fallback = null;
-    let driveUrl = null;
+    let sources = [];
 
     if (extension && extension !== '') {
-      const file = `${ImageName}_${text}.${extension}`;
-      // Drive key
-      const key = `${service}/${artistNum}/${file}`;
+      const base = `${ImageName}_${text}`;
+      const file = `${base}.${extension}`;
+      const driveKey = `${service}/${artistNum}/${file}`;
 
-      // Keep Contentful url as a fallback for non migrated images
-      if (mediaurl && mediaurl !== '') {
-        fallback = `https://images.ctfassets.net/${spaceId}/${mediaurl}/${file}`;
-      }
+      // R2 is case sensitive so try the extension as is and lowercased
+      const exts = [...new Set([extension, extension.toLowerCase()])];
+      const r2 = exts.map((ext) =>
+        r2Url(`${service}/${artistNum}/media/${base}.${ext}`)
+      );
 
-      driveUrl = driveImageUrl(key);
-      image = driveUrl || fallback;
+      // Contentful is the last fallback for non migrated images
+      const contentful =
+        mediaurl && mediaurl !== ''
+          ? `https://images.ctfassets.net/${spaceId}/${mediaurl}/${file}`
+          : null;
+
+      // Try R2 (both cases), then Drive, then Contentful
+      sources = [...r2, driveImageUrl(driveKey), contentful].filter(Boolean);
     }
 
     return (
@@ -231,13 +238,12 @@ function ChatBubble({
         {isLoading && <LoadingSpinner />}
         <DriveImage
           className={`${isLoading && 'hidden'}`}
-          src={image}
+          sources={sources}
           width={400}
-          fallback={driveUrl ? fallback : null}
           alt=""
           onLoad={onMediaLoad}
           onError={onMediaLoad}
-          onClick={() => onOpenMedia(true, image, null, null)}
+          onClick={() => onOpenMedia(true, sources, null, null)}
         />
       </div>
     );

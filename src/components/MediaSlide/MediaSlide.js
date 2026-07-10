@@ -25,7 +25,9 @@ function MediaSlide({ media, openMedia }) {
       )}
       {media && (
         <DriveImage
-          src={media.media}
+          {...(Array.isArray(media.media)
+            ? { sources: media.media }
+            : { src: media.media })}
           priority
           alt=""
           style={{ display: isLoading ? 'none' : undefined }}
