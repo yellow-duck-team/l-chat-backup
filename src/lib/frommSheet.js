@@ -2,14 +2,16 @@
  * Load fromm chat data and metadata from a Google Sheet
  * - Chat tabs: fromm-chat-<artist>
  * - Metadata tab (all artists): fromm-meta
+ * - Profile tabs (all artists): fromm-profile
  * Reproduces the sheet to json export so the shape matches the old Contentful data
  */
 
-const SHEET = process.env.REACT_APP_SHEET_URL_CONTENT || '';
+const SHEET = process.env.REACT_APP_SHEET_URL || '';
 const API_KEY = process.env.REACT_APP_SHEETS_API_KEY || '';
 const API = 'https://sheets.googleapis.com/v4/spreadsheets';
 const CHAT_PREFIX = 'fromm-chat-';
 const META_TAB = 'fromm-meta';
+const PROFILE_TAB = 'fromm-profile';
 
 // Pull the spreadsheet id from a full url or a bare id
 const sheetId = (value) => {
@@ -122,6 +124,38 @@ const groupMeta = (rows) => {
   return byArtist;
 };
 
+// Group the fromm-profile rows into per artist profile and background lists
+const groupProfile = (rows) => {
+  const byArtist = {};
+
+  for (const row of rows) {
+    const artist = String(row.artist || '');
+    const type = String(row.type || '').toLowerCase();
+    const filename = row.filename !== undefined ? String(row.filename) : '';
+    const extension = String(row.extension || '');
+    const current = String(row.isCurrent || '').toLowerCase() === 'yes';
+
+    if (!artist || !filename || !extension) continue;
+    if (type !== 'profile' && type !== 'background') continue;
+
+    if (!byArtist[artist]) {
+      byArtist[artist] = { profile: [], background: [] };
+    }
+
+    byArtist[artist][type].push({ filename, extension, current });
+  }
+
+  // Order by filename so the chat avatar index lines up with the list
+  for (const id in byArtist) {
+    byArtist[id].profile.sort((a, b) => a.filename.localeCompare(b.filename));
+    byArtist[id].background.sort((a, b) =>
+      a.filename.localeCompare(b.filename)
+    );
+  }
+
+  return byArtist;
+};
+
 // Fetch the given tabs in one batch call, keyed by tab title
 const batchGet = async (id, tabs) => {
   const ranges = tabs
@@ -168,15 +202,26 @@ export const loadFrommFromSheet = async () => {
     const titles = (info.sheets || []).map((s) => s.properties.title);
     const chatTabs = titles.filter((t) => t.startsWith(CHAT_PREFIX));
     const hasMeta = titles.includes(META_TAB);
+    const hasProfile = titles.includes(PROFILE_TAB);
 
     if (chatTabs.length === 0) {
       return [];
     }
 
-    const tabs = hasMeta ? [...chatTabs, META_TAB] : chatTabs;
+    const tabs = [...chatTabs];
+    if (hasMeta) {
+      tabs.push(META_TAB);
+    }
+    if (hasProfile) {
+      tabs.push(PROFILE_TAB);
+    }
+
     const byTitle = await batchGet(id, tabs);
     const metaByArtist = hasMeta
       ? groupMeta(rowsToObjects(byTitle[META_TAB]))
+      : {};
+    const imagesByArtist = hasProfile
+      ? groupProfile(rowsToObjects(byTitle[PROFILE_TAB]))
       : {};
 
     return chatTabs.map((tab) => {
@@ -186,13 +231,19 @@ export const loadFrommFromSheet = async () => {
         description: [],
         profileText: []
       };
+      const images = imagesByArtist[artistId] || {
+        profile: [],
+        background: []
+      };
 
       return {
         artistId,
         chatData: rowsToObjects(byTitle[tab]),
         artistName: meta.name,
         artistDescription: meta.description,
-        profileText: meta.profileText
+        profileText: meta.profileText,
+        profileImages: images.profile,
+        backgroundImages: images.background
       };
     });
   } catch (e) {

@@ -1,7 +1,10 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import { loadFrommFromSheet } from 'lib/frommSheet';
-import { loadDriveManifest } from 'lib/driveSheet';
-import { imageUrl, r2Url } from 'lib/assetUrl';
+import { r2Url } from 'lib/assetUrl';
+
+// Shown when an artist has no profile or background image
+const PLACEHOLDER_PROFILE = '/fromm/default_profile.png';
+const PLACEHOLDER_BG = '/fromm/default_bg.jpg';
 
 const initialState = {
   frommData: [],
@@ -23,21 +26,29 @@ export function FrommDataProvider({ children }) {
     let data = {};
 
     try {
-      Promise.all([loadFrommFromSheet(), loadDriveManifest()])
-        .then(([res, manifest]) => {
-          // Get source in order: R2 -> Drive -> Contentful
-          const imagesFor = (artistId, folder) => {
-            const prefix = `fromm/${artistId}/${folder}/`.toLowerCase();
+      loadFrommFromSheet()
+        .then((res) => {
+          // Profile and background have their own placeholder
+          const placeholderFor = (type) =>
+            type === 'background' ? PLACEHOLDER_BG : PLACEHOLDER_PROFILE;
 
-            return Object.keys(manifest)
-              .filter((k) => k.startsWith(prefix))
-              .sort()
-              .map((k) => {
-                // R2 path is the key itself - try the extension as is and uppercased
-                const upper = k.replace(/\.[^.]+$/, (m) => m.toUpperCase());
-                const r2 = [...new Set([k, upper])].map(r2Url);
-                return [...r2, imageUrl(manifest[k])].filter(Boolean);
-              });
+          // R2 url for one image with the placeholder as the last fallback
+          const chainFor = (artistId, type, img) =>
+            [
+              r2Url(
+                `fromm/${artistId}/${type}/${img.filename}.${img.extension}`
+              ),
+              placeholderFor(type)
+            ].filter(Boolean);
+
+          // Current image is the latest one flagged current, else the placeholder
+          const currentChain = (artistId, type, images) => {
+            const flagged = images.filter((img) => img.current);
+            const pick =
+              flagged.length > 0 ? flagged[flagged.length - 1] : null;
+            return pick
+              ? chainFor(artistId, type, pick)
+              : [placeholderFor(type)];
           };
 
           let profile = {};
@@ -47,12 +58,25 @@ export function FrommDataProvider({ children }) {
             const artistId = artistData.artistId;
             data[artistId] = artistData.chatData;
 
+            const profileImages = artistData.profileImages || [];
+            const backgroundImages = artistData.backgroundImages || [];
+
             profile[artistId] = {
               name: artistData.artistName,
               description: artistData.artistDescription,
               profileText: artistData.profileText,
-              profile: imagesFor(artistId, 'profile'),
-              background: imagesFor(artistId, 'background')
+              profile: profileImages.map((img) =>
+                chainFor(artistId, 'profile', img)
+              ),
+              background: backgroundImages.map((img) =>
+                chainFor(artistId, 'background', img)
+              ),
+              profileCurrent: currentChain(artistId, 'profile', profileImages),
+              backgroundCurrent: currentChain(
+                artistId,
+                'background',
+                backgroundImages
+              )
             };
           }
 

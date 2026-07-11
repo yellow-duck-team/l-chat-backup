@@ -29,8 +29,8 @@ function ProfilePage() {
         num: artistNum,
         name: artist.name.slice(-1),
         description: artist.description.slice(-1),
-        profile: artist.profile.at(-1),
-        background: artist.background.at(-1)
+        profile: artist.profileCurrent,
+        background: artist.backgroundCurrent
       });
       setIsFetching(false);
     }

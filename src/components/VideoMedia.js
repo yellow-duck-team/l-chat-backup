@@ -1,31 +1,20 @@
 import { useState } from 'react';
 
 /**
- * Video component that plays inline from a real host
- * Sources load in order: R2 -> Contentful, Drive only opens a tab
+ * Video component that plays inline
+ * Sources load in order: R2 -> Contentful
  */
-function VideoMedia({ sources = [], driveView = null }) {
+function VideoMedia({ sources = [] }) {
   const chain = sources.filter(Boolean);
   const [index, setIndex] = useState(0);
   const src = chain[index];
 
-  // No inline host, a play box opens the Drive tab instead
-  if (!src) {
-    if (!driveView) return null;
-    return (
-      <div
-        className="bubble video video-tab"
-        onClick={() => window.open(driveView, '_blank', 'noopener')}
-      >
-        <span className="video-play" />
-      </div>
-    );
-  }
+  if (!src) return null;
 
-  // The media fragment renders the first frame so no separate poster is needed
   return (
     <div className="bubble video">
       <video
+        // Renders the first frame so no separate poster is needed
         src={`${src}#t=0.1`}
         controls
         preload="metadata"

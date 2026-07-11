@@ -4,6 +4,9 @@ import ImageMedia from 'components/ImageMedia';
 import { useFrommDataContext } from 'context/frommDataState';
 import '../pages/ChatPage.css';
 
+// Shown when an artist has no profile or image does not exist
+const PLACEHOLDER = '/fromm/default_profile.png';
+
 /**
  * Profile image component for Fromm chat bubble.
  * @param {number} artistNum
@@ -35,7 +38,7 @@ function Profile({ artistNum, imgNum }) {
       {(isFetching || isLoading) && <LoadingSpinner />}
       <ImageMedia
         className={isLoading ? 'hidden' : ''}
-        sources={ProfileImg || []}
+        sources={ProfileImg || [PLACEHOLDER]}
         width={200}
         alt=""
         onLoad={onMediaLoad}

@@ -50,7 +50,7 @@ function ArtistListPage() {
           num: key,
           name: value.name,
           description: value.description,
-          profile: value.profile.at(-1)
+          profile: value.profileCurrent
         });
       }
       setArtistList(artists);

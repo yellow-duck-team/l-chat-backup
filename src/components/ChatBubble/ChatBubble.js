@@ -1,17 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import { parseDate } from 'lib/date';
-import './ChatBubble.css';
-import LoadingSpinner from 'components/LoadingSpinner/LoadingSpinner';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
+import { StopOutlined } from '@ant-design/icons';
+import { spaceId } from 'contentful/contentfulApi';
 import { useFrommDataContext } from 'context/frommDataState';
-import { useDriveManifest } from 'context/driveManifestState';
+import { r2Url } from 'lib/assetUrl';
+import { emojis, kaomojis } from 'lib/constants';
+import { parseDate } from 'lib/date';
+import LoadingSpinner from 'components/LoadingSpinner/LoadingSpinner';
 import ImageMedia from 'components/ImageMedia';
 import AudioMedia from 'components/AudioMedia';
 import VideoMedia from 'components/VideoMedia';
-import { r2Url } from 'lib/assetUrl';
-import { emojis, kaomojis } from 'lib/constants';
-import { spaceId } from 'contentful/contentfulApi';
-import { StopOutlined } from '@ant-design/icons';
+import './ChatBubble.css';
 
 // Convert kaomojis to display properly
 const displayKaomojis = (str, index) => {
@@ -120,8 +119,6 @@ function ChatBubble({
   extension = null
 }) {
   const { onOpenMedia } = useFrommDataContext();
-  const { driveImageUrl, drivePreviewUrl, driveDownloadUrl } =
-    useDriveManifest();
 
   const [ImageName, setImageName] = useState('');
   const [isLoading, setIsLoading] = useState(true);
@@ -171,7 +168,6 @@ function ChatBubble({
     } else if (mediaurl && mediaurl !== '' && extension && extension !== '') {
       const base = `${ImageName}_${text}`;
       const file = `${base}.${extension}`;
-      const driveKey = `${service}/${artistNum}/${file}`;
 
       // R2 keeps audio under voice
       const exts = [...new Set([extension, extension.toLowerCase()])];
@@ -179,10 +175,9 @@ function ChatBubble({
         r2Url(`${service}/${artistNum}/voice/${base}.${ext}`)
       );
 
-      // Try R2 -> Drive -> Contentful
+      // Try R2 -> Contentful
       audioSources = [
         ...r2,
-        driveDownloadUrl(driveKey),
         `https://assets.ctfassets.net/${spaceId}/${mediaurl}/${file}`
       ].filter(Boolean);
     }
@@ -227,7 +222,6 @@ function ChatBubble({
     if (extension && extension !== '') {
       const base = `${ImageName}_${text}`;
       const file = `${base}.${extension}`;
-      const driveKey = `${service}/${artistNum}/${file}`;
 
       // R2 is case sensitive so try the extension as is and lowercased
       const exts = [...new Set([extension, extension.toLowerCase()])];
@@ -241,8 +235,8 @@ function ChatBubble({
           ? `https://images.ctfassets.net/${spaceId}/${mediaurl}/${file}`
           : null;
 
-      // Try R2 (both cases), then Drive, then Contentful
-      sources = [...r2, driveImageUrl(driveKey), contentful].filter(Boolean);
+      // Try R2 (both cases), then Contentful
+      sources = [...r2, contentful].filter(Boolean);
     }
 
     return (
@@ -266,11 +260,9 @@ function ChatBubble({
     if (!dateStr || ImageName === '') return <LoadingSpinner />;
 
     let sources = [];
-    let driveView = null;
     if (extension && extension !== '') {
       const base = `${ImageName}_${text}`;
       const file = `${base}.${extension}`;
-      const driveKey = `${service}/${artistNum}/${file}`;
 
       // R2 keeps video under video
       const exts = [...new Set([extension, extension.toLowerCase()])];
@@ -284,11 +276,9 @@ function ChatBubble({
           : null;
 
       sources = [...r2, contentful].filter(Boolean);
-      const preview = drivePreviewUrl(driveKey);
-      driveView = preview ? preview.replace('/preview', '/view') : null;
     }
 
-    return <VideoMedia sources={sources} driveView={driveView} />;
+    return <VideoMedia sources={sources} />;
   }
 
   // Emoji

@@ -31,7 +31,7 @@ function SearchBar({ artistNum }) {
     <div className="fromm-artist fromm-search-bar flex-row">
       {profile && profile[artistNum] && (
         <ImageMedia
-          sources={profile[artistNum].profile.at(-1) || []}
+          sources={profile[artistNum].profileCurrent || []}
           width={200}
           alt=""
         />

@@ -28,7 +28,6 @@ function MediaSlide({ media, openMedia }) {
           {...(Array.isArray(media.media)
             ? { sources: media.media }
             : { src: media.media })}
-          priority
           alt=""
           style={{ display: isLoading ? 'none' : undefined }}
           onLoad={onSettle}
