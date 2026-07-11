@@ -1,7 +1,7 @@
 import { CloseOutlined } from '@ant-design/icons';
 import { useState } from 'react';
 import LoadingSpinner from 'components/LoadingSpinner/LoadingSpinner';
-import DriveImage from 'components/DriveImage';
+import ImageMedia from 'components/ImageMedia';
 import './MediaSlide.css';
 
 function MediaSlide({ media, openMedia }) {
@@ -24,7 +24,7 @@ function MediaSlide({ media, openMedia }) {
         </div>
       )}
       {media && (
-        <DriveImage
+        <ImageMedia
           {...(Array.isArray(media.media)
             ? { sources: media.media }
             : { src: media.media })}

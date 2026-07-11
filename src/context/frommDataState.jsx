@@ -1,7 +1,7 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import { loadFrommFromSheet } from 'lib/frommSheet';
 import { loadDriveManifest } from 'lib/driveSheet';
-import { imageUrl, r2Url } from 'lib/driveAsset';
+import { imageUrl, r2Url } from 'lib/assetUrl';
 
 const initialState = {
   frommData: [],

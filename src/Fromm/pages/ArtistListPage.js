@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useFrommDataContext } from 'context/frommDataState';
 import CategorizeModal from 'Fromm/components/CategorizeModal';
 import MobileLayout from 'components/MobileLayout';
-import DriveImage from 'components/DriveImage';
+import ImageMedia from 'components/ImageMedia';
 import './ArtistListPage.css';
 
 /**
@@ -18,7 +18,7 @@ function Artist({ artist, showModal }) {
 
   return (
     <div className="fromm-artist" onClick={onArtist}>
-      <DriveImage sources={artist.profile || []} width={200} alt="" />
+      <ImageMedia sources={artist.profile || []} width={200} alt="" />
       <div className="from-artist-info flex-col">
         <p>{artist.name && artist.name.length > 0 && artist.name.slice(-1)}</p>
         {artist.description &&

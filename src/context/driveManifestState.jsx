@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useMemo, useState } from 'react';
 import { loadDriveManifest } from 'lib/driveSheet';
-import { imageUrl, previewUrl, downloadUrl } from 'lib/driveAsset';
+import { imageUrl, previewUrl, downloadUrl } from 'lib/assetUrl';
 
 const DriveManifestContext = createContext({});
 

@@ -42,7 +42,7 @@ const isDrive = (url) => !!url && url.includes('drive.google.com');
  * Image component that loads images in order: R2 -> Drive -> Contentful
  * Drive sources go through the shared limit and retry, others advance on error
  */
-function DriveImage({
+function ImageMedia({
   src,
   fallback,
   sources,
@@ -156,4 +156,4 @@ function DriveImage({
   );
 }
 
-export default DriveImage;
+export default ImageMedia;

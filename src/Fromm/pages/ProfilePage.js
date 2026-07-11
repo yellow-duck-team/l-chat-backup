@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { useFrommDataContext } from 'context/frommDataState';
 import MobileLayout from 'components/MobileLayout';
 import LoadingSpinner from 'components/LoadingSpinner/LoadingSpinner';
-import DriveImage from 'components/DriveImage';
+import ImageMedia from 'components/ImageMedia';
 import './ProfilePage.css';
 
 /**
@@ -54,7 +54,7 @@ function ProfilePage() {
         <div className={`profile-front ${isLoading && 'hidden'}`}>
           {Artist && (
             <div className="profile flex-col">
-              <DriveImage
+              <ImageMedia
                 sources={Artist.profile || []}
                 width={600}
                 alt=""
@@ -71,7 +71,7 @@ function ProfilePage() {
           </div>
         </div>
         {Artist && (
-          <DriveImage
+          <ImageMedia
             sources={Artist.background || []}
             width={800}
             alt=""

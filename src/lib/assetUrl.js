@@ -1,7 +1,7 @@
 // Build Google Drive urls from a file id
 
 // Image url via the thumbnail endpoint
-// Loads are funneled through DriveImage to dodge the concurrent request cap
+// Loads are funneled through ImageMedia to dodge the concurrent request cap
 export const imageUrl = (id, width = 1600) =>
   id ? `https://drive.google.com/thumbnail?id=${id}&sz=w${width}` : null;
 

@@ -4,7 +4,7 @@ import { useFrommDataContext } from 'context/frommDataState';
 import MobileLayout from 'components/MobileLayout';
 import LoadingSpinner from 'components/LoadingSpinner/LoadingSpinner';
 import MediaSlide from 'components/MediaSlide/MediaSlide';
-import DriveImage from 'components/DriveImage';
+import ImageMedia from 'components/ImageMedia';
 import './ProfileHistoryPage.css';
 
 function ProfileText({ name, description }) {
@@ -38,7 +38,7 @@ function ProfileMediaList({ artistNum, type, media, mediaNum }) {
           key={`profile-history-image-${type}-${i}`}
           className={`profile-img ${isLoading && 'hidden'}`}
         >
-          <DriveImage
+          <ImageMedia
             sources={media[i]}
             width={400}
             alt=""

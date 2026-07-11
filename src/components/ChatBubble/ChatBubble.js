@@ -5,10 +5,10 @@ import LoadingSpinner from 'components/LoadingSpinner/LoadingSpinner';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 import { useFrommDataContext } from 'context/frommDataState';
 import { useDriveManifest } from 'context/driveManifestState';
-import DriveImage from 'components/DriveImage';
+import ImageMedia from 'components/ImageMedia';
 import AudioMedia from 'components/AudioMedia';
 import VideoMedia from 'components/VideoMedia';
-import { r2Url } from 'lib/driveAsset';
+import { r2Url } from 'lib/assetUrl';
 import { emojis, kaomojis } from 'lib/constants';
 import { spaceId } from 'contentful/contentfulApi';
 import { StopOutlined } from '@ant-design/icons';
@@ -248,7 +248,7 @@ function ChatBubble({
     return (
       <div className="bubble image">
         {isLoading && <LoadingSpinner />}
-        <DriveImage
+        <ImageMedia
           className={`${isLoading && 'hidden'}`}
           sources={sources}
           width={400}
