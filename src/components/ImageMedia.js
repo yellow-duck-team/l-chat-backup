@@ -1,12 +1,11 @@
 import React, { useEffect, useRef, useState } from 'react';
 
-// Global limit on how many Drive images load at once
-// Drive caps concurrent requests so we queue the rest
+// Limit on how many Drive images load at once
 const MAX_CONCURRENT = 2;
 let active = 0;
 const waiting = [];
 
-// Start as many queued loads as the limit allows
+// Start as many queued Drive loads as the limit allows
 const pump = () => {
   while (active < MAX_CONCURRENT && waiting.length > 0) {
     active++;
@@ -35,12 +34,12 @@ const bust = (src, n) => {
 const sized = (src, width) =>
   width && src ? src.replace(/([?&]sz=w)\d+/, `$1${width}`) : src;
 
-// Drive urls throttle so they are retried, other hosts fail over at once
+// If the source is a Drive url
 const isDrive = (url) => !!url && url.includes('drive.google.com');
 
 /**
  * Image component that loads images in order: R2 -> Drive -> Contentful
- * Drive sources go through the shared limit and retry, others advance on error
+ * Only Drive goes through the shared limit and retry, others load in parallel
  */
 function ImageMedia({
   src,
@@ -63,8 +62,8 @@ function ImageMedia({
   const settled = useRef(false);
   const timer = useRef(null);
 
-  // Priority loads immediately without waiting for a limiter slot
-  const enqueue = (run) => (priority ? run() : acquire(run));
+  // Google Drive - Wait foor a shared slot
+  const capped = (source) => isDrive(source) && !priority;
 
   const freeSlot = () => {
     if (holding.current) {
@@ -85,17 +84,17 @@ function ImageMedia({
       const wait = 500 * attempt.current + Math.random() * 700;
 
       setTimeout(() => {
-        if (!settled.current) enqueue(startLoad);
+        if (!settled.current) begin();
       }, wait);
 
       return;
     }
 
-    // Move on to the next source in the chain
+    // Move on to the next source
     if (index.current < chain.length - 1) {
       index.current += 1;
       attempt.current = 0;
-      enqueue(startLoad);
+      begin();
 
       return;
     }
@@ -105,20 +104,43 @@ function ImageMedia({
     if (onError) onError();
   };
 
+  // Point the img at the current source
   const startLoad = () => {
+    const source = chain[index.current];
+
     if (settled.current) {
-      if (!priority) release();
+      if (capped(source)) {
+        release();
+      }
+
       return;
     }
-    if (!priority) holding.current = true;
 
-    const source = chain[index.current];
+    if (capped(source)) {
+      holding.current = true;
+    }
+
     setUrl(bust(sized(source, width), attempt.current));
     clearTimeout(timer.current);
 
-    // Only Drive throttles so only guard Drive sources
-    if (isDrive(source)) {
+    // Google Drive - Guard with a timeout
+    if (capped(source)) {
       timer.current = setTimeout(fail, timeout);
+    }
+  };
+
+  // Begin media loading
+  const begin = () => {
+    if (settled.current) {
+      return;
+    }
+
+    if (capped(chain[index.current])) {
+      // Google Drive - Wait for a slot
+      acquire(startLoad);
+    } else {
+      // R2/Contentful - Start loading now
+      startLoad();
     }
   };
 
@@ -126,7 +148,10 @@ function ImageMedia({
     clearTimeout(timer.current);
     settled.current = true;
     freeSlot();
-    if (onLoad) onLoad(e);
+
+    if (onLoad) {
+      onLoad(e);
+    }
   };
 
   useEffect(() => {
@@ -136,7 +161,7 @@ function ImageMedia({
     index.current = 0;
     attempt.current = 0;
 
-    enqueue(startLoad);
+    begin();
     return () => {
       settled.current = true;
       clearTimeout(timer.current);
