@@ -55,7 +55,7 @@ function ProfilePage() {
           {Artist && (
             <div className="profile flex-col">
               <DriveImage
-                src={Artist.profile}
+                sources={Artist.profile || []}
                 width={600}
                 alt=""
                 className="profile-img"
@@ -72,7 +72,7 @@ function ProfilePage() {
         </div>
         {Artist && (
           <DriveImage
-            src={Artist.background}
+            sources={Artist.background || []}
             width={800}
             alt=""
             className="bg-img"

@@ -39,7 +39,7 @@ function ProfileMediaList({ artistNum, type, media, mediaNum }) {
           className={`profile-img ${isLoading && 'hidden'}`}
         >
           <DriveImage
-            src={media[i]}
+            sources={media[i]}
             width={400}
             alt=""
             onLoad={onMediaLoad}

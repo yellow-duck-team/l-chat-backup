@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
+import { useFrommDataContext } from 'context/frommDataState';
 import CategorizeModal from 'Fromm/components/CategorizeModal';
 import MobileLayout from 'components/MobileLayout';
+import DriveImage from 'components/DriveImage';
 import './ArtistListPage.css';
-import { useFrommDataContext } from 'context/frommDataState';
 
 /**
  * Artist profile component
@@ -17,7 +18,7 @@ function Artist({ artist, showModal }) {
 
   return (
     <div className="fromm-artist" onClick={onArtist}>
-      <img src={artist.profile} alt="" />
+      <DriveImage sources={artist.profile || []} width={200} alt="" />
       <div className="from-artist-info flex-col">
         <p>{artist.name && artist.name.length > 0 && artist.name.slice(-1)}</p>
         {artist.description &&
@@ -49,7 +50,7 @@ function ArtistListPage() {
           num: key,
           name: value.name,
           description: value.description,
-          profile: value.profile.slice(-1)
+          profile: value.profile.at(-1)
         });
       }
       setArtistList(artists);

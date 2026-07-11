@@ -6,9 +6,11 @@ import { ExclamationCircleOutlined } from '@ant-design/icons';
 import { useFrommDataContext } from 'context/frommDataState';
 import { useDriveManifest } from 'context/driveManifestState';
 import DriveImage from 'components/DriveImage';
+import AudioMedia from 'components/AudioMedia';
+import VideoMedia from 'components/VideoMedia';
 import { r2Url } from 'lib/driveAsset';
+import { emojis, kaomojis } from 'lib/constants';
 import { spaceId } from 'contentful/contentfulApi';
-import { emojis, kaomojis, noSupport } from 'lib/constants';
 import { StopOutlined } from '@ant-design/icons';
 
 // Convert kaomojis to display properly
@@ -149,7 +151,7 @@ function ChatBubble({
 
   // Voice
   if (type === 'Voice') {
-    let audioMedia = null;
+    let audioSources = [];
     if (service === 'fab') {
       if (text === '' || text === '-') {
         return (
@@ -159,18 +161,30 @@ function ChatBubble({
           </div>
         );
       }
-      audioMedia = require(`assets/fab/${artistNum}/voice/${chatId}_${text}.m4a`);
+      audioSources = [
+        require(`assets/fab/${artistNum}/voice/${chatId}_${text}.m4a`)
+      ];
     } else if (!dateStr || ImageName === '') {
       return <LoadingSpinner />;
     } else if (service === 'vlive') {
-      audioMedia = require(`assets/vlive/voice/${ImageName}_${text}.m4a`);
+      audioSources = [require(`assets/vlive/voice/${ImageName}_${text}.m4a`)];
     } else if (mediaurl && mediaurl !== '' && extension && extension !== '') {
-      const file = `${ImageName}_${text}.${extension}`;
-      const key = `${service}/${artistNum}/${file}`;
-      // Drive download first, Contentful fallback for non migrated audio
-      audioMedia =
-        driveDownloadUrl(key) ||
-        `https://assets.ctfassets.net/${spaceId}/${mediaurl}/${file}`;
+      const base = `${ImageName}_${text}`;
+      const file = `${base}.${extension}`;
+      const driveKey = `${service}/${artistNum}/${file}`;
+
+      // R2 keeps audio under voice
+      const exts = [...new Set([extension, extension.toLowerCase()])];
+      const r2 = exts.map((ext) =>
+        r2Url(`${service}/${artistNum}/voice/${base}.${ext}`)
+      );
+
+      // Try R2 -> Drive -> Contentful
+      audioSources = [
+        ...r2,
+        driveDownloadUrl(driveKey),
+        `https://assets.ctfassets.net/${spaceId}/${mediaurl}/${file}`
+      ].filter(Boolean);
     }
     return (
       <div
@@ -178,9 +192,7 @@ function ChatBubble({
           service === 'vlive' ? 'chat-voice-blue' : 'bubble voice audio'
         }
       >
-        <audio src={audioMedia} controls>
-          {noSupport.audio}
-        </audio>
+        <AudioMedia sources={audioSources} />
       </div>
     );
   }
@@ -253,53 +265,30 @@ function ChatBubble({
   if (type === 'Video') {
     if (!dateStr || ImageName === '') return <LoadingSpinner />;
 
-    let preview = null;
-    let poster = null;
-    let videoMedia = null;
+    let sources = [];
+    let driveView = null;
     if (extension && extension !== '') {
-      const file = `${ImageName}_${text}.${extension}`;
-      const key = `${service}/${artistNum}/${file}`;
-      preview = drivePreviewUrl(key);
-      poster = driveImageUrl(key);
-      if (mediaurl && mediaurl !== '') {
-        videoMedia = `https://videos.ctfassets.net/${spaceId}/${mediaurl}/${file}`;
-      }
-    }
+      const base = `${ImageName}_${text}`;
+      const file = `${base}.${extension}`;
+      const driveKey = `${service}/${artistNum}/${file}`;
 
-    // Drive video opens in a Drive tab, its embedded player crops when inlined
-    if (preview) {
-      const view = preview.replace('/preview', '/view');
-      return (
-        <div
-          className="bubble video video-poster"
-          onClick={() => window.open(view, '_blank', 'noopener')}
-        >
-          {isLoading && <LoadingSpinner />}
-          <DriveImage
-            className={`${isLoading && 'hidden'}`}
-            src={poster}
-            width={400}
-            alt=""
-            onLoad={onMediaLoad}
-            onError={onMediaLoad}
-          />
-          <span className="video-play" />
-        </div>
+      // R2 keeps video under video
+      const exts = [...new Set([extension, extension.toLowerCase()])];
+      const r2 = exts.map((ext) =>
+        r2Url(`${service}/${artistNum}/video/${base}.${ext}`)
       );
+
+      const contentful =
+        mediaurl && mediaurl !== ''
+          ? `https://videos.ctfassets.net/${spaceId}/${mediaurl}/${file}`
+          : null;
+
+      sources = [...r2, contentful].filter(Boolean);
+      const preview = drivePreviewUrl(driveKey);
+      driveView = preview ? preview.replace('/preview', '/view') : null;
     }
 
-    return (
-      <div className="bubble video">
-        {isLoading && <LoadingSpinner />}
-        <video
-          className={isLoading ? 'hidden' : ''}
-          controls
-          onLoadedData={onMediaLoad}
-        >
-          <source src={videoMedia} type="video/MP4" />
-        </video>
-      </div>
-    );
+    return <VideoMedia sources={sources} driveView={driveView} />;
   }
 
   // Emoji

@@ -1,7 +1,7 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import { loadFrommFromSheet } from 'lib/frommSheet';
 import { loadDriveManifest } from 'lib/driveSheet';
-import { imageUrl } from 'lib/driveAsset';
+import { imageUrl, r2Url } from 'lib/driveAsset';
 
 const initialState = {
   frommData: [],
@@ -25,14 +25,19 @@ export function FrommDataProvider({ children }) {
     try {
       Promise.all([loadFrommFromSheet(), loadDriveManifest()])
         .then(([res, manifest]) => {
-          // Ordered image urls for a folder, read from the Drive manifest
+          // Get source in order: R2 -> Drive -> Contentful
           const imagesFor = (artistId, folder) => {
             const prefix = `fromm/${artistId}/${folder}/`.toLowerCase();
 
             return Object.keys(manifest)
               .filter((k) => k.startsWith(prefix))
               .sort()
-              .map((k) => imageUrl(manifest[k]));
+              .map((k) => {
+                // R2 path is the key itself - try the extension as is and uppercased
+                const upper = k.replace(/\.[^.]+$/, (m) => m.toUpperCase());
+                const r2 = [...new Set([k, upper])].map(r2Url);
+                return [...r2, imageUrl(manifest[k])].filter(Boolean);
+              });
           };
 
           let profile = {};

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import LoadingSpinner from 'components/LoadingSpinner/LoadingSpinner';
+import DriveImage from 'components/DriveImage';
 import { useFrommDataContext } from 'context/frommDataState';
 import '../pages/ChatPage.css';
 
@@ -32,11 +33,13 @@ function Profile({ artistNum, imgNum }) {
   return (
     <div className="profile select-none">
       {(isFetching || isLoading) && <LoadingSpinner />}
-      <img
+      <DriveImage
         className={isLoading ? 'hidden' : ''}
-        src={ProfileImg}
+        sources={ProfileImg || []}
+        width={200}
         alt=""
         onLoad={onMediaLoad}
+        onError={onMediaLoad}
       />
     </div>
   );
