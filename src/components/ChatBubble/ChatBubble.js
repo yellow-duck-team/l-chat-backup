@@ -4,6 +4,7 @@ import { StopOutlined } from '@ant-design/icons';
 import { spaceId } from 'contentful/contentfulApi';
 import { useFrommDataContext } from 'context/frommDataState';
 import { r2Url } from 'lib/assetUrl';
+import { fabSources } from 'lib/fabMedia';
 import { emojis, kaomojis } from 'lib/constants';
 import { parseDate } from 'lib/date';
 import LoadingSpinner from 'components/LoadingSpinner/LoadingSpinner';
@@ -158,9 +159,7 @@ function ChatBubble({
           </div>
         );
       }
-      audioSources = [
-        require(`assets/fab/${artistNum}/voice/${chatId}_${text}.m4a`)
-      ];
+      audioSources = fabSources(`${artistNum}/voice/${chatId}_${text}.m4a`);
     } else if (!dateStr || ImageName === '') {
       return <LoadingSpinner />;
     } else if (service === 'vlive') {

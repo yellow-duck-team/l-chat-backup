@@ -7,7 +7,7 @@ export const groupByKey = (xs, key) => {
   }, {});
 };
 
-// Group data by date
+// Fromm - Group data by date
 export const groupByDate = (date, key, data, isNull = false) => {
   // If data is invalid
   if (!data || data.length === 0) return [];
@@ -24,7 +24,7 @@ export const groupByDate = (date, key, data, isNull = false) => {
   return data;
 };
 
-// Get chat object by date
+// Fromm - Get chat object by date
 export const chatObjByDate = (data, date, dateStr) => {
   let chatList = [];
   for (let i = 1; i < data.length; i++) {
@@ -41,69 +41,59 @@ export const chatObjByDate = (data, date, dateStr) => {
   return chatList;
 };
 
-// Get text data by message
-export const chatByMsg = (data) => {
-  let dataByMsg = [];
-  let i = 0;
-  while (i < data[0].length) {
-    if (data[0][i] === '') break;
-    // Get text data by line
-    dataByMsg.push({
-      msgNum: data[0][i],
-      data: data[2].slice(i, i + 4)
-    });
-    i += 4;
-  }
-  return dataByMsg;
+// Fab - A grouped bubble to the legacy [text, reply, type, date] shape
+const lineArr = (line) => [
+  line.text || '',
+  line.reply || '',
+  line.type || '',
+  line.date || ''
+];
+
+// Fab - Feed - one entry per message, using its first bubble (the main post)
+export const chatByMsg = (messages) => {
+  if (!messages || messages.length === 0) return [];
+  return messages
+    .filter((m) => m.lines && m.lines.length > 0)
+    .map((m) => ({ msgNum: m.msg, data: lineArr(m.lines[0]) }));
 };
 
-const countReply = (data, index) => {
-  // i, i + 4
-  let count = 0;
-  while (count < data.length && data[count][index] !== '') {
-    count++;
+// Bubbles for one message, or search matches across every message
+export const chatByMsgLine = (chatId, messages, searchText = null) => {
+  if (!messages || messages.length === 0) {
+    return searchText === null ? { text: [], replyCount: 0 } : { text: [] };
   }
-  return count;
-};
 
-// Get text data by message by line
-export const chatByMsgLine = (chatId, data, searchText = null) => {
-  let text = [];
-  let replyCount = 0;
-  let dataByText = [];
-  for (let i = 0; i < data[0].length; i += 4) {
-    // Get text data by line
-    if (chatId === null || chatId === data[0][i]) {
-      let dataByLine = [];
-      for (let j = 2; j < data.length; j++) {
-        const slicedText = data[j].slice(i, i + 4);
-        if (slicedText[2] === '') {
-          // Empty line
-          break;
+  // Search matching text bubbles
+  if (searchText !== null) {
+    const results = [];
+    for (const m of messages) {
+      for (const line of m.lines) {
+        if (
+          (line.type === 'Text' || line.type === 'Reply') &&
+          line.text &&
+          line.text.includes(searchText)
+        ) {
+          results.push({
+            chatId: m.msg,
+            chatDate: line.date,
+            chatText: lineArr(line)
+          });
         }
-        if (searchText === null) {
-          dataByLine.push(slicedText);
-        } else {
-          if (slicedText[2] === 'Text' || slicedText[2] === 'Reply') {
-            if (slicedText[0].includes(searchText)) {
-              dataByText.push({
-                chatId: data[0][i],
-                chatDate: slicedText[3],
-                chatText: slicedText
-              });
-            }
-          }
-        }
-      }
-      if (searchText === null) {
-        text = dataByLine;
-        replyCount = countReply(data.slice(3, data.length), i);
-        break;
       }
     }
+    return { text: results };
   }
-  if (text.length === 0) text = dataByText;
-  return { text, replyCount };
+
+  // A single message
+  const m = messages.find((x) => String(x.msg) === String(chatId));
+  if (!m) {
+    return { text: [], replyCount: 0 };
+  }
+
+  return {
+    text: m.lines.map(lineArr),
+    replyCount: Math.max(0, m.lines.length - 1)
+  };
 };
 
 // Get text data by search text

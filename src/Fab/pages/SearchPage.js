@@ -6,11 +6,10 @@ import LoadingSpinner from 'components/LoadingSpinner/LoadingSpinner';
 import MobileLayout from 'components/MobileLayout';
 import { useFabDataContext } from 'context/fabDataState';
 import { chatByMsgLine } from 'lib/group';
-import { getFabPromise } from 'api/getData';
 import './SearchPage.css';
 
 function SearchPage() {
-  const { fabData, setFabData } = useFabDataContext();
+  const { fabData } = useFabDataContext();
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -56,28 +55,6 @@ function SearchPage() {
       setIsFetching(false);
     }
   }, [ArtistNum, SearchText, CSVText.length, fabData]);
-
-  // If data cannot be pulled from context API
-  useEffect(() => {
-    const timerId = setTimeout(() => {
-      if (!isFetching) return;
-      if (!ArtistNum || ArtistNum === '') return;
-      if (SearchText === '' || CSVText.length === 0) {
-        getFabPromise(ArtistNum).then((res) => {
-          const fab = JSON.parse(JSON.stringify(res));
-          if (fab && fab.length > 0) {
-            setFabData(fab);
-            // Get text data by message
-            const { text } = chatByMsgLine(null, fab, SearchText);
-            setCSVText(text);
-          }
-        });
-      }
-      setIsFetching(false);
-    }, 3000);
-    // Cleanup the timer when component unmouts
-    return () => clearTimeout(timerId);
-  });
 
   const searchResults =
     CSVText.length > 0
