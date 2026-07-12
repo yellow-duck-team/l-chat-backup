@@ -1,7 +1,6 @@
 import React from 'react';
 import { richTextStyles } from 'lib/constants';
 import { fabSources } from 'lib/fabMedia';
-import LoadingSpinner from 'components/LoadingSpinner/LoadingSpinner';
 import ImageMedia from 'components/ImageMedia';
 import 'Fab/pages/MessagePage.css';
 import './RichText.css';
@@ -69,14 +68,13 @@ const renderRichTextImgGrid = (
     const sources = fabSources(`${artistNum}/media/${mediaId}_${i}.jpg`);
     const imageComponent = (
       <React.Fragment key={`rich-img-${lineNum}-${i}`}>
-        {isLoading && <LoadingSpinner />}
         <ImageMedia
           sources={sources}
+          loading="lazy"
           onClick={() =>
             onOpenMedia(true, sources, currImg, totalImgCount + imgCount)
           }
           alt=""
-          className={isLoading ? 'hidden' : ''}
           onLoad={onMediaLoad}
           onError={onMediaLoad}
         />

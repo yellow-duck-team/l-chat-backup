@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { convertDate } from 'lib/date';
 import { chatByMsg } from 'lib/group';
 import { fabSources } from 'lib/fabMedia';
+import { useInfiniteScroll } from 'hooks/useInfiniteScroll';
 import { useFabDataContext } from 'context/fabDataState';
 import fabArtists from 'assets/fab/artist_info.json';
 import Video from 'Fab/components/Video';
@@ -99,6 +100,8 @@ function ArtistPage() {
   const [CSVText, setCSVText] = useState([]);
   const [isFetching, setIsFetching] = useState(true);
 
+  const { visible, sentinelRef } = useInfiniteScroll(CSVText.length, 9);
+
   useEffect(() => {
     const chatId = location.pathname.split('/')[2];
     setArtistNum(chatId);
@@ -136,18 +139,19 @@ function ArtistPage() {
 
   const fabMsgGrid = () => {
     const rows = [];
+    const count = Math.min(visible, CSVText.length);
 
-    for (let i = 0; i < CSVText.length; i += 3) {
+    for (let i = 0; i < count; i += 3) {
       rows.push(
         <div key={`artist-msg-row-${i / 3}`} className="flex-row">
-          {i < CSVText.length && (
+          {i < count && (
             <FabMsgImg
               key={`artist-msg-${i}`}
               artistNum={ArtistNum}
               data={CSVText[i]}
             />
           )}
-          {i + 1 < CSVText.length ? (
+          {i + 1 < count ? (
             <FabMsgImg
               key={`artist-msg-${i + 1}`}
               artistNum={ArtistNum}
@@ -156,7 +160,7 @@ function ArtistPage() {
           ) : (
             <div className="artist-msg select-none"></div>
           )}
-          {i + 2 < CSVText.length ? (
+          {i + 2 < count ? (
             <FabMsgImg
               key={`artist-msg-${i + 2}`}
               artistNum={ArtistNum}
@@ -194,7 +198,12 @@ function ArtistPage() {
           </div>
           <div className="artist-body flex-col">
             {CSVText && CSVText.length > 1 ? (
-              fabMsgGrid()
+              <>
+                {fabMsgGrid()}
+                {visible < CSVText.length && (
+                  <div ref={sentinelRef} style={{ height: '1px' }} />
+                )}
+              </>
             ) : (
               <EmptyList listType="Message history" />
             )}
