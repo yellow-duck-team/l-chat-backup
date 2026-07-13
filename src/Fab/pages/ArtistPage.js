@@ -62,6 +62,7 @@ function FabMsgImg({ artistNum, data }) {
         className={isLoading ? 'hidden' : ''}
         width="750"
         height="500"
+        preload="metadata"
         onLoadedData={onMediaLoad}
       />
     );
