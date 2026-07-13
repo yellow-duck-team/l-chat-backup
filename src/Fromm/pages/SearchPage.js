@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import MobileLayout from 'components/MobileLayout';
 import LoadingSpinner from 'components/LoadingSpinner/LoadingSpinner';
+import ImageMedia from 'components/ImageMedia';
 import { searchText } from 'lib/group';
 import { useFrommDataContext } from 'context/frommDataState';
 import { Chat } from 'Fromm/pages/ChatPage';
@@ -29,7 +30,11 @@ function SearchBar({ artistNum }) {
   return (
     <div className="fromm-artist fromm-search-bar flex-row">
       {profile && profile[artistNum] && (
-        <img src={profile[artistNum].profile.slice(-1)} alt="" />
+        <ImageMedia
+          sources={profile[artistNum].profileCurrent || []}
+          width={200}
+          alt=""
+        />
       )}
       <div className="fromm-search flex-row">
         <input

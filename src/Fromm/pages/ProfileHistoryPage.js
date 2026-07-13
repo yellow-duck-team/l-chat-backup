@@ -4,6 +4,7 @@ import { useFrommDataContext } from 'context/frommDataState';
 import MobileLayout from 'components/MobileLayout';
 import LoadingSpinner from 'components/LoadingSpinner/LoadingSpinner';
 import MediaSlide from 'components/MediaSlide/MediaSlide';
+import ImageMedia from 'components/ImageMedia';
 import './ProfileHistoryPage.css';
 
 function ProfileText({ name, description }) {
@@ -15,68 +16,27 @@ function ProfileText({ name, description }) {
   );
 }
 
-function ProfileMediaList({ artistNum, type, media, mediaNum }) {
+function ProfileMediaList({ type, media }) {
   const { onOpenMedia } = useFrommDataContext();
-  let fetchedMedia = 0;
 
-  const [MediaList, setMediaList] = useState(null);
-  const [FetchedMedia, setFetchedMedia] = useState(0);
-  const [isLoading, setIsLoading] = useState(true);
+  if (!media || media.length === 0) {
+    return null;
+  }
 
-  const onMediaLoad = () => {
-    setFetchedMedia(fetchedMedia + 1);
-    fetchedMedia++;
-  };
-
-  const getMediaList = (num) => {
-    if (!media) return null;
-    const images = [];
-    for (let i = 0; i < num; i++) {
-      images.push(
-        <div
-          key={`profile-history-image-${type}-${i}`}
-          className={`profile-img ${isLoading && 'hidden'}`}
-        >
-          <img
-            src={media[i]}
-            alt=""
-            onLoad={onMediaLoad}
-            onClick={() => onOpenMedia(true, media[i], null, null)}
-          />
-        </div>
-      );
-    }
-    return images;
-  };
-
-  useEffect(() => {
-    if (!artistNum || !type) return;
-    if (
-      (media === undefined || media === null) &&
-      (mediaNum === undefined || mediaNum === null)
-    )
-      return;
-    let images = getMediaList(mediaNum ? mediaNum + 1 : media.length);
-    setMediaList(images);
-  }, [artistNum, type, mediaNum, isLoading]);
-
-  useEffect(() => {
-    if (
-      !artistNum ||
-      !type ||
-      ((media === undefined || media === null) &&
-        (mediaNum === undefined || mediaNum === null)) ||
-      !isLoading ||
-      !MediaList
-    )
-      return;
-    setIsLoading(FetchedMedia !== MediaList.length);
-  }, [artistNum, type, mediaNum, MediaList, FetchedMedia]);
-
+  // Lazy load images
   return (
     <div className="profile-img-list">
-      {isLoading && <LoadingSpinner />}
-      {MediaList}
+      {media.map((sources, i) => (
+        <div key={`profile-history-image-${type}-${i}`} className="profile-img">
+          <ImageMedia
+            sources={sources}
+            width={400}
+            loading="lazy"
+            alt=""
+            onClick={() => onOpenMedia(true, sources, null, null)}
+          />
+        </div>
+      ))}
     </div>
   );
 }
@@ -154,12 +114,7 @@ function ProfileHistoryPage() {
             {isFetching || !Artist?.num || !Artist.profile ? (
               <LoadingSpinner />
             ) : (
-              <ProfileMediaList
-                artistNum={Artist.num}
-                type="profile"
-                media={Artist.profile}
-                mediaNum={Artist?.profile ? Number(Artist.profile) : -1}
-              />
+              <ProfileMediaList type="profile" media={Artist.profile} />
             )}
           </div>
         </div>
@@ -171,12 +126,7 @@ function ProfileHistoryPage() {
             {isFetching || !Artist?.num || !Artist.background ? (
               <LoadingSpinner />
             ) : (
-              <ProfileMediaList
-                artistNum={Artist.num}
-                type="background"
-                media={Artist.background}
-                mediaNum={Artist?.background ? Number(Artist.background) : -1}
-              />
+              <ProfileMediaList type="background" media={Artist.background} />
             )}
           </div>
         </div>

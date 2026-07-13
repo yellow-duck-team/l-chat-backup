@@ -5,12 +5,11 @@ import LoadingSpinner from 'components/LoadingSpinner/LoadingSpinner';
 import EmptyList from 'components/EmptyList';
 import MobileLayout from 'components/MobileLayout';
 import { chatByMsgLine } from 'lib/group';
-import { getFabPromise } from 'api/getData';
 import { useFabDataContext } from 'context/fabDataState';
 import './ChatPage.css';
 
 function ChatPage() {
-  const { fabData, setFabData } = useFabDataContext();
+  const { fabData } = useFabDataContext();
   const location = useLocation();
   const artistNum = useMemo(
     () => location.pathname.split('/')[2],
@@ -43,28 +42,6 @@ function ChatPage() {
       setIsFetching(false);
     }
   }, [artistNum, chatId, CSVText.length, fabData]);
-
-  // If data cannot be pulled from context API
-  useEffect(() => {
-    const timerId = setTimeout(() => {
-      if (!isFetching) return;
-      if (!artistNum || artistNum === '' || chatId === '') return;
-      if (!CSVText || CSVText.length === 0) {
-        getFabPromise(artistNum).then((res) => {
-          const fab = JSON.parse(JSON.stringify(res));
-          if (fab && fab.length > 0) {
-            setFabData(fab);
-            // Get text data by message
-            const { text } = chatByMsgLine(chatId, fab);
-            setCSVText(text);
-          }
-        });
-      }
-      setIsFetching(false);
-    }, 3000);
-    // Cleanup the timer when component unmouts
-    return () => clearTimeout(timerId);
-  });
 
   return (
     <MobileLayout

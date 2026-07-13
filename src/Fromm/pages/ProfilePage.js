@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { useFrommDataContext } from 'context/frommDataState';
 import MobileLayout from 'components/MobileLayout';
 import LoadingSpinner from 'components/LoadingSpinner/LoadingSpinner';
-import { useFrommDataContext } from 'context/frommDataState';
+import ImageMedia from 'components/ImageMedia';
 import './ProfilePage.css';
 
 /**
@@ -17,7 +18,6 @@ function ProfilePage() {
   const [Artist, setArtist] = useState(null);
   const [isFetching, setIsFetching] = useState(true);
   const [isProfileLoading, setIsProfileLoading] = useState(true);
-  const [isBgLoading, setIsBgLoading] = useState(true);
 
   useEffect(() => {
     if (!isFetching) return;
@@ -29,23 +29,23 @@ function ProfilePage() {
         num: artistNum,
         name: artist.name.slice(-1),
         description: artist.description.slice(-1),
-        profile: artist.profile.slice(-1),
-        background: artist.background.slice(-1)
+        profile: artist.profileCurrent,
+        background: artist.backgroundCurrent
       });
       setIsFetching(false);
     }
   }, [location.pathname, profile]);
 
-  const onMediaLoad = (type) => {
-    if (type === 0) setIsProfileLoading(false);
-    if (type === 1) setIsBgLoading(false);
+  const onMediaLoad = () => {
+    setIsProfileLoading(false);
   };
 
   const onButton = () => {
     navigate(`/fromm/profile/${Artist.num}/history`);
   };
 
-  const isLoading = isFetching || isProfileLoading || isBgLoading;
+  // Background loads on its own so the profile and button do not wait for it
+  const isLoading = isFetching || isProfileLoading;
 
   return (
     <MobileLayout className="mobile-header fromm" headerUrl="/fromm">
@@ -54,11 +54,13 @@ function ProfilePage() {
         <div className={`profile-front ${isLoading && 'hidden'}`}>
           {Artist && (
             <div className="profile flex-col">
-              <img
-                src={Artist.profile}
+              <ImageMedia
+                sources={Artist.profile || []}
+                width={600}
                 alt=""
                 className="profile-img"
-                onLoad={() => onMediaLoad(0)}
+                onLoad={onMediaLoad}
+                onError={onMediaLoad}
               />
               <p className="profile-name">{Artist.name}</p>
               <p className="profile-description">{Artist.description}</p>
@@ -69,11 +71,11 @@ function ProfilePage() {
           </div>
         </div>
         {Artist && (
-          <img
-            src={Artist.background}
+          <ImageMedia
+            sources={Artist.background || []}
+            width={800}
             alt=""
             className="bg-img"
-            onLoad={() => onMediaLoad(1)}
           />
         )}
       </div>

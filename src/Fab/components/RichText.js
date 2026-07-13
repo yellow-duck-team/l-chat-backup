@@ -1,6 +1,7 @@
-import LoadingSpinner from 'components/LoadingSpinner/LoadingSpinner';
 import React from 'react';
 import { richTextStyles } from 'lib/constants';
+import { fabSources } from 'lib/fabMedia';
+import ImageMedia from 'components/ImageMedia';
 import 'Fab/pages/MessagePage.css';
 import './RichText.css';
 
@@ -59,24 +60,23 @@ const renderRichTextImgGrid = (
   onMediaLoad = null
 ) => {
   const imgCount = text.split('(Image)').length - 1;
+  const mediaId = chatId.length === 1 ? '0' + chatId : chatId;
   let images = [];
   let i = totalImgCount;
   while (i < totalImgCount + imgCount) {
     let currImg = i;
-    const image = require(`assets/fab/${artistNum}/media/${
-      chatId.length === 1 ? '0' + chatId : chatId
-    }_${i}.jpg`);
+    const sources = fabSources(`${artistNum}/media/${mediaId}_${i}.jpg`);
     const imageComponent = (
       <React.Fragment key={`rich-img-${lineNum}-${i}`}>
-        {isLoading && <LoadingSpinner />}
-        <img
-          src={image}
+        <ImageMedia
+          sources={sources}
+          loading="lazy"
           onClick={() =>
-            onOpenMedia(true, image, currImg, totalImgCount + imgCount)
+            onOpenMedia(true, sources, currImg, totalImgCount + imgCount)
           }
           alt=""
-          className={isLoading ? 'hidden' : ''}
           onLoad={onMediaLoad}
+          onError={onMediaLoad}
         />
       </React.Fragment>
     );
@@ -99,11 +99,14 @@ const renderRichTextImgGrid = (
 // Render styled text
 const renderStyledText = (text) => {
   const firstStyle = stylePrecedence(text);
+
   // If text doesn't have style
   if (firstStyle === '') return text;
+
   // If text has style
   let textListToStyle = text.split(`(${firstStyle})`);
   const splitText = textListToStyle[1].split(`(/${firstStyle})`);
+
   return (
     <span>
       {textListToStyle[0]}
@@ -123,12 +126,15 @@ const renderStyledText = (text) => {
 const stylePrecedence = (text) => {
   let index = -1;
   let firstStyle = '';
+
   for (let i = 0; i < richTextStyles.length; i++) {
     const j = text.indexOf(`(${richTextStyles[i]})`);
+
     if (j >= 0 && (index < 0 || j < index)) {
       index = j;
       firstStyle = richTextStyles[i];
     }
   }
+
   return firstStyle;
 };

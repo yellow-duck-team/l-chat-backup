@@ -1,5 +1,10 @@
 import { createContext, useContext, useEffect, useState } from 'react';
-import getContentfulFromm from 'contentful/contentfulApi';
+import { loadFrommFromSheet } from 'lib/frommSheet';
+import { r2Url } from 'lib/assetUrl';
+
+// Shown when an artist has no profile or background image
+const PLACEHOLDER_PROFILE = '/fromm/default_profile.png';
+const PLACEHOLDER_BG = '/fromm/default_bg.jpg';
 
 const initialState = {
   frommData: [],
@@ -17,44 +22,72 @@ export function FrommDataProvider({ children }) {
   const [openMedia, setOpenMedia] = useState(false);
 
   useEffect(() => {
-    // Create a controller
     const controller = new AbortController();
-    // Get Fromm Data
     let data = {};
+
     try {
-      getContentfulFromm().then((res) => {
-        let profile = {};
-        for (let i = 0; i < res.length; i++) {
-          const artistData = res[i];
-          data[artistData.artistId] = artistData.chatData;
-          // Profile and background images
-          const profileImage = [];
-          const backgroundImage = [];
-          for (let j = 0; j < res[i].profileImage.length; j++) {
-            profileImage.push(
-              `https:${res[i].profileImage[j].fields.media.fields.file.url}`
-            );
-          }
-          for (let j = 0; j < res[i].backgroundImage.length; j++) {
-            backgroundImage.push(
-              `https:${res[i].backgroundImage[j].fields.media.fields.file.url}`
-            );
-          }
-          profile[artistData.artistId] = {
-            name: res[i].artistName,
-            description: res[i].artistDescription,
-            profileText: res[i].profileText,
-            profile: profileImage,
-            background: backgroundImage
+      loadFrommFromSheet()
+        .then((res) => {
+          // Profile and background have their own placeholder
+          const placeholderFor = (type) =>
+            type === 'background' ? PLACEHOLDER_BG : PLACEHOLDER_PROFILE;
+
+          // R2 url for one image with the placeholder as the last fallback
+          const chainFor = (artistId, type, img) =>
+            [
+              r2Url(
+                `fromm/${artistId}/${type}/${img.filename}.${img.extension}`
+              ),
+              placeholderFor(type)
+            ].filter(Boolean);
+
+          // Current image is the latest one flagged current, else the placeholder
+          const currentChain = (artistId, type, images) => {
+            const flagged = images.filter((img) => img.current);
+            const pick =
+              flagged.length > 0 ? flagged[flagged.length - 1] : null;
+            return pick
+              ? chainFor(artistId, type, pick)
+              : [placeholderFor(type)];
           };
-        }
-        console.log('-');
-        setFrommData(data);
-        setProfile(profile);
-      });
+
+          let profile = {};
+
+          for (let i = 0; i < res.length; i++) {
+            const artistData = res[i];
+            const artistId = artistData.artistId;
+            data[artistId] = artistData.chatData;
+
+            const profileImages = artistData.profileImages || [];
+            const backgroundImages = artistData.backgroundImages || [];
+
+            profile[artistId] = {
+              name: artistData.artistName,
+              description: artistData.artistDescription,
+              profileText: artistData.profileText,
+              profile: profileImages.map((img) =>
+                chainFor(artistId, 'profile', img)
+              ),
+              background: backgroundImages.map((img) =>
+                chainFor(artistId, 'background', img)
+              ),
+              profileCurrent: currentChain(artistId, 'profile', profileImages),
+              backgroundCurrent: currentChain(
+                artistId,
+                'background',
+                backgroundImages
+              )
+            };
+          }
+
+          setFrommData(data);
+          setProfile(profile);
+        })
+        .catch(() => setFrommData([]));
     } catch (e) {
       setFrommData([]);
     }
+
     // Aborts the request when the component umounts
     return () => controller?.abort();
   }, []);

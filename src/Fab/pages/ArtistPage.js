@@ -1,14 +1,17 @@
 import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { convertDate } from 'lib/date';
-import { getFabPromise } from 'api/getData';
 import { chatByMsg } from 'lib/group';
+import { fabSources } from 'lib/fabMedia';
+import { useInfiniteScroll } from 'hooks/useInfiniteScroll';
 import { useFabDataContext } from 'context/fabDataState';
 import fabArtists from 'assets/fab/artist_info.json';
+import Video from 'Fab/components/Video';
 import Header from 'components/Header/Header';
 import LoadingSpinner from 'components/LoadingSpinner/LoadingSpinner';
-import './ArtistPage.css';
+import ImageMedia from 'components/ImageMedia';
 import EmptyList from 'components/EmptyList';
+import './ArtistPage.css';
 
 function FabMsgImg({ artistNum, data }) {
   const navigate = useNavigate();
@@ -45,30 +48,33 @@ function FabMsgImg({ artistNum, data }) {
   }
 
   let msgNum = data.msgNum;
-  if (msgNum.length === 1) msgNum = '0' + msgNum;
+  if (msgNum.length === 1) {
+    msgNum = '0' + msgNum;
+  }
+
   let artistMedia = null;
+
   if (data.data[0] === '(Video)') {
     // Message with a video
-    const artistVideo = require(`assets/fab/${artistNum}/media/${msgNum}_0.mp4`);
     artistMedia = (
-      <video
+      <Video
+        sources={fabSources(`${artistNum}/media/${msgNum}_0.mp4`)}
         className={isLoading ? 'hidden' : ''}
         width="750"
         height="500"
+        preload="metadata"
         onLoadedData={onMediaLoad}
-      >
-        <source src={artistVideo} type="video/mp4" />
-      </video>
+      />
     );
   } else {
     // Message with an image
-    const artistImg = require(`assets/fab/${artistNum}/media/${msgNum}_0.jpg`);
     artistMedia = (
-      <img
+      <ImageMedia
+        sources={fabSources(`${artistNum}/media/${msgNum}_0.jpg`)}
         className={isLoading ? 'hidden' : ''}
-        src={artistImg}
         alt=""
         onLoad={onMediaLoad}
+        onError={onMediaLoad}
       />
     );
   }
@@ -86,76 +92,67 @@ function FabMsgImg({ artistNum, data }) {
 }
 
 function ArtistPage() {
-  const { fabData, setFabData } = useFabDataContext();
+  const { fabData, fabProfile } = useFabDataContext();
   const location = useLocation();
 
   const [ArtistNum, setArtistNum] = useState('');
-  const [ProfileImg, setProfileImg] = useState('');
-  const [BGImg, setBGImg] = useState('');
+  const [ProfileImg, setProfileImg] = useState([]);
+  const [BGImg, setBGImg] = useState([]);
   const [CSVText, setCSVText] = useState([]);
   const [isFetching, setIsFetching] = useState(true);
 
-  // Get artist profile info
+  const { visible, sentinelRef } = useInfiniteScroll(CSVText.length, 9);
+
   useEffect(() => {
     const chatId = location.pathname.split('/')[2];
     setArtistNum(chatId);
-    const profileImg = require(`assets/fab/${chatId}/profile/0.jpg`);
-    setProfileImg(profileImg);
-    const bgImg = require(`assets/fab/${chatId}/bg/0.jpg`);
-    setBGImg(bgImg);
   }, [location.pathname]);
+
+  // Current profile and bg from the fab-profile sheet
+  useEffect(() => {
+    const p = fabProfile[ArtistNum];
+    if (p) {
+      setProfileImg(p.profile);
+      setBGImg(p.background);
+    }
+  }, [ArtistNum, fabProfile]);
 
   useEffect(() => {
     // Missing artist number
     if (!ArtistNum || ArtistNum === '') return;
+
     // Already fetched data
     if (CSVText.length > 0) {
       setIsFetching(false);
       return;
     }
+
     // Fetch data
     setIsFetching(true);
     if (fabData && Object.keys(fabData).length === 2) {
       if (fabData[ArtistNum] && fabData[ArtistNum].length > 0) {
         setCSVText(chatByMsg(fabData[ArtistNum]));
       }
+
       setIsFetching(false);
     }
   }, [ArtistNum, CSVText.length, fabData]);
 
-  // If data cannot be pulled from context API
-  useEffect(() => {
-    const timerId = setTimeout(() => {
-      if (!isFetching) return;
-      if (!ArtistNum || ArtistNum === '') return;
-      if (!CSVText || CSVText.length === 0) {
-        getFabPromise(ArtistNum).then((res) => {
-          const fab = JSON.parse(JSON.stringify(res));
-          if (fab && fab.length > 0) {
-            setFabData(fab);
-            setCSVText(chatByMsg(fab));
-          }
-        });
-      }
-      setIsFetching(false);
-    }, 3000);
-    // Cleanup the timer when component unmouts
-    return () => clearTimeout(timerId);
-  });
-
   const fabMsgGrid = () => {
     const rows = [];
-    for (let i = 0; i < CSVText.length; i += 3) {
+    const count = Math.min(visible, CSVText.length);
+
+    for (let i = 0; i < count; i += 3) {
       rows.push(
         <div key={`artist-msg-row-${i / 3}`} className="flex-row">
-          {i < CSVText.length && (
+          {i < count && (
             <FabMsgImg
               key={`artist-msg-${i}`}
               artistNum={ArtistNum}
               data={CSVText[i]}
             />
           )}
-          {i + 1 < CSVText.length ? (
+          {i + 1 < count ? (
             <FabMsgImg
               key={`artist-msg-${i + 1}`}
               artistNum={ArtistNum}
@@ -164,7 +161,7 @@ function ArtistPage() {
           ) : (
             <div className="artist-msg select-none"></div>
           )}
-          {i + 2 < CSVText.length ? (
+          {i + 2 < count ? (
             <FabMsgImg
               key={`artist-msg-${i + 2}`}
               artistNum={ArtistNum}
@@ -176,6 +173,7 @@ function ArtistPage() {
         </div>
       );
     }
+
     return rows;
   };
 
@@ -187,9 +185,13 @@ function ArtistPage() {
       ) : (
         <div className="artistpage-body">
           <div className="top">
-            <img src={ProfileImg} className="artist-profile" alt="" />
+            <ImageMedia
+              sources={ProfileImg}
+              className="artist-profile"
+              alt=""
+            />
             <div className="artist-background">
-              <img src={BGImg} alt="" />
+              <ImageMedia sources={BGImg} alt="" />
             </div>
             <div className="profile-name flex-row">
               <p>{ArtistNum !== '' ? fabArtists[ArtistNum].name : ''}</p>
@@ -197,7 +199,12 @@ function ArtistPage() {
           </div>
           <div className="artist-body flex-col">
             {CSVText && CSVText.length > 1 ? (
-              fabMsgGrid()
+              <>
+                {fabMsgGrid()}
+                {visible < CSVText.length && (
+                  <div ref={sentinelRef} style={{ height: '1px' }} />
+                )}
+              </>
             ) : (
               <EmptyList listType="Message history" />
             )}

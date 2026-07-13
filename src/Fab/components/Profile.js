@@ -1,17 +1,14 @@
-import React, { useEffect, useState } from 'react';
-import './Profile.css';
+import React, { useState } from 'react';
+import { useFabDataContext } from 'context/fabDataState';
 import LoadingSpinner from 'components/LoadingSpinner/LoadingSpinner';
+import ImageMedia from 'components/ImageMedia';
+import './Profile.css';
 
 function Profile(props) {
-  const [ProfileImg, setProfileImg] = useState('');
+  const { fabProfile } = useFabDataContext();
   const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    if (props.artistNum) {
-      const profileImg = require(`assets/fab/${props.artistNum}/profile/0.jpg`);
-      setProfileImg(profileImg);
-    }
-  }, [props]);
+  const sources = fabProfile[props.artistNum]?.profile || [];
 
   // Show loading spinner until profile image is successfully loaded
   const onMediaLoad = () => {
@@ -21,11 +18,12 @@ function Profile(props) {
   return (
     <div className="profile">
       {isLoading && <LoadingSpinner />}
-      <img
+      <ImageMedia
         className={isLoading ? 'hidden' : ''}
-        src={ProfileImg}
+        sources={sources}
         alt=""
         onLoad={onMediaLoad}
+        onError={onMediaLoad}
       />
     </div>
   );

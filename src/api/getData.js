@@ -15,18 +15,3 @@ export const getVlivePromise = async () => {
     });
   });
 };
-
-export const getFabPromise = async (artistNum) => {
-  const textCSV = require(`../assets/fab/${artistNum}/text.csv`);
-  return new Promise((resolve, reject) => {
-    readString(textCSV, {
-      download: true,
-      complete: (results, file) => {
-        resolve(results.data);
-      },
-      error: (error, file) => {
-        console.log('Error while parsing:', error, file);
-      }
-    });
-  });
-};

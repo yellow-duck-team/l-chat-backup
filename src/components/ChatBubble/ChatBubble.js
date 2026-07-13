@@ -1,12 +1,17 @@
 import React, { useEffect, useState } from 'react';
-import { parseDate } from 'lib/date';
-import './ChatBubble.css';
-import LoadingSpinner from 'components/LoadingSpinner/LoadingSpinner';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
-import { useFrommDataContext } from 'context/frommDataState';
-import { spaceId } from 'contentful/contentfulApi';
-import { emojis, kaomojis, noSupport } from 'lib/constants';
 import { StopOutlined } from '@ant-design/icons';
+import { spaceId } from 'contentful/contentfulApi';
+import { useFrommDataContext } from 'context/frommDataState';
+import { r2Url } from 'lib/assetUrl';
+import { fabSources } from 'lib/fabMedia';
+import { emojis, kaomojis } from 'lib/constants';
+import { parseDate } from 'lib/date';
+import LoadingSpinner from 'components/LoadingSpinner/LoadingSpinner';
+import ImageMedia from 'components/ImageMedia';
+import AudioMedia from 'components/AudioMedia';
+import VideoMedia from 'components/VideoMedia';
+import './ChatBubble.css';
 
 // Convert kaomojis to display properly
 const displayKaomojis = (str, index) => {
@@ -144,7 +149,7 @@ function ChatBubble({
 
   // Voice
   if (type === 'Voice') {
-    let audioMedia = null;
+    let audioSources = [];
     if (service === 'fab') {
       if (text === '' || text === '-') {
         return (
@@ -154,13 +159,26 @@ function ChatBubble({
           </div>
         );
       }
-      audioMedia = require(`assets/fab/${artistNum}/voice/${chatId}_${text}.m4a`);
+      audioSources = fabSources(`${artistNum}/voice/${chatId}_${text}.m4a`);
     } else if (!dateStr || ImageName === '') {
       return <LoadingSpinner />;
     } else if (service === 'vlive') {
-      audioMedia = require(`assets/vlive/voice/${ImageName}_${text}.m4a`);
+      audioSources = [require(`assets/vlive/voice/${ImageName}_${text}.m4a`)];
     } else if (mediaurl && mediaurl !== '' && extension && extension !== '') {
-      audioMedia = `https://assets.ctfassets.net/${spaceId}/${mediaurl}/${ImageName}_${text}.${extension}`;
+      const base = `${ImageName}_${text}`;
+      const file = `${base}.${extension}`;
+
+      // R2 keeps audio under voice
+      const exts = [...new Set([extension, extension.toLowerCase()])];
+      const r2 = exts.map((ext) =>
+        r2Url(`${service}/${artistNum}/voice/${base}.${ext}`)
+      );
+
+      // Try R2 -> Contentful
+      audioSources = [
+        ...r2,
+        `https://assets.ctfassets.net/${spaceId}/${mediaurl}/${file}`
+      ].filter(Boolean);
     }
     return (
       <div
@@ -168,19 +186,22 @@ function ChatBubble({
           service === 'vlive' ? 'chat-voice-blue' : 'bubble voice audio'
         }
       >
-        <audio src={audioMedia} controls>
-          {noSupport.audio}
-        </audio>
+        <AudioMedia sources={audioSources} />
       </div>
     );
   }
 
   // Image
   if (type === 'Image') {
-    if (!dateStr || ImageName === '') return <LoadingSpinner />;
+    if (!dateStr || ImageName === '') {
+      return <LoadingSpinner />;
+    }
+
     let image = null;
+
     if (service === 'vlive') {
       image = require(`assets/vlive/media/${ImageName}_${text}.JPG`);
+
       return (
         <>
           {isLoading && <LoadingSpinner />}
@@ -194,18 +215,40 @@ function ChatBubble({
         </>
       );
     }
-    if (mediaurl && mediaurl !== '' && extension && extension !== '') {
-      image = `https://images.ctfassets.net/${spaceId}/${mediaurl}/${ImageName}_${text}.${extension}`;
+
+    let sources = [];
+
+    if (extension && extension !== '') {
+      const base = `${ImageName}_${text}`;
+      const file = `${base}.${extension}`;
+
+      // R2 is case sensitive so try the extension as is and lowercased
+      const exts = [...new Set([extension, extension.toLowerCase()])];
+      const r2 = exts.map((ext) =>
+        r2Url(`${service}/${artistNum}/media/${base}.${ext}`)
+      );
+
+      // Contentful is the last fallback for non migrated images
+      const contentful =
+        mediaurl && mediaurl !== ''
+          ? `https://images.ctfassets.net/${spaceId}/${mediaurl}/${file}`
+          : null;
+
+      // Try R2 (both cases), then Contentful
+      sources = [...r2, contentful].filter(Boolean);
     }
+
     return (
       <div className="bubble image">
         {isLoading && <LoadingSpinner />}
-        <img
+        <ImageMedia
           className={`${isLoading && 'hidden'}`}
-          src={image}
+          sources={sources}
+          width={400}
           alt=""
           onLoad={onMediaLoad}
-          onClick={() => onOpenMedia(true, image, null, null)}
+          onError={onMediaLoad}
+          onClick={() => onOpenMedia(true, sources, null, null)}
         />
       </div>
     );
@@ -214,22 +257,27 @@ function ChatBubble({
   // Video
   if (type === 'Video') {
     if (!dateStr || ImageName === '') return <LoadingSpinner />;
-    let videoMedia = null;
-    if (mediaurl && mediaurl !== '' && extension && extension !== '') {
-      videoMedia = `https://videos.ctfassets.net/${spaceId}/${mediaurl}/${ImageName}_${text}.${extension}`;
+
+    let sources = [];
+    if (extension && extension !== '') {
+      const base = `${ImageName}_${text}`;
+      const file = `${base}.${extension}`;
+
+      // R2 keeps video under video
+      const exts = [...new Set([extension, extension.toLowerCase()])];
+      const r2 = exts.map((ext) =>
+        r2Url(`${service}/${artistNum}/video/${base}.${ext}`)
+      );
+
+      const contentful =
+        mediaurl && mediaurl !== ''
+          ? `https://videos.ctfassets.net/${spaceId}/${mediaurl}/${file}`
+          : null;
+
+      sources = [...r2, contentful].filter(Boolean);
     }
-    return (
-      <div className="bubble video">
-        {isLoading && <LoadingSpinner />}
-        <video
-          className={isLoading ? 'hidden' : ''}
-          controls
-          onLoadedData={onMediaLoad}
-        >
-          <source src={videoMedia} type="video/MP4" />
-        </video>
-      </div>
-    );
+
+    return <VideoMedia sources={sources} />;
   }
 
   // Emoji

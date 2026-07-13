@@ -1,15 +1,15 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import Profile from 'Fromm/components/Profile';
-import ChatBubble from 'components/ChatBubble/ChatBubble';
-import Date from 'Fromm/components/Date';
-import MediaSlide from 'components/MediaSlide/MediaSlide';
+import { useFrommDataContext } from 'context/frommDataState';
+import { formatTime } from 'lib/date';
+import { groupByDate } from 'lib/group';
 import LoadingSpinner from 'components/LoadingSpinner/LoadingSpinner';
 import EmptyList from 'components/EmptyList';
 import MobileLayout from 'components/MobileLayout';
-import { formatTime } from 'lib/date';
-import { groupByDate } from 'lib/group';
-import { useFrommDataContext } from 'context/frommDataState';
+import ChatBubble from 'components/ChatBubble/ChatBubble';
+import MediaSlide from 'components/MediaSlide/MediaSlide';
+import Profile from 'Fromm/components/Profile';
+import Date from 'Fromm/components/Date';
 import './ChatPage.css';
 
 export function Chat({ artistNum, chatData, chat, index, isChatList }) {
@@ -51,8 +51,49 @@ export function Chat({ artistNum, chatData, chat, index, isChatList }) {
   );
 }
 
+// Number of chats to render per scroll step
+const CHAT_PER_STEP = 10;
+
 export function Chats({ artistNum, chatData, isChatList = true }) {
-  const chatBubble = chatData.map((chat, index) => {
+  const [visible, setVisible] = useState(CHAT_PER_STEP);
+  const sentinelRef = useRef(null);
+
+  // Reset the window when the data changes
+  useEffect(() => {
+    setVisible(CHAT_PER_STEP);
+  }, [chatData]);
+
+  // Grow the window as the sentinel nears the bottom of the scroll area
+  useEffect(() => {
+    const el = sentinelRef.current;
+
+    if (!el || visible >= chatData.length) {
+      return undefined;
+    }
+
+    // Observe inside the scrolling ancestor so its clipping is respected
+    let root = el.parentElement;
+    while (root && root !== document.body) {
+      const oy = getComputedStyle(root).overflowY;
+
+      if (oy === 'auto' || oy === 'scroll') break;
+
+      root = root.parentElement;
+    }
+
+    const io = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          setVisible((v) => Math.min(v + CHAT_PER_STEP, chatData.length));
+        }
+      },
+      { root: root || null, rootMargin: '600px 0px' }
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, [visible, chatData]);
+
+  const chatBubble = chatData.slice(0, visible).map((chat, index) => {
     if (
       chat.date === '' ||
       chat.text === '' ||
@@ -61,7 +102,7 @@ export function Chats({ artistNum, chatData, isChatList = true }) {
       chat.profile === '' ||
       chat.background === ''
     )
-      return <></>;
+      return null;
 
     return (
       <Chat
@@ -76,7 +117,12 @@ export function Chats({ artistNum, chatData, isChatList = true }) {
   });
 
   return (
-    <div className="chat">{chatData && chatData.length > 0 && chatBubble}</div>
+    <div className="chat">
+      {chatData && chatData.length > 0 && chatBubble}
+      {visible < chatData.length && (
+        <div ref={sentinelRef} style={{ height: '1px' }} />
+      )}
+    </div>
   );
 }
 

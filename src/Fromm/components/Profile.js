@@ -1,7 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import LoadingSpinner from 'components/LoadingSpinner/LoadingSpinner';
+import ImageMedia from 'components/ImageMedia';
 import { useFrommDataContext } from 'context/frommDataState';
 import '../pages/ChatPage.css';
+
+// Shown when an artist has no profile or image does not exist
+const PLACEHOLDER = '/fromm/default_profile.png';
 
 /**
  * Profile image component for Fromm chat bubble.
@@ -32,11 +36,13 @@ function Profile({ artistNum, imgNum }) {
   return (
     <div className="profile select-none">
       {(isFetching || isLoading) && <LoadingSpinner />}
-      <img
+      <ImageMedia
         className={isLoading ? 'hidden' : ''}
-        src={ProfileImg}
+        sources={ProfileImg || [PLACEHOLDER]}
+        width={200}
         alt=""
         onLoad={onMediaLoad}
+        onError={onMediaLoad}
       />
     </div>
   );

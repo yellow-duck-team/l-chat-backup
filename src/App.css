@@ -1,3 +1,7 @@
+body {
+  background-color: rgb(30, 30, 30);
+}
+
 .App-bg {
   display: flex;
   justify-content: center;
@@ -42,6 +46,7 @@
 
 .hidden {
   visibility: hidden;
+  position: fixed;
 }
 
 .horizontal-line {

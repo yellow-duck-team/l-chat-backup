@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import MobileLayout from 'components/MobileLayout';
+import ImageMedia from 'components/ImageMedia';
+import { fabSources } from 'lib/fabMedia';
 import './ArtistListPage.css';
 
 const artistName = [
@@ -20,12 +22,12 @@ const artistName = [
 const artists = [];
 for (let i = 1; i < 13; i++) {
   try {
-    // If artist exists
-    let profileImg = require(`assets/fab/${i}/profile/0.jpg`);
+    // Existence check only, the display url comes from fabSources
+    require(`assets/fab/${i}/profile/0.jpg`);
     artists.push({
       index: i,
       name: artistName[i - 1],
-      profileImg: profileImg
+      profileImg: fabSources(`${i}/profile/0.jpg`)
     });
   } catch (err) {} // If artist doesn't exist, do nothing
 }
@@ -94,9 +96,9 @@ function ArtistListPage() {
           {artists &&
             artists.length > 0 &&
             artists.map((artist, index) => (
-              <img
+              <ImageMedia
                 key={`artist-list-${index}`}
-                src={artist.profileImg}
+                sources={artist.profileImg}
                 className="artist-list-img"
                 onClick={() => navigate(`/fab/${artist.index}`)}
                 alt=""

@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useInfiniteScroll } from 'hooks/useInfiniteScroll';
 // Components
 import ChatBubble from 'components/ChatBubble/ChatBubble';
 import Date from './Date';
@@ -11,6 +12,7 @@ function Chats({ artistNum, chatId, chatData }) {
   let chatDate = '';
 
   const [ChatData, setChatData] = useState([]);
+  const { visible, sentinelRef } = useInfiniteScroll(ChatData.length, 10);
 
   useEffect(() => {
     if (!chatId || !chatData) return;
@@ -19,7 +21,7 @@ function Chats({ artistNum, chatId, chatData }) {
     }
   }, [chatId, chatData]);
 
-  const Bubbles = ChatData.map((chat, index) => {
+  const Bubbles = ChatData.slice(0, visible).map((chat, index) => {
     const showChatDate = () => {
       if (chatDate === '' || chatDate !== chat[3].split(' ')[0]) {
         chatDate = chat[3].split(' ')[0];
@@ -61,7 +63,14 @@ function Chats({ artistNum, chatId, chatData }) {
     );
   });
 
-  return <div className="fab chat">{Bubbles}</div>;
+  return (
+    <div className="fab chat">
+      {Bubbles}
+      {visible < ChatData.length && (
+        <div ref={sentinelRef} style={{ height: '1px' }} />
+      )}
+    </div>
+  );
 }
 
 export default Chats;

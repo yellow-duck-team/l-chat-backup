@@ -35,6 +35,7 @@ function App() {
     <div className="App-bg">
       <div className="App">
         <NavBar />
+
         <Routes>
           <Route exact path="/" element={<HomePage />} />
           <Route

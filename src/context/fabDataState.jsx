@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useState } from 'react';
-import { getFabPromise } from 'api/getData';
-import fabArtists from 'assets/fab/artist_info.json';
+import { loadFabFromSheet } from 'lib/fabSheet';
+import { fabSources } from 'lib/fabMedia';
 
 const initialState = {
   fabData: [],
@@ -14,23 +14,40 @@ export const FabDataContext = createContext(initialState);
 
 export function FabDataProvider({ children }) {
   const [fabData, setFabData] = useState(null);
+  const [fabProfile, setFabProfile] = useState({});
   const [media, setMedia] = useState(null);
   const [openMedia, setOpenMedia] = useState(false);
 
   useEffect(() => {
-    // Create a controller
     const controller = new AbortController();
-    // Get Fab Data
-    let data = {};
-    for (const artist in fabArtists) {
-      getFabPromise(artist).then((res) => {
-        const fab = JSON.parse(JSON.stringify(res));
-        if (fab && fab.length > 0) {
-          data[artist] = fab;
+
+    loadFabFromSheet()
+      .then(({ chat, profile }) => {
+        setFabData(chat);
+
+        // Current profile and bg sources per artist, 0.jpg as fallback
+        const sourcesFor = (artist, folder, info) =>
+          info
+            ? fabSources(
+                `${artist}/${folder}/${info.filename}.${info.extension}`
+              )
+            : fabSources(`${artist}/${folder}/0.jpg`);
+
+        const built = {};
+        for (const artist in chat) {
+          const info = profile[artist] || {};
+          built[artist] = {
+            profile: sourcesFor(artist, 'profile', info.profile),
+            background: sourcesFor(artist, 'bg', info.bg)
+          };
         }
+        setFabProfile(built);
+      })
+      .catch(() => {
+        setFabData({});
+        setFabProfile({});
       });
-    }
-    setFabData(data);
+
     // Aborts the request when the component umounts
     return () => controller?.abort();
   }, []);
@@ -46,7 +63,14 @@ export function FabDataProvider({ children }) {
 
   return (
     <FabDataContext.Provider
-      value={{ fabData, setFabData, media, openMedia, onOpenMedia }}
+      value={{
+        fabData,
+        setFabData,
+        fabProfile,
+        media,
+        openMedia,
+        onOpenMedia
+      }}
     >
       {children}
     </FabDataContext.Provider>
