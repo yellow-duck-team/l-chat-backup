@@ -2,10 +2,9 @@ import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { convertDate } from 'lib/date';
 import { chatByMsg } from 'lib/group';
-import { fabSources } from 'lib/fabMedia';
+import { fabSources, artistName } from 'lib/fabMedia';
 import { useInfiniteScroll } from 'hooks/useInfiniteScroll';
 import { useFabDataContext } from 'context/fabDataState';
-import fabArtists from 'assets/fab/artist_info.json';
 import Video from 'Fab/components/Video';
 import Header from 'components/Header/Header';
 import LoadingSpinner from 'components/LoadingSpinner/LoadingSpinner';
@@ -29,7 +28,6 @@ function FabMsgImg({ artistNum, data }) {
 
   // Message without media
   if (data.data[0] !== '(Video)' && !data.data[0].includes('Image')) {
-    const emptyImg = require(`assets/fab/empty.jpg`);
     return (
       <div
         className="artist-msg select-none"
@@ -39,7 +37,7 @@ function FabMsgImg({ artistNum, data }) {
         {isLoading && <LoadingSpinner />}
         <img
           className={isLoading ? 'hidden' : ''}
-          src={emptyImg}
+          src="/fab/empty.jpg"
           alt=""
           onLoad={onMediaLoad}
         />
@@ -194,7 +192,7 @@ function ArtistPage() {
               <ImageMedia sources={BGImg} alt="" />
             </div>
             <div className="profile-name flex-row">
-              <p>{ArtistNum !== '' ? fabArtists[ArtistNum].name : ''}</p>
+              <p>{ArtistNum !== '' ? artistName[Number(ArtistNum) - 1] : ''}</p>
             </div>
           </div>
           <div className="artist-body flex-col">
