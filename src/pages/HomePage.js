@@ -4,9 +4,9 @@ import MobileLayout from 'components/MobileLayout';
 import './HomePage.css';
 
 const platforms = [
-  { name: 'vlive', icon: require('assets/logo_vlive.png') },
-  { name: 'fab', icon: require('assets/logo_fab.png') },
-  { name: 'fromm', icon: require('assets/logo_fromm.png') }
+  { name: 'vlive', icon: '/img/logo_vlive.png' },
+  { name: 'fab', icon: '/img/logo_fab.png' },
+  { name: 'fromm', icon: '/img/logo_fromm.png' }
 ];
 
 /**

@@ -1,8 +1,7 @@
 import { useState } from 'react';
 
 /**
- * Video component
- * Sources load in order: R2 -> Bundled file
+ * Video component that loads sources from R2
  */
 function Video({ sources = [], ...rest }) {
   const chain = sources.filter(Boolean);

@@ -5,7 +5,7 @@ import MediaSlide from 'components/MediaSlide/MediaSlide';
 import LoadingSpinner from 'components/LoadingSpinner/LoadingSpinner';
 import MobileLayout from 'components/MobileLayout';
 import ImageMedia from 'components/ImageMedia';
-import fabArtists from 'assets/fab/artist_info.json';
+import { artistName } from 'lib/fabMedia';
 import { chatByMsgLine } from 'lib/group';
 import { useFabDataContext } from 'context/fabDataState';
 import { CommentOutlined } from '@ant-design/icons';
@@ -100,7 +100,7 @@ function MessagePage() {
             />
             <div className="footer-text">
               <p className="profile-name">
-                {ArtistNum !== '' ? fabArtists[ArtistNum].name : ''}
+                {ArtistNum !== '' ? artistName[Number(ArtistNum) - 1] : ''}
               </p>
               {CSVText && CSVText.length > 0 && <p>{CSVText[3]}</p>}
             </div>
