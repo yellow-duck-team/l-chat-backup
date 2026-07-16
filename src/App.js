@@ -1,4 +1,5 @@
 import { Route, Routes } from 'react-router-dom';
+import { Analytics } from '@vercel/analytics/react';
 import './App.css';
 // Context
 import { FabDataProvider } from 'context/fabDataState';
@@ -34,6 +35,8 @@ function App() {
   return (
     <div className="App-bg">
       <div className="App">
+        <Analytics />
+
         <NavBar />
 
         <Routes>
